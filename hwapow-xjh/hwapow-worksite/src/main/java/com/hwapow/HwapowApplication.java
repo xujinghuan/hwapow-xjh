@@ -16,6 +16,6 @@ public class HwapowApplication
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(HwapowApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  华普启动成功   ლ(´ڡ`ლ)ﾞ  \n");
+        System.out.println("(♥◠‿◠)ﾉﾞ  工地管理系统启动成功   ლ(´ڡ`ლ)ﾞ  \n");
     }
 }
