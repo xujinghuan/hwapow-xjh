@@ -215,3 +215,15 @@ aside{
 .login-form .el-form-item{
   padding-bottom: 12px;
 }
+
+.searchForm .el-input{
+  width: 180px;
+}
+
+.el-dialog__body .fullContainer{
+  height:500px;
+}
+
+.double-label-font .el-form-item__label{
+  line-height: 15px;
+}
