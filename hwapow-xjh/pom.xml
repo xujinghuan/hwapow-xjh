@@ -204,6 +204,7 @@
         <module>hwapow-quartz</module>
         <module>hwapow-generator</module>
         <module>hwapow-common</module>
+        <module>hwapow-worksite</module>
     </modules>
     <packaging>pom</packaging>
 

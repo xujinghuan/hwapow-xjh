@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.worksite.mapper.WorkerMapper">
+
+    <resultMap type="Worker" id="WorkerResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="phone"    column="phone"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="address"    column="address"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="workType"    column="work_type"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="account"    column="account"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWorkerVo">
+        select * from worker
+    </sql>
+
+    <select id="selectWorkerList" parameterType="Worker" resultMap="WorkerResult">
+        <include refid="selectWorkerVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="idcard != null  and idcard != ''"> and idcard like concat('%', #{idcard}, '%')</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="workType != null "> and work_type = #{workType}</if>
+             and (del_flag = 0 or del_flag is null)
+        </where>
+    </select>
+
+    <select id="selectWorkerById" parameterType="Long" resultMap="WorkerResult">
+        <include refid="selectWorkerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWorker" parameterType="Worker" useGeneratedKeys="true" keyProperty="id">
+        insert into worker
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="idcard != null">idcard,</if>
+            <if test="phone != null">phone,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="address != null">address,</if>
+            <if test="nativePlace != null">native_place,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="accountName != null">account_name,</if>
+            <if test="account != null">account,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="idcard != null">#{idcard},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="address != null">#{address},</if>
+            <if test="nativePlace != null">#{nativePlace},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="accountName != null">#{accountName},</if>
+            <if test="account != null">#{account},</if>
+            <if test="bankName != null">#{bankName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorker" parameterType="Worker">
+        update worker
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="nativePlace != null">native_place = #{nativePlace},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="account != null">account = #{account},</if>
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteWorkerById" parameterType="Long">
+        update worker set del_flag = 2 where id = #{id}
+    </update>
+
+    <select id="checkWorkerUnique"  resultMap="WorkerResult">
+        <include refid="selectWorkerVo"/>
+        where (name = #{name} <if test="idcard != null">or idcard=#{idcard}</if>) and (del_flag is null or del_flag = '0') limit 1
+    </select>
+
+    <delete id="deleteWorkerByIds" parameterType="String">
+        update worker set del_flag = 2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
