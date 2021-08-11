@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.worksite.mapper.AskForLeaveMapper">
+
+    <resultMap type="AskForLeave" id="AskForLeaveResult">
+        <result property="id"    column="id"    />
+        <result property="worker"    column="worker"    />
+        <result property="workerName"    column="worker_name"    />
+        <result property="reason"    column="reason"    />
+        <result property="leaveTime"    column="leave_time"    />
+        <result property="leaveDate"    column="leave_date"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAskForLeaveVo">
+        select a.*,b.name as worker_name from ask_for_leave a left join worker b on a.worker=b.id
+    </sql>
+
+    <select id="selectAskForLeaveList" parameterType="AskForLeave" resultMap="AskForLeaveResult">
+        <include refid="selectAskForLeaveVo"/>
+        <where>
+            <if test="worker != null "> and worker = #{worker}</if>
+            <if test="reason != null  and reason != ''"> and reason like concat('%', #{reason}, '%')</if>
+            <if test="leaveDate != null "> and leave_date = #{leaveDate}</if>
+            and (a.del_flag = 0 or a.del_flag is null)
+        </where>
+    </select>
+
+    <select id="selectAskForLeaveById" parameterType="Long" resultMap="AskForLeaveResult">
+        <include refid="selectAskForLeaveVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertAskForLeave" parameterType="AskForLeave" useGeneratedKeys="true" keyProperty="id">
+        insert into ask_for_leave
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="worker != null">worker,</if>
+            <if test="reason != null">reason,</if>
+            <if test="leaveTime != null">leave_time,</if>
+            <if test="leaveDate != null">leave_date,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="worker != null">#{worker},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="leaveTime != null">#{leaveTime},</if>
+            <if test="leaveDate != null">#{leaveDate},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAskForLeave" parameterType="AskForLeave">
+        update ask_for_leave
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="worker != null">worker = #{worker},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="leaveTime != null">leave_time = #{leaveTime},</if>
+            <if test="leaveDate != null">leave_date = #{leaveDate},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteAskForLeaveById" parameterType="Long">
+        update ask_for_leave set del_flag = 2 where id = #{id}
+    </update>
+
+    <update id="deleteAskForLeaveByIds" parameterType="String">
+        update ask_for_leave set del_flag = 2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

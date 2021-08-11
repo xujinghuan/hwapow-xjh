@@ -9,6 +9,14 @@ export function listWorker(query) {
   })
 }
 
+// 查询工人下拉树结构
+export function workerTreeselect() {
+  return request({
+    url: '/worksite/worker/treeselect',
+    method: 'get'
+  })
+}
+
 // 查询工人详细
 export function getWorker(id) {
   return request({

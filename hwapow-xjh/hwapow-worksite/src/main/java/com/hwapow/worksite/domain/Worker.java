@@ -24,6 +24,9 @@ public class Worker extends BaseEntity
     @Excel(name = "工人名称")
     private String name;
 
+    /**用于显示树名称**/
+    private String label;
+
     /** 工人昵称 */
     @Excel(name = "工人昵称")
     private String nickname;
@@ -85,6 +88,10 @@ public class Worker extends BaseEntity
         this.name = name;
     }
 
+    public String getLabel()
+    {
+        return name;
+    }
     public String getName()
     {
         return name;

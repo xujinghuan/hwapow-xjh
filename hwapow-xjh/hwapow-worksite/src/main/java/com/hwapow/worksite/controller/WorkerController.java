@@ -3,6 +3,7 @@ package com.hwapow.worksite.controller;
 import java.util.List;
 
 import com.hwapow.common.constant.UserConstants;
+import com.hwapow.common.core.domain.entity.SysOrg;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,6 +99,16 @@ public class WorkerController extends BaseController
             return AjaxResult.error("修改工人'" + worker.getName() + "'失败，工人名称或身份证号已存在，请核实后保存");
         }
         return toAjax(workerService.updateWorker(worker));
+    }
+
+    /**
+     * 获取工人下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(Worker worker)
+    {
+        List<Worker> workers = workerService.selectWorkerList(worker);
+        return AjaxResult.success(workers);
     }
 
     /**
