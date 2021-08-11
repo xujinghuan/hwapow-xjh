@@ -5,12 +5,12 @@
         <el-form-item label="工人" prop="worker">
           <treeselect style="width: 200px" class="vue-treeselect-mini" v-model="queryParams.worker" :options="workerOptions" :show-count="true" placeholder="请选择工人" />
         </el-form-item>
-        <el-form-item label="请假日期" prop="leaveDate">
+        <el-form-item label="发放日期" prop="payDate">
           <el-date-picker clearable
-                          v-model="queryParams.leaveDate"
+                          v-model="queryParams.payDate"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="选择请假日期">
+                          placeholder="选择发放日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -26,7 +26,7 @@
         icon="el-icon-plus"
         size="mini"
         @click="handleAdd"
-        v-hasPermi="['worksite:askForLeave:add']"
+        v-hasPermi="['worksite:paySalary:add']"
       >新增</el-button>
       <el-button
         type="success"
@@ -35,20 +35,29 @@
         size="mini"
         :disabled="single"
         @click="handleUpdate"
-        v-hasPermi="['worksite:askForLeave:edit']"
+        v-hasPermi="['worksite:paySalary:edit']"
       >修改</el-button>
+      <el-button
+        type="danger"
+        plain
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['worksite:paySalary:remove']"
+      >删除</el-button>
       <el-button
         type="warning"
         plain
         icon="el-icon-download"
         size="mini"
         @click="handleExport"
-        v-hasPermi="['worksite:askForLeave:export']"
+        v-hasPermi="['worksite:paySalary:export']"
       >导出</el-button>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </div>
     <el-main>
-      <el-table v-loading="loading" :data="askForLeaveList" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="paySalaryList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column
           label="序号"
@@ -59,29 +68,30 @@
             <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="工人" align="center" prop="workerName"  width="100"/>
-        <el-table-column label="请假工时" align="center" prop="leaveTime" width="80"/>
-        <el-table-column label="请假日期" align="center" prop="leaveDate" width="180">
+        <el-table-column label="工人" align="center" prop="workerName" width="100"/>
+        <el-table-column label="工资" align="center" prop="salary" width="60"/>
+        <el-table-column label="发放日期" align="center" prop="payDate" width="100">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.leaveDate, '{y}-{m}-{d}') }}</span>
+            <span>{{ parseTime(scope.row.payDate, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="请假理由" align="center" prop="reason" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130">
+        <el-table-column label="发放方式" align="center" prop="payWay" :formatter="payWayFormat" width="100"/>
+        <el-table-column label="理由" align="center" prop="reason"/>
+        <el-table-column label="操作" width="130" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['worksite:askForLeave:edit']"
+              v-hasPermi="['worksite:paySalary:edit']"
             >修改</el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['worksite:askForLeave:remove']"
+              v-hasPermi="['worksite:paySalary:remove']"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -96,7 +106,7 @@
         @pagination="getList"
       />
     </el-footer>
-    <!-- 添加或修改请假对话框 -->
+    <!-- 添加或修改工资发放对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
       <el-container  class="fullContainer" direction="vertical">
         <div class="toolbar">
@@ -108,19 +118,29 @@
             <el-form-item label="工人" prop="worker">
               <treeselect style="width: 200px" class="vue-treeselect-mini" v-model="form.worker" :options="workerOptions" :show-count="true" placeholder="请选择工人" />
             </el-form-item>
-            <el-form-item label="请假理由" prop="reason">
-              <el-input v-model="form.reason" type="textarea" placeholder="请输入内容" />
+            <el-form-item label="工资" prop="salary">
+              <el-input-number min="0" v-model="form.salary" placeholder="请输入工资" />
             </el-form-item>
-            <el-form-item label="请假工时" prop="leaveTime">
-              <el-input-number  min="0" max="3" v-model="form.leaveTime" placeholder="请输入请假工时" />
+            <el-form-item label="发放方式" prop="payWay">
+              <el-select v-model="form.payWay" placeholder="请选择发放方式">
+                <el-option
+                  v-for="dict in payWayOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                ></el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="请假日期" prop="leaveDate">
+            <el-form-item label="发放日期" prop="payDate">
               <el-date-picker clearable size="small"
-                              v-model="form.leaveDate"
+                              v-model="form.payDate"
                               type="date"
                               value-format="yyyy-MM-dd"
-                              placeholder="选择请假日期">
+                              placeholder="选择发放日期">
               </el-date-picker>
+            </el-form-item>
+            <el-form-item label="理由" prop="reason">
+              <el-input v-model="form.reason" type="textarea" placeholder="请输入内容" />
             </el-form-item>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
@@ -133,13 +153,13 @@
 </template>
 
 <script>
-import { listAskForLeave, getAskForLeave, delAskForLeave, addAskForLeave, updateAskForLeave, exportAskForLeave } from "@/api/worksite/askForLeave";
+import { listPaySalary, getPaySalary, delPaySalary, addPaySalary, updatePaySalary, exportPaySalary } from "@/api/worksite/paySalary";
 import {  workerTreeselect } from '@/api/worksite/worker'
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
-  name: "AskForLeave",
+  name: "PaySalary",
   components: {
     Treeselect
   },
@@ -157,8 +177,10 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 请假表格数据
-      askForLeaveList: [],
+      // 工资发放表格数据
+      paySalaryList: [],
+      // 字典
+      payWayOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -170,8 +192,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         worker: null,
-        reason: null,
-        leaveDate: null,
+        payDate: null,
       },
       // 表单参数
       form: {},
@@ -185,14 +206,17 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("pay_way").then(response => {
+      this.payWayOptions = response.data;
+    });
     this.getTreeselect();
   },
   methods: {
-    /** 查询请假列表 */
+    /** 查询工资发放列表 */
     getList() {
       this.loading = true;
-      listAskForLeave(this.queryParams).then(response => {
-        this.askForLeaveList = response.rows;
+      listPaySalary(this.queryParams).then(response => {
+        this.paySalaryList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -202,6 +226,10 @@ export default {
       workerTreeselect().then(response => {
         this.workerOptions = response.data;
       });
+    },
+    // 字典翻译
+    payWayFormat(row, column) {
+      return this.selectDictLabel(this.payWayOptions, row.payWay);
     },
     // 取消按钮
     cancel() {
@@ -214,8 +242,8 @@ export default {
         id: null,
         worker: null,
         reason: null,
-        leaveTime: null,
-        leaveDate: null,
+        salary: null,
+        payDate: null,
         delFlag: null,
         createBy: null,
         createTime: null,
@@ -246,17 +274,17 @@ export default {
       this.reset();
       this.getTreeselect();
       this.open = true;
-      this.title = "添加请假";
+      this.title = "添加工资发放";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       this.getTreeselect();
       const id = row.id || this.ids
-      getAskForLeave(id).then(response => {
+      getPaySalary(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改请假";
+        this.title = "修改工资发放";
       });
     },
     /** 提交按钮 */
@@ -264,13 +292,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateAskForLeave(this.form).then(response => {
+            updatePaySalary(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addAskForLeave(this.form).then(response => {
+            addPaySalary(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -282,13 +310,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      const names=row.workerName+" "+row.leaveDate;
-      this.$confirm('确认删除 ' + names + ' 的请假?', "警告", {
+      const names=row.workerName+" "+row.payDate+"发放";
+      this.$confirm('确认删除给' + names + '的'+row.salary+'工资?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return delAskForLeave(ids);
+        return delPaySalary(ids);
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
@@ -297,12 +325,12 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有请假数据项?', "警告", {
+      this.$confirm('是否确认导出所有工资发放数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return exportAskForLeave(queryParams);
+        return exportPaySalary(queryParams);
       }).then(response => {
         this.download(response.msg);
       })

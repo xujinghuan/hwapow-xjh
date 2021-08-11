@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.worksite.mapper.PaySalaryMapper">
+
+    <resultMap type="PaySalary" id="PaySalaryResult">
+        <result property="id"    column="id"    />
+        <result property="worker"    column="worker"    />
+        <result property="workerName"    column="worker_name"    />
+        <result property="reason"    column="reason"    />
+        <result property="salary"    column="salary"    />
+        <result property="payDate"    column="pay_date"    />
+        <result property="payWay"    column="pay_way"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPaySalaryVo">
+        select a.*,b.name as worker_name from pay_salary a left join worker b on a.worker=b.id
+    </sql>
+
+    <select id="selectPaySalaryList" parameterType="PaySalary" resultMap="PaySalaryResult">
+        <include refid="selectPaySalaryVo"/>
+        <where>
+            <if test="worker != null "> and worker = #{worker}</if>
+            <if test="payDate != null "> and pay_date = #{payDate}</if>
+            and (a.del_flag = 0 or a.del_flag is null)
+        </where>
+    </select>
+
+    <select id="selectPaySalaryById" parameterType="Long" resultMap="PaySalaryResult">
+        <include refid="selectPaySalaryVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPaySalary" parameterType="PaySalary" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_salary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="worker != null">worker,</if>
+            <if test="reason != null">reason,</if>
+            <if test="salary != null">salary,</if>
+            <if test="payDate != null">pay_date,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="payWay != null">pay_way,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="worker != null">#{worker},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="salary != null">#{salary},</if>
+            <if test="payDate != null">#{payDate},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="payWay != null">#{payWay},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePaySalary" parameterType="PaySalary">
+        update pay_salary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="worker != null">worker = #{worker},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="payDate != null">pay_date = #{payDate},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="payWay != null">pay_way = #{payWay},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deletePaySalaryById" parameterType="Long">
+        update pay_salary set del_flag=2 where id = #{id}
+    </update>
+
+    <update id="deletePaySalaryByIds" parameterType="String">
+        update pay_salary set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
