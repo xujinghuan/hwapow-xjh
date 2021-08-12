@@ -101,6 +101,16 @@ public class WorksiteController extends BaseController
     }
 
     /**
+     * 获取工地下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(Worksite worksite)
+    {
+        List<Worksite> worksites = worksiteService.selectWorksiteList(worksite);
+        return AjaxResult.success(worksites);
+    }
+
+    /**
      * 删除工地
      */
     @PreAuthorize("@ss.hasPermi('worksite:worksite:remove')")

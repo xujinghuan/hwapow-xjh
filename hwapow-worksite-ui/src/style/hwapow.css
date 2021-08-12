@@ -168,6 +168,12 @@ aside{
 /******表格样式修改end*****/
 
 /**左侧每个菜单栏高度 start**/
+
+.el-menu .el-menu-item{
+  height: 50px;
+  line-height: 50px;
+}
+
 .el-submenu__title{
   height: 50px;
   line-height: 50px;

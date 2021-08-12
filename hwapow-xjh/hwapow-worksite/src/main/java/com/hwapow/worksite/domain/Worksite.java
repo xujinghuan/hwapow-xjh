@@ -24,6 +24,9 @@ public class Worksite extends BaseEntity
     @Excel(name = "工地名称")
     private String name;
 
+    /**用于显示树名称**/
+    private String label;
+
     /** 工地位置 */
     @Excel(name = "工地位置")
     private String address;
@@ -67,6 +70,10 @@ public class Worksite extends BaseEntity
         this.name = name;
     }
 
+    public String getLabel()
+    {
+        return name;
+    }
     public String getName()
     {
         return name;
