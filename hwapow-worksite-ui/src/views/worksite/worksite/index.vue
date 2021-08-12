@@ -74,7 +74,7 @@
           </template>
         </el-table-column>
         <el-table-column label="工地名称" align="center" prop="name"  width="250"/>
-        <el-table-column label="工地位置" align="center" prop="address" width="250"/>
+        <el-table-column label="工地位置" align="left" prop="address" width="250"/>
         <el-table-column label="工地单位" align="center" prop="serviceOrg" />
         <el-table-column label="开工时间" align="center" prop="startTime" width="100">
           <template slot-scope="scope">

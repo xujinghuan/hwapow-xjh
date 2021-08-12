@@ -66,7 +66,7 @@
             <span>{{ parseTime(scope.row.leaveDate, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="请假理由" align="center" prop="reason" />
+        <el-table-column label="请假理由" align="left" prop="reason" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130">
           <template slot-scope="scope">
             <el-button
