@@ -9,6 +9,14 @@ export function listWorksite(query) {
   })
 }
 
+// 查询工地下拉树结构
+export function worksiteTreeselect() {
+  return request({
+    url: '/worksite/worksite/treeselect',
+    method: 'get'
+  })
+}
+
 // 查询工地详细
 export function getWorksite(id) {
   return request({
