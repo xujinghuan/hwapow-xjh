@@ -91,6 +91,11 @@
             <span>{{ parseTime(scope.row.actualEndTime, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="状态" align="center" prop="status" >
+          <template slot-scope="scope">
+            <span>{{ scope.row.status==0?"启用":"停用" }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -170,6 +175,12 @@
                   </el-date-picker>
                 </el-form-item>
               </el-col>
+              <el-form-item label="状态">
+                <el-radio-group v-model="form.status">
+                  <el-radio label="0" value="0">启用</el-radio>
+                  <el-radio label="1" value="1">停用</el-radio>
+                </el-radio-group>
+              </el-form-item>
             </el-row>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
@@ -263,7 +274,8 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        remark: null
+        remark: null,
+        status: "0"
       };
       this.resetForm("form");
     },
