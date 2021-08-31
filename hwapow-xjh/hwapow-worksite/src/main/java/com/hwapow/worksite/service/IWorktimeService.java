@@ -1,5 +1,6 @@
 package com.hwapow.worksite.service;
 
+import java.util.Date;
 import java.util.List;
 import com.hwapow.worksite.domain.Worktime;
 
@@ -65,4 +66,10 @@ public interface IWorktimeService
      * @return
      */
     public String checkWorktimeUnique(Worktime worktime);
+
+    /***
+     * 获取最近一次工时
+     * @return
+     */
+    public Date getLastDay();
 }

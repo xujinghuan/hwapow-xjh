@@ -35,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workDate != null "> and work_date = #{workDate}</if>
             and (a.del_flag = 0 or a.del_flag is null)
         </where>
+        order by c.name desc,b.name desc
     </select>
 
     <select id="selectWorktimeById" parameterType="Long" resultMap="WorktimeResult">
@@ -107,5 +108,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="checkWorktimeUnique"  resultMap="WorktimeResult">
         <include refid="selectWorktimeVo"/>
         where (a.worker = #{worker} and a.work_date = #{workDate}) and (a.del_flag is null or a.del_flag = '0') limit 1
+    </select>
+
+    <select id="getLastDay" resultType="Date">
+        select MAX(work_date) from worktime where (del_flag = 0 or del_flag is null)
     </select>
 </mapper>

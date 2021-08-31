@@ -69,4 +69,10 @@ public interface WorktimeMapper
      * @return
      */
     public Worktime checkWorktimeUnique(@Param("worker")Long worker, @Param("workDate") Date workDate);
+
+    /***
+     * 获取最近一次工时
+     * @return
+     */
+    public Date getLastDay();
 }

@@ -1,5 +1,6 @@
 package com.hwapow.worksite.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.hwapow.common.constant.UserConstants;
@@ -115,5 +116,14 @@ public class WorktimeServiceImpl implements IWorktimeService
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /***
+     * 获取最近一次工时
+     * @return
+     */
+    @Override
+    public Date getLastDay(){
+        return this.worktimeMapper.getLastDay();
     }
 }

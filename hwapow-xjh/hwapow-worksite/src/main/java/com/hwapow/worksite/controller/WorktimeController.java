@@ -1,19 +1,16 @@
 package com.hwapow.worksite.controller;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+import com.hwapow.common.constant.HttpStatus;
 import com.hwapow.common.constant.UserConstants;
 import com.hwapow.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.hwapow.common.annotation.Log;
 import com.hwapow.common.core.controller.BaseController;
 import com.hwapow.common.core.domain.AjaxResult;
@@ -45,7 +42,19 @@ public class WorktimeController extends BaseController
     {
         startPage();
         List<Worktime> list = worktimeService.selectWorktimeList(worktime);
-        return getDataTable(list);
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        if(list==null||list.size()==0){
+            rspData.setMsg(null);
+            Date date=this.worktimeService.getLastDay();
+            if(date!=null){
+                rspData.setMsg(DateUtils.parseDateToStr("yyyy年MM月dd日",date));
+            }
+        }
+        rspData.setRows(list);
+        rspData.setTotal(new PageInfo(list).getTotal());
+        return rspData;
     }
 
     /**
@@ -87,6 +96,80 @@ public class WorktimeController extends BaseController
     }
 
     /**
+     * 导入工人数据
+     */
+    @PreAuthorize("@ss.hasPermi('worksite:worktime:add')")
+    @Log(title = "工时记录（导入工人）", businessType = BusinessType.INSERT)
+    @PostMapping("/importWorker")
+    public AjaxResult importWorker(@RequestParam(name="workDate") Date workDate, @RequestBody List<Long> workers)
+    {
+        if (workDate==null){
+            return AjaxResult.error("要导入的日期不能为空！");
+        }
+        if (workers==null||workers.size()==0){
+            return AjaxResult.error("要导入工人数据不能为空！");
+        }
+        int count =0;
+        for (Long worker:workers){
+            Worktime worktime=new Worktime();
+            worktime.setWorker(worker);
+            worktime.setWorkDate(workDate);
+            worktime.setWorkDate(workDate);
+            worktime.setTaskTime(new BigDecimal(0));
+            if (UserConstants.NOT_UNIQUE.equals(worktimeService.checkWorktimeUnique(worktime)))
+            {
+                continue;
+            }
+            worktimeService.insertWorktime(worktime);
+            count++;
+        }
+        return AjaxResult.success("导入成功！",count);
+    }
+
+    /**
+     * 导入最次一次工时记录
+     */
+    @PreAuthorize("@ss.hasPermi('worksite:worktime:add')")
+    @Log(title = "工时记录(导入最近一次数据)", businessType = BusinessType.INSERT)
+    @GetMapping("/importLastDay")
+    public AjaxResult importLastDay(Date workDate)
+    {
+        if (workDate==null){
+            return AjaxResult.error("要导入的日期不能为空！");
+        }
+        Worktime sworktime=new Worktime();
+        sworktime.setWorkDate(workDate);
+        List<Worktime> worktimes=this.worktimeService.selectWorktimeList(sworktime);
+        if (worktimes!=null&&worktimes.size()>0){
+            return AjaxResult.error(DateUtils.parseDateToStr("yyyy年mm月dd日",sworktime.getWorkDate())+"工时已记录，不需要导入！");
+        }
+        Date date=this.worktimeService.getLastDay();
+        if(date==null){
+            return AjaxResult.error("当前无数据可以导入");
+        }
+        sworktime.setWorkDate(date);
+        List<Worktime> lsatworktimes=this.worktimeService.selectWorktimeList(sworktime);
+        if(lsatworktimes==null&&lsatworktimes.size()==0){
+            return AjaxResult.error("当前无数据可以导入");
+        }
+        int count=0;
+        for(Worktime worktime : lsatworktimes){
+            worktime.setId(null);
+            worktime.setWorkDate(workDate);
+            worktime.setTaskTime(new BigDecimal(0));
+            worktime.setContent(null);
+            worktime.setRemark(null);
+            if (UserConstants.NOT_UNIQUE.equals(worktimeService.checkWorktimeUnique(worktime))&&worktime.getWorker()!=null)
+            {
+                continue;
+            }
+            worktimeService.insertWorktime(worktime);
+            count++;
+        }
+        return AjaxResult.success("导入成功！",count);
+    }
+
+    /**
      * 修改工时记录
      */
     @PreAuthorize("@ss.hasPermi('worksite:worktime:edit')")
@@ -111,4 +194,5 @@ public class WorktimeController extends BaseController
     {
         return toAjax(worktimeService.deleteWorktimeByIds(ids));
     }
+
 }
