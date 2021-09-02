@@ -30,9 +30,14 @@ public class SysDictData extends BaseEntity
     @Excel(name = "字典标签")
     private String dictLabel;
 
+    private String text;
+
     /** 字典键值 */
     @Excel(name = "字典键值")
     private String dictValue;
+
+    //为了某些组件的取值（不存库）
+    private String value;
 
     /** 字典类型 */
     @Excel(name = "字典类型")
@@ -118,6 +123,10 @@ public class SysDictData extends BaseEntity
     {
         this.cssClass = cssClass;
     }
+
+    public String getValue(){ return dictValue; }
+
+    public String getText(){ return dictLabel; }
 
     public String getListClass()
     {

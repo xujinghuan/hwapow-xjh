@@ -2,6 +2,7 @@ package com.hwapow.worksite.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.hwapow.common.annotation.Excel;
@@ -41,7 +42,7 @@ public class Worker extends BaseEntity
 
     /** 性别 */
     @Excel(name = "性别")
-    private Long sex;
+    private String sex;
 
     /** 出生日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -56,7 +57,7 @@ public class Worker extends BaseEntity
 
     /** 工种 */
     @Excel(name = "工种")
-    private Long workType;
+    private String workType;
 
     /** 银行账户名称 */
     private String accountName;
@@ -90,6 +91,9 @@ public class Worker extends BaseEntity
 
     public String getLabel()
     {
+        if(StringUtils.isNoneEmpty(nickname)){
+            return name+"("+nickname+")";
+        }
         return name;
     }
     public String getName()
@@ -123,12 +127,12 @@ public class Worker extends BaseEntity
     {
         return phone;
     }
-    public void setSex(Long sex)
+    public void setSex(String sex)
     {
         this.sex = sex;
     }
 
-    public Long getSex()
+    public String getSex()
     {
         return sex;
     }
@@ -159,12 +163,12 @@ public class Worker extends BaseEntity
     {
         return nativePlace;
     }
-    public void setWorkType(Long workType)
+    public void setWorkType(String workType)
     {
         this.workType = workType;
     }
 
-    public Long getWorkType()
+    public String getWorkType()
     {
         return workType;
     }
