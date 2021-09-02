@@ -178,7 +178,7 @@
                       v-for="dict in sexOptions"
                       :key="dict.dictValue"
                       :label="dict.dictLabel"
-                      :value="parseInt(dict.dictValue)"
+                      :value="dict.dictValue"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -216,7 +216,7 @@
                       v-for="dict in workTypeOptions"
                       :key="dict.dictValue"
                       :label="dict.dictLabel"
-                      :value="parseInt(dict.dictValue)"
+                      :value="dict.dictValue"
                     ></el-option>
                   </el-select>
                 </el-form-item>
