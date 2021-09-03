@@ -67,4 +67,12 @@ public interface WorksiteMapper
      * @return
      */
     public Worksite checkWorksiteUnique(String name);
+
+    /***
+     * 修改工人状态
+     * @param status
+     * @param id
+     * @return
+     */
+    public int updateWorksiteStatus(@Param("status")String status, @Param("id")Long id);
 }

@@ -3,6 +3,7 @@ package com.hwapow.worksite.controller;
 import java.util.List;
 
 import com.hwapow.common.constant.UserConstants;
+import com.hwapow.worksite.domain.Worker;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,6 +99,17 @@ public class WorksiteController extends BaseController
             return AjaxResult.error("修改工地'" + worksite.getName() + "'失败，工地名称已存在，请核实后保存");
         }
         return toAjax(worksiteService.updateWorksite(worksite));
+    }
+
+    /**
+     * 修改工地状态
+     */
+    @PreAuthorize("@ss.hasPermi('worksite:worksite:edit')")
+    @Log(title = "工地", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateStatus")
+    public AjaxResult updateStatus(@RequestBody Worksite worksite)
+    {
+        return toAjax(worksiteService.updateWorksiteStatus(worksite.getStatus(),worksite.getId()));
     }
 
     /**

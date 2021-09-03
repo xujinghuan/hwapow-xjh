@@ -8,6 +8,7 @@ import com.hwapow.common.utils.DateUtils;
 import com.hwapow.common.utils.SecurityUtils;
 import com.hwapow.common.utils.StringUtils;
 import com.hwapow.worksite.domain.Worker;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hwapow.worksite.mapper.WorksiteMapper;
@@ -115,5 +116,15 @@ public class WorksiteServiceImpl implements IWorksiteService
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /***
+     * 修改工地状态
+     * @param status
+     * @param id
+     * @return
+     */
+    public int updateWorksiteStatus(@Param("status")String status, @Param("id")Long id){
+        return this.worksiteMapper.updateWorksiteStatus(status,id);
     }
 }

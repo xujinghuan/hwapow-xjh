@@ -3,6 +3,7 @@ package com.hwapow.worksite.service;
 import java.util.List;
 
 import com.hwapow.worksite.domain.Worksite;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 工地Service接口
@@ -66,4 +67,12 @@ public interface IWorksiteService
      * @return
      */
     public String checkWorksiteUnique(Worksite workesite);
+
+    /***
+     * 修改工地状态
+     * @param status
+     * @param id
+     * @return
+     */
+    public int updateWorksiteStatus(@Param("status")String status, @Param("id")Long id);
 }
