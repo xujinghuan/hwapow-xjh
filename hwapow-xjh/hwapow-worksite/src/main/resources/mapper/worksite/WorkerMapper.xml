@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
              and (del_flag = 0 or del_flag is null)
         </where>
-        order by name desc
+        order by CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectWorkerById" parameterType="Long" resultMap="WorkerResult">
@@ -122,6 +122,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="deleteWorkerById" parameterType="Long">
         update worker set del_flag = 2 where id = #{id}
+    </update>
+
+    <update id="updateWorkerStatus" >
+        update worker set status = #{status} where id = #{id}
     </update>
 
     <select id="checkWorkerUnique"  resultMap="WorkerResult">

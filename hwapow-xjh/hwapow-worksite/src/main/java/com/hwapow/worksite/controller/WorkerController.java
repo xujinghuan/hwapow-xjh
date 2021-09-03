@@ -102,6 +102,17 @@ public class WorkerController extends BaseController
     }
 
     /**
+     * 修改工人状态
+     */
+    @PreAuthorize("@ss.hasPermi('worksite:worker:edit')")
+    @Log(title = "工人", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateStatus")
+    public AjaxResult updateStatus(@RequestBody Worker worker)
+    {
+        return toAjax(workerService.updateWorkerStatus(worker.getStatus(),worker.getId()));
+    }
+
+    /**
      * 获取工人下拉树列表
      */
     @GetMapping("/treeselect")

@@ -2,6 +2,7 @@ package com.hwapow.worksite.service;
 
 import java.util.List;
 import com.hwapow.worksite.domain.Worker;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 工人Service接口
@@ -65,4 +66,12 @@ public interface IWorkerService
      * @return
      */
     public String checkWorkerUnique(Worker worker);
+
+    /***
+     * 修改工人状态
+     * @param status
+     * @param id
+     * @return
+     */
+    public int updateWorkerStatus(@Param("status")String status, @Param("id")Long id);
 }
