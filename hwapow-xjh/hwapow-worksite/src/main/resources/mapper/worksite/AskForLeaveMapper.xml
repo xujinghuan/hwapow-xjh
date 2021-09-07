@@ -31,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="leaveDate != null "> and leave_date = #{leaveDate}</if>
             and (a.del_flag = 0 or a.del_flag is null)
         </where>
+        order by leave_date desc,create_time desc
     </select>
 
     <select id="selectAskForLeaveById" parameterType="Long" resultMap="AskForLeaveResult">
