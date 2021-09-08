@@ -242,6 +242,6 @@ public class WorktimeController extends BaseController
      */
     @GetMapping("/countOneYear")
     public AjaxResult countOneYear(Long worker,String year){
-        return AjaxResult.success(this.worktimeService.countOneMonth(worker,year));
+        return AjaxResult.success(this.worktimeService.countOneYear(worker,year));
     }
 }
