@@ -134,6 +134,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="countOneYear" resultType="java.util.Map">
-        select worker,worker_name,work_month,sum(task_time),sum(wage) as wage from v_worktime where work_year=#{year} and worker=#{worker} group by work_month order by work_month asc
+        select worker,worker_name,work_month,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_year=#{year} and worker=#{worker} group by work_month order by work_month asc
     </select>
 </mapper>
