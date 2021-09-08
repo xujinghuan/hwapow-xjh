@@ -113,4 +113,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getLastDay" resultType="Date">
         select MAX(work_date) from worktime where (del_flag = 0 or del_flag is null)
     </select>
+
+    <select id="countAllYear" resultType="java.util.Map">
+        select work_year,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_year=#{year} GROUP BY worker
+         order by CONVERT( worker_name USING gbk ) COLLATE gbk_chinese_ci ASC
+    </select>
+
+    <select id="countAllMonth" resultType="java.util.Map">
+        select work_month,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_month=#{month} GROUP BY worker
+         order by CONVERT( worker_name USING gbk ) COLLATE gbk_chinese_ci ASC
+    </select>
+
+    <select id="countAllDay" resultType="java.util.Map">
+        select work_date,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_date=#{day} GROUP BY worker
+         order by CONVERT( worker_name USING gbk ) COLLATE gbk_chinese_ci ASC
+    </select>
+
+    <select id="countOneMonth" resultType="java.util.Map">
+        select worker,worker_name,work_date,task_time,wage as wage from v_worktime where work_month=#{month} and worker=#{worker} order by work_date asc
+    </select>
+
+    <select id="countOneYear" resultType="java.util.Map">
+        select worker,worker_name,work_month,sum(task_time),sum(wage) as wage from v_worktime where work_year=#{year} and worker=#{worker} group by work_month order by work_month asc
+    </select>
 </mapper>

@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="worker"    column="worker"    />
         <result property="workerName"    column="worker_name"    />
+        <result property="payWayName"    column="pay_way_name"    />
         <result property="reason"    column="reason"    />
         <result property="salary"    column="salary"    />
         <result property="payDate"    column="pay_date"    />
@@ -21,7 +22,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPaySalaryVo">
-        select a.*,b.name as worker_name from pay_salary a left join worker b on a.worker=b.id
+        select a.*,b.name as worker_name,c.dict_label as pay_way_name from pay_salary a left join worker b on a.worker=b.id
+        left join (select * from sys_dict_data where dict_type='pay_way') c on a.pay_way=c.dict_value
     </sql>
 
     <select id="selectPaySalaryList" parameterType="PaySalary" resultMap="PaySalaryResult">

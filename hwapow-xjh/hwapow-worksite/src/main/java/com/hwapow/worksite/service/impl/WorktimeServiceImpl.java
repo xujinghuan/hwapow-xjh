@@ -2,6 +2,7 @@ package com.hwapow.worksite.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.hwapow.common.constant.UserConstants;
 import com.hwapow.common.core.domain.model.LoginUser;
@@ -125,5 +126,58 @@ public class WorktimeServiceImpl implements IWorktimeService
     @Override
     public Date getLastDay(){
         return this.worktimeMapper.getLastDay();
+    }
+
+    /**
+     * 全员按年统计
+     * @param year
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> countAllYear(String year){
+        return this.worktimeMapper.countAllYear(year);
+    }
+
+
+    /**
+     * 全员按月统计
+     * @param month
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> countAllMonth(String month){
+        return this.worktimeMapper.countAllMonth(month);
+    }
+
+    /**
+     * 全员按天统计
+     * @param day
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> countAllDay(String day){
+        return this.worktimeMapper.countAllDay(day);
+    }
+
+    /**
+     * 单人按月统计
+     * @param month
+     * @param worker
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> countOneMonth(Long worker,String month){
+        return this.worktimeMapper.countOneMonth(worker,month);
+    }
+
+    /**
+     * 单人按年统计
+     * @param year
+     * @param worker
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> countOneYear(Long worker,String year){
+        return this.worktimeMapper.countOneYear(worker,year);
     }
 }

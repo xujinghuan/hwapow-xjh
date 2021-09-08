@@ -2,6 +2,7 @@ package com.hwapow.worksite.mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.hwapow.worksite.domain.Worktime;
 import org.apache.ibatis.annotations.Param;
@@ -75,4 +76,41 @@ public interface WorktimeMapper
      * @return
      */
     public Date getLastDay();
+
+    /**
+     * 全员按年统计
+     * @param year
+     * @return
+     */
+    public List<Map<String,Object>> countAllYear(@Param("year")String year);
+
+    /**
+     * 全员按月统计
+     * @param month
+     * @return
+     */
+    public List<Map<String,Object>> countAllMonth(@Param("month")String month);
+
+    /**
+     * 全员按天统计
+     * @param day
+     * @return
+     */
+    public List<Map<String,Object>> countAllDay(@Param("day")String day);
+
+    /**
+     * 单人按月统计
+     * @param month
+     * @param worker
+     * @return
+     */
+    public List<Map<String,Object>> countOneMonth(@Param("worker")Long worker,@Param("month")String month);
+
+    /**
+     * 单人按年统计
+     * @param year
+     * @param worker
+     * @return
+     */
+    public List<Map<String,Object>> countOneYear(@Param("worker")Long worker,@Param("year")String year);
 }

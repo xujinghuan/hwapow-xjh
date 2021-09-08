@@ -195,4 +195,53 @@ public class WorktimeController extends BaseController
         return toAjax(worktimeService.deleteWorktimeByIds(ids));
     }
 
+    /**
+     * 全员按年统计
+     * @param year
+     * @return
+     */
+    @GetMapping("/countAllYear")
+    public AjaxResult countAllYear(String year){
+        return AjaxResult.success(this.worktimeService.countAllYear(year));
+    }
+
+    /**
+     * 全员按月统计
+     * @param month
+     * @return
+     */
+    @GetMapping("/countAllMonth")
+    public AjaxResult countAllMonth(String month){
+        return AjaxResult.success(this.worktimeService.countAllMonth(month));
+    }
+
+    /**
+     * 全员按天统计
+     * @param day
+     * @return
+     */
+    @GetMapping("/countAllDay")
+    public AjaxResult countAllDay(String day){
+        return AjaxResult.success(this.worktimeService.countAllDay(day));
+    }
+
+    /**
+     * 单人按月统计
+     * @param month
+     * @return
+     */
+    @GetMapping("/countOneMonth")
+    public AjaxResult countOneMonth(Long worker,String month){
+        return AjaxResult.success(this.worktimeService.countOneMonth(worker,month));
+    }
+
+    /**
+     * 单人按年统计
+     * @param year
+     * @return
+     */
+    @GetMapping("/countOneYear")
+    public AjaxResult countOneYear(Long worker,String year){
+        return AjaxResult.success(this.worktimeService.countOneMonth(worker,year));
+    }
 }

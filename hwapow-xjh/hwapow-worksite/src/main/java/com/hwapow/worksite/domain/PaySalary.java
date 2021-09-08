@@ -28,6 +28,9 @@ public class PaySalary extends BaseEntity
     /*为了显示*/
     private String workerName;
 
+    /*为了显示*/
+    private String payWayName;
+
     /** 理由 */
     @Excel(name = "理由")
     private String reason;
@@ -42,7 +45,7 @@ public class PaySalary extends BaseEntity
     private Date payDate;
 
     /**工资发放路径*/
-    private Long payWay;
+    private String payWay;
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
@@ -105,11 +108,15 @@ public class PaySalary extends BaseEntity
         return delFlag;
     }
 
-    public Long getPayWay() {
+    public String getPayWay() {
         return payWay;
     }
 
-    public void setPayWay(Long payWay) {
+    public String getPayWayName() {
+        return payWayName;
+    }
+
+    public void setPayWay(String payWay) {
         this.payWay = payWay;
     }
 

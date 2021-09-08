@@ -2,7 +2,10 @@ package com.hwapow.worksite.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.hwapow.worksite.domain.Worktime;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 工时记录Service接口
@@ -72,4 +75,42 @@ public interface IWorktimeService
      * @return
      */
     public Date getLastDay();
+
+    /**
+     * 全员按年统计
+     * @param year
+     * @return
+     */
+    public List<Map<String,Object>> countAllYear(String year);
+
+
+    /**
+     * 全员按月统计
+     * @param month
+     * @return
+     */
+    public List<Map<String,Object>> countAllMonth(String month);
+
+    /**
+     * 全员按天统计
+     * @param day
+     * @return
+     */
+    public List<Map<String,Object>> countAllDay(String day);
+
+    /**
+     * 单人按月统计
+     * @param month
+     * @param worker
+     * @return
+     */
+    public List<Map<String,Object>> countOneMonth(Long worker,String month);
+
+    /**
+     * 单人按年统计
+     * @param year
+     * @param worker
+     * @return
+     */
+    public List<Map<String,Object>> countOneYear(Long worker,String year);
 }
