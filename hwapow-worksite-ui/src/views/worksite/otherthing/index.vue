@@ -67,7 +67,7 @@
         </el-table-column>
         <el-table-column label="内容" align="left" prop="content" >
           <template slot-scope="scope">
-            <span v-html="scope.row.content"></span>
+            <span>{{scope.row.content}}</span>
           </template>
         </el-table-column>
         <el-table-column label="记录日期" align="center" prop="recordDate" width="100">
@@ -122,7 +122,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="内容">
-              <editor v-model="form.content" :min-height="192" />
+              <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
             </el-form-item>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
