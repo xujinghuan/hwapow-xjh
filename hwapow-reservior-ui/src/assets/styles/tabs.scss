@@ -1,0 +1,13 @@
+.el-tabs--card{
+  .el-tabs__header {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 0;
+  }
+
+  /*Tabs标签高度35px*/
+  .el-tabs__item {
+    height: 34px;
+    line-height: 34px;
+  }
+}
