@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.reservior.mapper.ResSectionMapper">
+    
+    <resultMap type="ResSection" id="ResSectionResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="sort"    column="sort"    />
+        <result property="orgId"    column="org_id"    />
+        <result property="orgName"    column="org_name"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectResSectionVo">
+        select a.*,b.org_name as org_name from res_section a left join sys_org b on a.org_id = b.org_id
+    </sql>
+
+    <select id="selectResSectionList" parameterType="ResSection" resultMap="ResSectionResult">
+        <include refid="selectResSectionVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and a.code like concat('%', #{code}, '%')</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            and (a.del_flag is null or a.del_flag = '0')
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectResSectionById" parameterType="Long" resultMap="ResSectionResult">
+        <include refid="selectResSectionVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertResSection" parameterType="ResSection" useGeneratedKeys="true" keyProperty="id">
+        insert into res_section
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="sort != null">sort,</if>
+            <if test="orgId != null">org_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="orgId != null">#{orgId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateResSection" parameterType="ResSection">
+        update res_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="orgId != null">org_id = #{orgId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="checkSectionUnique" resultMap="ResSectionResult">
+        <include refid="selectResSectionVo"/>
+        where a.code = #{code} and a.org_id=#{orgId} and (a.del_flag is null or a.del_flag = '0') limit 1
+    </select>
+    
+    <update id="deleteResSectionById" parameterType="Long">
+       update res_section set del_flag=2 where id = #{id}
+    </update>
+
+    <update id="deleteResSectionByIds" parameterType="String">
+        update res_section set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
