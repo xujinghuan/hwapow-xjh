@@ -1,8 +1,8 @@
 module.exports = {
   //网站标题，在登陆页展示
-  title: '工地管理系统',
+  title: 'XXXX系统',
   //网站缩写标题，在主界面左上方展示（最多支持十个字）
-  title_abbr:'工地管理系统',
+  title_abbr:'XXXXX系统',
   //后端地址和端口
   backIPPort:'127.0.0.1:8080',
   /**

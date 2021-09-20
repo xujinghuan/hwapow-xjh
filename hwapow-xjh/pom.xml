@@ -205,6 +205,7 @@
         <module>hwapow-generator</module>
         <module>hwapow-common</module>
         <module>hwapow-worksite</module>
+        <module>hwapow-reservior</module>
     </modules>
     <packaging>pom</packaging>
 
