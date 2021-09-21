@@ -186,7 +186,17 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        code:[
+          { required: true, message: "编码不能为空", trigger: "blur" }
+        ],
+        name:[
+          { required: true, message: "名称不能为空", trigger: "blur" }
+        ],
+        orgId:[
+          { required: true, message: "水库不能为空", trigger: "blur" }
+        ]
+      }
     };
   },
   created() {

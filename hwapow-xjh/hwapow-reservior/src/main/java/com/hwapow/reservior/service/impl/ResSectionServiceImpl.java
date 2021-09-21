@@ -112,7 +112,7 @@ public class ResSectionServiceImpl implements IResSectionService
      */
     @Override
     public String checkSectionUnique(ResSection resSection){
-        ResSection resSectionC = resSectionMapper.checkSectionUnique(resSection.getName(),resSection.getOrgId());
+        ResSection resSectionC = resSectionMapper.checkSectionUnique(resSection.getCode(),resSection.getOrgId());
         if (StringUtils.isNotNull(resSectionC) && !resSectionC.getId().equals(resSection.getId()))
         {
             return UserConstants.NOT_UNIQUE;

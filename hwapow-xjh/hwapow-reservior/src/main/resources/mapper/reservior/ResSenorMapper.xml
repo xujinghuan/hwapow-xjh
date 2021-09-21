@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.reservior.mapper.ResSenorMapper">
+
+    <resultMap type="ResSenor" id="ResSenorResult">
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="sectionId" column="section_id"/>
+        <result property="sectionName" column="section_name"/>
+        <result property="orgName" column="org_name"/>
+        <result property="zeroElevation" column="zero_elevation"/>
+        <result property="nozzleElevation" column="nozzle_elevation"/>
+        <result property="getInstruction" column="get_instruction"/>
+        <result property="x" column="x"/>
+        <result property="y" column="y"/>
+        <result property="sort" column="sort"/>
+        <result property="backIdentification" column="back_identification"/>
+        <result property="backIdenIndexS" column="back_iden_index_s"/>
+        <result property="backIdenIndexE" column="back_iden_index_e"/>
+        <result property="backDataIndexS" column="back_data_index_s"/>
+        <result property="backDataIndexE" column="back_data_index_e"/>
+        <result property="backDataFormula" column="back_data_formula"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectResSenorVo">
+        select a.*,b.name as section_name,b.org_name as org_name from res_senor a left join
+        ( select a.*,b.org_name as org_name from res_section a left join sys_org b on a.org_id = b.org_id where (a.del_flag is null or a.del_flag = '0')) b
+        on a.section_id=b.id
+    </sql>
+
+    <select id="selectResSenorList" parameterType="ResSenor" resultMap="ResSenorResult">
+        <include refid="selectResSenorVo"/>
+        <where>
+            <if test="code != null  and code != ''">and code like concat('%', #{code}, '%')</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            and (a.del_flag is null or a.del_flag = '0')
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="selectResSenorById" parameterType="Long" resultMap="ResSenorResult">
+        <include refid="selectResSenorVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertResSenor" parameterType="ResSenor" useGeneratedKeys="true" keyProperty="id">
+        insert into res_senor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="sectionId != null">section_id,</if>
+            <if test="zeroElevation != null">zero_elevation,</if>
+            <if test="nozzleElevation != null">nozzle_elevation,</if>
+            <if test="getInstruction != null">get_instruction,</if>
+            <if test="x != null">x,</if>
+            <if test="y != null">y,</if>
+            <if test="sort != null">sort,</if>
+            <if test="backIdentification != null">back_identification,</if>
+            <if test="backIdenIndexS != null">back_iden_index_s,</if>
+            <if test="backIdenIndexE != null">back_iden_index_e,</if>
+            <if test="backDataIndexS != null">back_data_index_s,</if>
+            <if test="backDataIndexE != null">back_data_index_e,</if>
+            <if test="backDataFormula != null">back_data_formula,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sectionId != null">#{sectionId},</if>
+            <if test="zeroElevation != null">#{zeroElevation},</if>
+            <if test="nozzleElevation != null">#{nozzleElevation},</if>
+            <if test="getInstruction != null">#{getInstruction},</if>
+            <if test="x != null">#{x},</if>
+            <if test="y != null">#{y},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="backIdentification != null">#{backIdentification},</if>
+            <if test="backIdenIndexS != null">#{backIdenIndexS},</if>
+            <if test="backIdenIndexE != null">#{backIdenIndexE},</if>
+            <if test="backDataIndexS != null">#{backDataIndexS},</if>
+            <if test="backDataIndexE != null">#{backDataIndexE},</if>
+            <if test="backDataFormula != null">#{backDataFormula},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateResSenor" parameterType="ResSenor">
+        update res_senor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="sectionId != null">section_id = #{sectionId},</if>
+            <if test="zeroElevation != null">zero_elevation = #{zeroElevation},</if>
+            <if test="nozzleElevation != null">nozzle_elevation = #{nozzleElevation},</if>
+            <if test="getInstruction != null">get_instruction = #{getInstruction},</if>
+            <if test="x != null">x = #{x},</if>
+            <if test="y != null">y = #{y},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="backIdentification != null">back_identification = #{backIdentification},</if>
+            <if test="backIdenIndexS != null">back_iden_index_s = #{backIdenIndexS},</if>
+            <if test="backIdenIndexE != null">back_iden_index_e = #{backIdenIndexE},</if>
+            <if test="backDataIndexS != null">back_data_index_s = #{backDataIndexS},</if>
+            <if test="backDataIndexE != null">back_data_index_e = #{backDataIndexE},</if>
+            <if test="backDataFormula != null">back_data_formula = #{backDataFormula},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="checkSenorUnique" resultMap="ResSenorResult">
+        <include refid="selectResSenorVo"/>
+        where a.code = #{code} and a.section_id=#{sectionId} and (a.del_flag is null or a.del_flag = '0') limit 1
+    </select>
+    
+    <update id="deleteResSenorById" parameterType="Long">
+       update res_senor set del_flag=2 where id = #{id}
+    </update>
+
+    <update id="deleteResSenorByIds" parameterType="String">
+        update res_senor set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
