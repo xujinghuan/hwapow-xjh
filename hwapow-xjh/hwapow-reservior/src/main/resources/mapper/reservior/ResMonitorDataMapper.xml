@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.reservior.mapper.ResMonitorDataMapper">
+    
+    <resultMap type="ResMonitorData" id="ResMonitorDataResult">
+        <result property="id"    column="id"    />
+        <result property="senorId"    column="senor_id"    />
+        <result property="getTime"    column="get_time"    />
+        <result property="backInstruction"    column="back_instruction"    />
+        <result property="rawData"    column="raw_data"    />
+        <result property="data"    column="data"    />
+        <result property="sectionId"    column="section_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectResMonitorDataVo">
+        select a.*,b.name as section_name,b.org_name as org_name from res_monitor_data a left join
+        ( select a.*,b.org_name as org_name from res_section a left join sys_org b on a.org_id = b.org_id where (a.del_flag is null or a.del_flag = '0')) b
+        on a.section_id=b.id
+    </sql>
+
+    <select id="selectResMonitorDataList" parameterType="ResMonitorData" resultMap="ResMonitorDataResult">
+        <include refid="selectResMonitorDataVo"/>
+        <where>  
+            <if test="getTime != null "> and get_time = #{getTime}</if>
+            and (a.del_flag is null or a.del_flag = '0')
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectResMonitorDataById" parameterType="Long" resultMap="ResMonitorDataResult">
+        <include refid="selectResMonitorDataVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertResMonitorData" parameterType="ResMonitorData" useGeneratedKeys="true" keyProperty="id">
+        insert into res_monitor_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="senorId != null">senor_id,</if>
+            <if test="getTime != null">get_time,</if>
+            <if test="backInstruction != null">back_instruction,</if>
+            <if test="rawData != null">raw_data,</if>
+            <if test="data != null">data,</if>
+            <if test="sectionId != null">section_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="senorId != null">#{senorId},</if>
+            <if test="getTime != null">#{getTime},</if>
+            <if test="backInstruction != null">#{backInstruction},</if>
+            <if test="rawData != null">#{rawData},</if>
+            <if test="data != null">#{data},</if>
+            <if test="sectionId != null">#{sectionId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateResMonitorData" parameterType="ResMonitorData">
+        update res_monitor_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="senorId != null">senor_id = #{senorId},</if>
+            <if test="getTime != null">get_time = #{getTime},</if>
+            <if test="backInstruction != null">back_instruction = #{backInstruction},</if>
+            <if test="rawData != null">raw_data = #{rawData},</if>
+            <if test="data != null">data = #{data},</if>
+            <if test="sectionId != null">section_id = #{sectionId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteResMonitorDataById" parameterType="Long">
+        update res_monitor_data  set del_flag=2 where id = #{id}
+    </update>
+
+    <update id="deleteResMonitorDataByIds" parameterType="String">
+        update res_monitor_data  set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
