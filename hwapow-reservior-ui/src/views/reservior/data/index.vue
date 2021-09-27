@@ -67,7 +67,6 @@
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="数据获取时间" align="center" prop="id"/>
         <el-table-column label="传感器设备id" align="center" prop="senorId"/>
         <el-table-column label="数据获取时间" align="center" prop="getTime" width="180">
           <template slot-scope="scope">

@@ -1,8 +1,13 @@
 package com.hwapow;
 
+import com.hwapow.rxtx.core.PortLister;
+import com.hwapow.rxtx.core.SerialPortUtil;
+import com.hwapow.rxtx.service.impl.PortService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+
+import javax.annotation.PreDestroy;
 
 /**
  * 启动程序
@@ -24,5 +29,13 @@ public class HwapowApplication
                         " |____|    \\_____>______/__|  \\_____>___/\\__\\____/ \n" +
                         "\n " +
                         "水库监测系统启动成功 \n");
+    }
+
+    @PreDestroy
+    public void destory() {
+        //关闭应用前 关闭端口
+        SerialPortUtil serialPortUtil = SerialPortUtil.getSerialPortUtil();
+        serialPortUtil.removeListener(PortService.serialPort, new PortLister());
+        serialPortUtil.closePort(PortService.serialPort);
     }
 }
