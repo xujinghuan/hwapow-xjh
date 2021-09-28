@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '350px'
+      default: '400px'
     },
     autoResize: {
       type: Boolean,
@@ -33,7 +33,8 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      chartColor:["#3888fa","#ff1e00","#ffc300","#4e6ef2","#11FF00","#4f6ef2","#fd1e00","#FF005A"]
     }
   },
   watch: {
@@ -61,13 +62,58 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    /**
+     * xAxisData X轴显示内容，数组，如['1月',‘2月’,'3月']
+     * seriesData 有几种数据，显示几条线，包括数据。对象数组，如[{name:'水位',data:['10','20','30'],areaStyle:{}}，{name:'雨量',data:['13','24','35'],areaStyle:{}}]
+     *            name:数据类型，
+     *            data：具体数据，
+     *            areaStyle：是否展示面积图
+     * yAxisUnit y轴单位
+     * yAxisDcale y刻度是否从0开始，默认true，不从0开始，false则是从0开始
+     * @param D
+     */
+    setOptions(D) {
+      var legendData=[];
+      var seriesData=[];
+      for(var i in D.seriesData){
+        legendData.push(D.seriesData[i].name)
+        seriesData.push({
+          name: D.seriesData[i].name,
+          itemStyle: {
+            normal: {
+              color: this.chartColor[i%8],
+              lineStyle: {
+                color: this.chartColor[i%8],
+                width: 2
+              }
+            }
+          },
+          smooth: true,
+          areaStyle:D.seriesData[i].areaStyle?D.seriesData[i].areaStyle:null,
+          type: D.seriesData[i].type?D.seriesData[i].type:'line',
+          data: D.seriesData[i].data,
+          animationDuration: 2800,
+          animationEasing: 'cubicInOut',
+          label: {
+            show: true
+          }
+        });
+      }
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
+          data: D.xAxisData,
+          boundaryGap: true,
           axisTick: {
             show: false
+          }
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {},
+            dataView: { readOnly: true },
+            magicType: { type: [ 'bar'] },
+            restore: {}
           }
         },
         grid: {
@@ -87,47 +133,17 @@ export default {
         yAxis: {
           axisTick: {
             show: false
+          },
+          scale:true,
+          type:"value",
+          axisLabel: {
+            formatter:'{value}'+(D.yAxisUnit?D.yAxisUnit:"")
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: legendData
         },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+        series: seriesData
       })
     }
   }

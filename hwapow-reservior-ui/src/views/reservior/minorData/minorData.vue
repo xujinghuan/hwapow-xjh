@@ -2,13 +2,53 @@
   <el-container class="fullContainer">
     <el-header style="height: auto;">
       <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-        <el-form-item label="数据获取时间" prop="getTime">
-          <el-date-picker clearable
-                          v-model="queryParams.getTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择数据获取时间">
+        <el-form-item label="年份" prop="getYear">
+          <el-date-picker
+            v-model="queryParams.params.getYear"
+            type="year"
+            value-format="yyyy"
+            placeholder="选择年份" clearable>
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="月份" prop="getMonth">
+          <el-select v-model="queryParams.params.getMonth" placeholder="请选择月份" clearable>
+            <el-option
+              v-for="item in monthOptions"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="日期" prop="getDay">
+          <el-select v-model="queryParams.params.getDay" placeholder="请选择日期" clearable>
+            <el-option
+              v-for="item in dayOptions"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="断面" prop="sectionId">
+          <el-select v-model="queryParams.sectionId" placeholder="请选择所属断面" clearable>
+            <el-option
+              v-for="dict in sectionOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设备" prop="senorId">
+          <el-select v-model="queryParams.senorId" placeholder="请选择所属断面" clearable>
+            <el-option
+              v-for="dict in senorOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -24,8 +64,8 @@
         size="mini"
         @click="handleAdd"
         v-hasPermi="['reservior:data:add']"
-      >新增</el-button>-->
-      <!--<el-button
+      >新增</el-button>
+      <el-button
         type="success"
         plain
         icon="el-icon-edit"
@@ -35,15 +75,15 @@
         v-hasPermi="['reservior:data:edit']"
       >修改</el-button>-->
       <el-button
-        type="danger"
-        plain
-        icon="el-icon-delete"
-        size="mini"
-        :disabled="multiple"
-        @click="handleDelete"
-        v-hasPermi="['reservior:data:remove']"
-      >删除
-      </el-button>
+         type="danger"
+         plain
+         icon="el-icon-delete"
+         size="mini"
+         :disabled="multiple"
+         @click="handleDelete"
+         v-hasPermi="['reservior:data:remove']"
+       >删除
+       </el-button>
       <el-button
         type="warning"
         plain
@@ -67,27 +107,27 @@
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="传感器设备id" align="center" prop="senorId"/>
+        <el-table-column label="水库" align="center" prop="orgName"/>
+        <el-table-column label="断面" align="center" prop="sectionName"/>
+        <el-table-column label="设备" align="center" prop="senorName"/>
         <el-table-column label="数据获取时间" align="center" prop="getTime" width="180">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.getTime, '{y}-{m}-{d}') }}</span>
+            <span>{{ parseTime(scope.row.getTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="返回指令" align="center" prop="backInstruction"/>
         <el-table-column label="原始数据" align="center" prop="rawData"/>
         <el-table-column label="数据" align="center" prop="data"/>
-        <el-table-column label="断面" align="center" prop="sectionName"/>
-        <el-table-column label="水库" align="center" prop="orgName"/>
-        <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button
+            <!--<el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['reservior:data:edit']"
             >修改
-            </el-button>
+            </el-button>-->
             <el-button
               size="mini"
               type="text"
@@ -97,7 +137,7 @@
             >删除
             </el-button>
           </template>
-        </el-table-column>-->
+        </el-table-column>
       </el-table>
     </el-main>
     <el-footer>
@@ -127,9 +167,11 @@
 
 <script>
 import {listData, getData, delData, addData, updateData, exportData} from "@/api/reservior/data";
+import {listSection} from "@/api/reservior/section";
+import {listSenor} from "@/api/reservior/senor";
 
 export default {
-  name: "Data",
+  name: "MinorData",
   components: {},
   data() {
     return {
@@ -155,16 +197,27 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        getTime: null,
+        params:{
+          getYear: null,
+          getMonth: null,
+          getDay: null
+        },
+        sectionId:null,
+        senorId:null
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {},
+      sectionOptions:[],//断面集合
+      senorOptions:[],//设备集合
+      monthOptions: ["01","02","03","04","05","06","07","08","09","10","11","12"],
+      dayOptions: ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
     };
   },
   created() {
     this.getList();
+    this.initQuery();
   },
   methods: {
     /** 查询传感器监测数据列表 */
@@ -174,6 +227,14 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    initQuery(){
+      listSection().then(response => {
+        this.sectionOptions = response.rows;
+      });
+      listSenor().then(response => {
+        this.senorOptions = response.rows;
       });
     },
     // 取消按钮
@@ -269,7 +330,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有传感器监测数据数据项?', "警告", {
+      this.$confirm('是否确认导出传感器监测数据数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

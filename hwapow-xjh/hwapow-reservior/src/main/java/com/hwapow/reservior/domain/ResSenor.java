@@ -1,6 +1,7 @@
 package com.hwapow.reservior.domain;
 
 import java.math.BigDecimal;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.hwapow.common.annotation.Excel;
@@ -12,24 +13,41 @@ import com.hwapow.common.core.domain.BaseEntity;
  * @author hwapow
  * @date 2021-09-20
  */
-public class ResSenor extends BaseEntity
-{
+public class ResSenor extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
-    /** 设备编码 */
+    /**
+     * 设备编码
+     */
     @Excel(name = "设备编码")
     private String code;
 
-    /** 设备名称 */
+    /*
+     *对应设备id（每个坝体设备对应一个坝基设备）
+     */
+    private Long matchSenorId;
+
+    /**
+     * 设备名称
+     */
     @Excel(name = "设备名称")
     private String name;
 
-    /** 所属断面 */
+    /**
+     * 所属断面
+     */
     @Excel(name = "所属断面")
     private Long sectionId;
+
+    /**
+     * 所属类型（字典类型）
+     */
+    private String type;
 
     /**
      * 用于断面名称
@@ -41,84 +59,113 @@ public class ResSenor extends BaseEntity
      */
     private String orgName;
 
-    /** 零点高程 */
+    /**
+     * 零点高程
+     */
     @Excel(name = "零点高程")
     private BigDecimal zeroElevation;
 
-    /** 管口高程 */
+    /**
+     * 管口高程
+     */
     @Excel(name = "管口高程")
     private BigDecimal nozzleElevation;
 
-    /** 取数指令 */
+    /**
+     * 取数指令
+     */
     @Excel(name = "取数指令")
     private String getInstruction;
 
-    /** 以水库图左上角为原点，x轴距离原点的百分比 */
+    /**
+     * 以水库图左上角为原点，x轴距离原点的百分比
+     */
     private BigDecimal x;
 
-    /** 以水库图左上角为原点，y轴距离原点的百分比 */
+    /**
+     * 以水库图左上角为原点，y轴距离原点的百分比
+     */
     private BigDecimal y;
 
-    /** 顺序号 */
+    /**
+     * 顺序号
+     */
     @Excel(name = "顺序号")
     private Integer sort;
 
-    /** 返回指令设备标识，比如返回指令01代表设备T1-1 */
+    /**
+     * 返回指令设备标识，比如返回指令01代表设备T1-1
+     */
     private String backIdentification;
 
-    /** 返回指令中设备标识开始下标 */
+    /**
+     * 返回指令中设备标识开始下标
+     */
     private Integer backIdenIndexS;
 
-    /** 返回指令中设备标识结束下标 */
+    /**
+     * 返回指令中设备标识结束下标
+     */
     private Integer backIdenIndexE;
 
-    /** 返回指令中数据开始下标 */
+    /**
+     * 返回指令中数据开始下标
+     */
     private Integer backDataIndexS;
 
-    /** 返回指令中数据结束下标 */
+    /**
+     * 返回指令中数据结束下标
+     */
     private Integer backDataIndexE;
 
-    /** 返回数据计算公式（sql） */
+    /**
+     * 返回数据计算公式（sql）
+     */
     private String backDataFormula;
 
-    /** 删除标志（0代表存在 2代表删除） */
+    /**
+     * 删除标志（0代表存在 2代表删除）
+     */
     private String delFlag;
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
-    public void setCode(String code)
-    {
+
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public String getCode()
-    {
+    public String getCode() {
         return code;
     }
-    public void setName(String name)
-    {
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
-    public void setSectionId(Long sectionId)
-    {
+
+    public void setSectionId(Long sectionId) {
         this.sectionId = sectionId;
     }
 
-    public Long getSectionId()
-    {
+    public Long getSectionId() {
         return sectionId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getSectionName() {
@@ -137,149 +184,143 @@ public class ResSenor extends BaseEntity
         this.orgName = orgName;
     }
 
-    public void setZeroElevation(BigDecimal zeroElevation)
-    {
+    public void setZeroElevation(BigDecimal zeroElevation) {
         this.zeroElevation = zeroElevation;
     }
 
-    public BigDecimal getZeroElevation()
-    {
+    public BigDecimal getZeroElevation() {
         return zeroElevation;
     }
-    public void setNozzleElevation(BigDecimal nozzleElevation)
-    {
+
+    public void setNozzleElevation(BigDecimal nozzleElevation) {
         this.nozzleElevation = nozzleElevation;
     }
 
-    public BigDecimal getNozzleElevation()
-    {
+    public BigDecimal getNozzleElevation() {
         return nozzleElevation;
     }
-    public void setGetInstruction(String getInstruction)
-    {
+
+    public void setGetInstruction(String getInstruction) {
         this.getInstruction = getInstruction;
     }
 
-    public String getGetInstruction()
-    {
+    public String getGetInstruction() {
         return getInstruction;
     }
-    public void setX(BigDecimal x)
-    {
+
+    public void setX(BigDecimal x) {
         this.x = x;
     }
 
-    public BigDecimal getX()
-    {
+    public BigDecimal getX() {
         return x;
     }
-    public void setY(BigDecimal y)
-    {
+
+    public void setY(BigDecimal y) {
         this.y = y;
     }
 
-    public BigDecimal getY()
-    {
+    public BigDecimal getY() {
         return y;
     }
-    public void setSort(Integer sort)
-    {
+
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 
-    public Integer getSort()
-    {
+    public Integer getSort() {
         return sort;
     }
-    public void setBackIdentification(String backIdentification)
-    {
+
+    public void setBackIdentification(String backIdentification) {
         this.backIdentification = backIdentification;
     }
 
-    public String getBackIdentification()
-    {
+    public String getBackIdentification() {
         return backIdentification;
     }
-    public void setBackIdenIndexS(Integer backIdenIndexS)
-    {
+
+    public void setBackIdenIndexS(Integer backIdenIndexS) {
         this.backIdenIndexS = backIdenIndexS;
     }
 
-    public Integer getBackIdenIndexS()
-    {
+    public Integer getBackIdenIndexS() {
         return backIdenIndexS;
     }
-    public void setBackIdenIndexE(Integer backIdenIndexE)
-    {
+
+    public void setBackIdenIndexE(Integer backIdenIndexE) {
         this.backIdenIndexE = backIdenIndexE;
     }
 
-    public Integer getBackIdenIndexE()
-    {
+    public Integer getBackIdenIndexE() {
         return backIdenIndexE;
     }
-    public void setBackDataIndexS(Integer backDataIndexS)
-    {
+
+    public void setBackDataIndexS(Integer backDataIndexS) {
         this.backDataIndexS = backDataIndexS;
     }
 
-    public Integer getBackDataIndexS()
-    {
+    public Integer getBackDataIndexS() {
         return backDataIndexS;
     }
-    public void setBackDataIndexE(Integer backDataIndexE)
-    {
+
+    public void setBackDataIndexE(Integer backDataIndexE) {
         this.backDataIndexE = backDataIndexE;
     }
 
-    public Integer getBackDataIndexE()
-    {
+    public Integer getBackDataIndexE() {
         return backDataIndexE;
     }
-    public void setBackDataFormula(String backDataFormula)
-    {
+
+    public void setBackDataFormula(String backDataFormula) {
         this.backDataFormula = backDataFormula;
     }
 
-    public String getBackDataFormula()
-    {
+    public String getBackDataFormula() {
         return backDataFormula;
     }
-    public void setDelFlag(String delFlag)
-    {
+
+    public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag()
-    {
+    public String getDelFlag() {
         return delFlag;
+    }
+
+    public Long getMatchSenorId() {
+        return matchSenorId;
+    }
+
+    public void setMatchSenorId(Long matchSenorId) {
+        this.matchSenorId = matchSenorId;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("code", getCode())
-            .append("name", getName())
-            .append("sectionId", getSectionId())
-            .append("zeroElevation", getZeroElevation())
-            .append("nozzleElevation", getNozzleElevation())
-            .append("getInstruction", getGetInstruction())
-            .append("x", getX())
-            .append("y", getY())
-            .append("sort", getSort())
-            .append("backIdentification", getBackIdentification())
-            .append("backIdenIndexS", getBackIdenIndexS())
-            .append("backIdenIndexE", getBackIdenIndexE())
-            .append("backDataIndexS", getBackDataIndexS())
-            .append("backDataIndexE", getBackDataIndexE())
-            .append("backDataFormula", getBackDataFormula())
-            .append("delFlag", getDelFlag())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("code", getCode())
+                .append("name", getName())
+                .append("sectionId", getSectionId())
+                .append("zeroElevation", getZeroElevation())
+                .append("nozzleElevation", getNozzleElevation())
+                .append("getInstruction", getGetInstruction())
+                .append("x", getX())
+                .append("y", getY())
+                .append("sort", getSort())
+                .append("backIdentification", getBackIdentification())
+                .append("backIdenIndexS", getBackIdenIndexS())
+                .append("backIdenIndexE", getBackIdenIndexE())
+                .append("backDataIndexS", getBackDataIndexS())
+                .append("backDataIndexE", getBackDataIndexE())
+                .append("backDataFormula", getBackDataFormula())
+                .append("delFlag", getDelFlag())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .toString();
     }
 }

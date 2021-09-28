@@ -42,11 +42,13 @@
         <where>
             <if test="code != null  and code != ''">and code like concat('%', #{code}, '%')</if>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null">and type = #{type}</if>
             <if test="sectionId != null  and sectionId != ''">and section_id = #{sectionId}</if>
             and (a.del_flag is null or a.del_flag = '0')
         </where>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+        order by type,sort
     </select>
 
     <select id="selectResSenorById" parameterType="Long" resultMap="ResSenorResult">
@@ -78,6 +80,8 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="type != null">type,</if>
+            <if test="matchSenorId != null">match_senor_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="code != null">#{code},</if>
@@ -101,6 +105,8 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="type != null">#{type},</if>
+            <if test="matchSenorId != null">#{matchSenorId},</if>
         </trim>
     </insert>
 
@@ -125,6 +131,8 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="matchSenorId != null">match_senor_id = #{matchSenorId},</if>
         </trim>
         where id = #{id}
     </update>

@@ -41,7 +41,7 @@ public class ResMonitorDataServiceImpl implements IResMonitorDataService {
      * @return 传感器监测数据
      */
     @Override
-    @DataScope(orgAlias = "b")
+    @DataScope(orgAlias = "a")
     public List<ResMonitorData> selectResMonitorDataList(ResMonitorData resMonitorData) {
         return resMonitorDataMapper.selectResMonitorDataList(resMonitorData);
     }

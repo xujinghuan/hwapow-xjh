@@ -21,15 +21,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectResMonitorDataVo">
-        select a.*,b.name as section_name,b.org_name as org_name from res_monitor_data a left join
-        ( select a.*,b.org_name as org_name from res_section a left join sys_org b on a.org_id = b.org_id where (a.del_flag is null or a.del_flag = '0')) b
-        on a.section_id=b.id
+        select * from v_res_monitor_data a
     </sql>
 
-    <select id="selectResMonitorDataList" parameterType="ResMonitorData" resultMap="ResMonitorDataResult">
+    <select id="selectResMonitorDataList"  resultMap="ResMonitorDataResult">
         <include refid="selectResMonitorDataVo"/>
         <where>  
             <if test="getTime != null "> and get_time = #{getTime}</if>
+            <if test="params.getYear != null and params.getYear != 'null' "> and get_year = #{params.getYear}</if>
+            <if test="params.getMonth != null and params.getMonth != 'null'"> and get_month = #{params.getMonth}</if>
+            <if test="params.getDay != null and params.getDay != 'null'"> and get_day = #{params.getDay}</if>
+            <if test="senorId != null"> and senor_id = #{senorId}</if>
+            <if test="sectionId != null"> and section_id = #{sectionId}</if>
             and (a.del_flag is null or a.del_flag = '0')
         </where>
         <!-- 数据范围过滤 -->
