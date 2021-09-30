@@ -1,14 +1,18 @@
 package com.hwapow.rxtx.core;
 
-import com.hwapow.common.utils.SecurityUtils;
+import com.hwapow.common.utils.DateUtils;
+import com.hwapow.common.utils.spring.SpringUtils;
+import com.hwapow.reservior.domain.ResCapacity;
+import com.hwapow.reservior.domain.ResMonitorData;
+import com.hwapow.reservior.domain.ResSenor;
+import com.hwapow.reservior.service.IResCapacityService;
+import com.hwapow.reservior.service.IResMonitorDataService;
+import com.hwapow.reservior.service.IResSenorService;
 import com.hwapow.rxtx.service.impl.PortService;
 import com.hwapow.webSocket.service.WebSocketServer;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -18,16 +22,67 @@ import java.util.Date;
  */
 public class PortLister implements SerialPortEventListener {
 
+    private IResSenorService resSenorService;
+
+    private IResMonitorDataService resMonitorDataService;
+
+    private IResCapacityService resCapacityService;
+
+    public PortLister(){
+        resSenorService=SpringUtils.getBean(IResSenorService.class);
+        resMonitorDataService=SpringUtils.getBean(IResMonitorDataService.class);
+        resCapacityService=SpringUtils.getBean(IResCapacityService.class);
+    }
+
     @SneakyThrows
     @Override
     public void serialEvent(SerialPortEvent arg0) {
         if (arg0.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+            Date getTime=new Date();
             SerialPortUtil serialPortUtil = SerialPortUtil.getSerialPortUtil();
             byte[] bytes = serialPortUtil.readFromPort(PortService.serialPort);
             String byteStr = new String(bytes, 0, bytes.length).trim();
             String needData = printHexString(bytes);
-            System.out.println(new Date() + "接收数据：" + needData);
-            WebSocketServer.sendInfo("sernorData",needData);
+            ResSenor resSenor=null;
+            try {
+                resSenor=resSenorService.selectResSenorByBackData(needData);
+                if(resSenor==null){
+                    System.out.println(DateUtils.getTime()+ "接收数据：" + needData+"未找到设备!");
+                    return;
+                }else{
+                    System.out.println(DateUtils.getTime()+"设备【"+resSenor.getName()+"】开始接收数据！");
+                }
+                //取原始数据（原始数据是指返回指令的数据位翻译为十进制直接保存的数据，不进行计算）
+                String rowData16=needData.substring(resSenor.getBackDataIndexS(),resSenor.getBackDataIndexE());
+                System.out.println(DateUtils.getTime()+"设备【"+resSenor.getName()+"】原始数据16进制！"+rowData16);
+                double rowData= Integer.parseInt(rowData16.replace(" ",""), 16);
+                if(rowData>=resSenor.getBackDataMax()){//如果大于等于最大值，则返回0
+                    rowData=0;
+                }
+                System.out.println(DateUtils.getTime()+"设备【"+resSenor.getName()+"】原始数据10进制！"+rowData);
+                //执行计算公式获取计算数据
+                String formulaSql=resSenor.getBackDataFormula().replace("{senorId}",resSenor.getId()+"").replace("{rowData}",rowData+"");
+                double data=resSenorService.executeFormulaSql(formulaSql);
+                System.out.println(DateUtils.getTime()+"设备【"+resSenor.getName()+"】计算数据！"+data);
+                //取库容
+                ResCapacity resCapacity=resCapacityService.selectCapacity(data, resSenor.getOrgId());
+
+                //开始保存数据
+                ResMonitorData monitorData=new ResMonitorData();
+                monitorData.setSenorId(resSenor.getId());
+                monitorData.setSectionId(resSenor.getSectionId());
+                monitorData.setBackInstruction(needData);
+                monitorData.setGetTime(getTime);
+                monitorData.setRawData(rowData+"");
+                monitorData.setData(data+"");
+                monitorData.setCapacity(resCapacity!=null?resCapacity.getCapacity():null);
+                this.resMonitorDataService.insertResMonitorData(monitorData);
+                //给前端发信息，更新数据
+                WebSocketServer.sendInfo("sernorData",needData);
+                System.out.println(DateUtils.getTime()+"设备【"+resSenor.getName()+"】数据更新！");
+            }catch (Exception e){
+                System.out.println(e);
+            }
         }
     }
 

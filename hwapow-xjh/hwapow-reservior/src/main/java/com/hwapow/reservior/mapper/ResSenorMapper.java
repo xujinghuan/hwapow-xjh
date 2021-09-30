@@ -23,6 +23,14 @@ public interface ResSenorMapper
     public ResSenor selectResSenorById(Long id);
 
     /**
+     * 根据返回指令查询设备管理
+     *
+     * @param backData 返回指令
+     * @return 设备管理
+     */
+    public ResSenor selectResSenorByBackData(String backData);
+
+    /**
      * 查询设备管理列表
      * 
      * @param resSenor 设备管理
@@ -69,4 +77,12 @@ public interface ResSenorMapper
      * @return
      */
     public ResSenor checkSenorUnique(@Param("code") String code, @Param("sectionId")Long sectionId);
+
+    /**
+     * 执行计算sql
+     *
+     * @param sql
+     * @return 结果
+     */
+    public double executeFormulaSql(String sql);
 }

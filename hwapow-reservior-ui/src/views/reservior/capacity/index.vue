@@ -79,8 +79,8 @@
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="水位" align="center" prop="waterLevel"/>
-        <el-table-column label="库容" align="center" prop="capacity"/>
+        <el-table-column label="水位（米）" align="center" prop="waterLevel"/>
+        <el-table-column label="库容（立方米）" align="center" prop="capacity"/>
         <el-table-column label="水库" align="center" prop="orgName"/>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
@@ -122,10 +122,10 @@
         </div>
         <el-main>
           <el-form size="mini" ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="水位" prop="waterLevel">
+            <el-form-item label="水位(米)" prop="waterLevel">
               <el-input
                 v-model="form.waterLevel"
-                placeholder="水位"
+                placeholder="水位(米)"
                 clearable
                 onkeyup="value=value.replace(/[^\.\d]/g,'')"
               />

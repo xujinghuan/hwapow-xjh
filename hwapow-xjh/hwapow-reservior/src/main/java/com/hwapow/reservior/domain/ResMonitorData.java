@@ -24,9 +24,29 @@ public class ResMonitorData extends BaseEntity
     @Excel(name = "传感器设备id")
     private Long senorId;
 
+    /**
+     * 设备名称，不保存，只显示
+     */
+    private String senorName;
+
+    /**
+     * 设备组织名称，不保存，只显示
+     */
+    private String orgName;
+
+    /**
+     * 设备组织名称，不保存，只显示
+     */
+    private String sectionName;
+
+    /**
+     * 返回数据单位，不保存，只显示
+     */
+    private String backDataUnit;
+
     /** 数据获取时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "数据获取时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "数据获取时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date getTime;
 
     /** 返回指令 */
@@ -40,6 +60,11 @@ public class ResMonitorData extends BaseEntity
     /** 数据 */
     @Excel(name = "数据")
     private String data;
+
+    /**
+     * 库容
+     */
+    private Double capacity;
 
     /** 断面 */
     @Excel(name = "断面")
@@ -119,6 +144,46 @@ public class ResMonitorData extends BaseEntity
     public String getDelFlag()
     {
         return delFlag;
+    }
+
+    public Double getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Double capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getSenorName() {
+        return senorName;
+    }
+
+    public void setSenorName(String senorName) {
+        this.senorName = senorName;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public String getSectionName() {
+        return sectionName;
+    }
+
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
+    public String getBackDataUnit() {
+        return backDataUnit;
+    }
+
+    public void setBackDataUnit(String backDataUnit) {
+        this.backDataUnit = backDataUnit;
     }
 
     @Override

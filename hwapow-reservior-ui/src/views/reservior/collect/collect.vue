@@ -14,36 +14,39 @@
         </div>
       </div>
       <div class="collect-data">
-        <el-table :data="dataList">
-          <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column
-            label="序号"
-            type="index"
-            width="50"
-            align="center">
-            <template scope="scope">
-              <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="水库" align="center" prop="orgName"/>
-          <el-table-column label="传感器设备" align="center" prop="senorName"/>
-          <el-table-column label="断面" align="center" prop="sectionName"/>
-          <el-table-column label="淹没高度" align="center" prop="backInstruction"/>
-          <el-table-column label="实时水位" align="center" prop="rawData"/>
-          <el-table-column label="库容" align="center" prop="data"/>
-          <el-table-column label="采集时间" align="center" prop="getTime" width="180">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.getTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getDataList"
-        />
+        <el-main>
+          <el-table :data="dataList">
+            <el-table-column
+              label="序号"
+              type="index"
+              width="50"
+              align="center">
+              <template scope="scope">
+                <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="水库" align="center" prop="orgName"/>
+            <el-table-column label="设备" align="center" prop="senorName"/>
+            <!--<el-table-column label="断面" align="center" prop="sectionName"/>-->
+            <el-table-column label="淹没高度" align="center" prop="rawData"/>
+            <el-table-column label="实时水位" align="center" prop="data"/>
+            <el-table-column label="库容" align="center" prop="capacity"/>
+            <el-table-column label="采集时间" align="center" prop="getTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.getTime) }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-main>
+        <el-footer>
+          <pagination
+            v-show="total>0"
+            :total="total"
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getDataList"
+          />
+        </el-footer>
       </div>
     </el-main>
   </el-container>
@@ -104,7 +107,7 @@ export default {
     },
     /** 查询设备列表 */
     getSenorList() {
-      listSenor(this.queryParams).then(response => {
+      listSenor().then(response => {
         this.senorList = response.rows;
       });
     },
@@ -115,7 +118,6 @@ export default {
     },
     sectionClick(item) {
       if (item == null) {
-        console.log(111);
         sendToALL().then(response => {
           this.msgSuccess(response.msg);
         });
@@ -125,18 +127,18 @@ export default {
         });
       }
     },
-    senorClick(item){
+    senorClick(item) {
       sendToSenor(item.id).then(response => {
         this.msgSuccess(response.msg);
       });
     },
     //添加后端监听
-    addListener(){
-      var $this=this;
-      openSocket(function receiveMsg(msg){
-        if(msg.code=="sernorData"){//需要判断code是什么。也就是取到的数据是什么，才能判断做什么事情
-          $this.queryParams.pageNum=1;
-          $this.queryParams.pageSize=30;
+    addListener() {
+      var $this = this;
+      openSocket(function receiveMsg(msg) {
+        if (msg.code == "sernorData") {//需要判断code是什么。也就是取到的数据是什么，才能判断做什么事情
+          $this.queryParams.pageNum = 1;
+          $this.queryParams.pageSize = 30;
           $this.getDataList();
         }
       });
@@ -146,7 +148,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .collect-left {
-  width: 50%;
+  width: 60%;
   height: 100%;
   float: left;
 }
@@ -167,10 +169,17 @@ export default {
 }
 
 .collect-data {
-  width: 50%;
+  width: 40%;
   height: 100%;
   float: right;
+  border-left: 1px solid #dedede;
 }
+
+.collect-data .el-main{
+  height: calc(100% - 60px);
+}
+
+
 
 .collect-section {
   width: 50%;

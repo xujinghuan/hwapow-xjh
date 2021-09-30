@@ -33,6 +33,11 @@ public class ResSenor extends BaseEntity {
     private Long matchSenorId;
 
     /**
+     * 返回数据默认单位（字典back_data_unit）
+     */
+    private String backDataUnit;
+
+    /**
      * 设备名称
      */
     @Excel(name = "设备名称")
@@ -45,7 +50,7 @@ public class ResSenor extends BaseEntity {
     private Long sectionId;
 
     /**
-     * 所属类型（字典类型）
+     * 所属类型（字典类型 senor_type）
      */
     private String type;
 
@@ -58,6 +63,11 @@ public class ResSenor extends BaseEntity {
      * 用于显示水库名称
      */
     private String orgName;
+
+    /**
+     * 用于显示水库名称
+     */
+    private Long orgId;
 
     /**
      * 零点高程
@@ -104,11 +114,6 @@ public class ResSenor extends BaseEntity {
     private Integer backIdenIndexS;
 
     /**
-     * 返回指令中设备标识结束下标
-     */
-    private Integer backIdenIndexE;
-
-    /**
      * 返回指令中数据开始下标
      */
     private Integer backDataIndexS;
@@ -127,6 +132,11 @@ public class ResSenor extends BaseEntity {
      * 删除标志（0代表存在 2代表删除）
      */
     private String delFlag;
+
+    /**
+     * 返回数据最大值（以原始数据为标准）
+     */
+    private Double backDataMax;
 
     public void setId(Long id) {
         this.id = id;
@@ -248,14 +258,6 @@ public class ResSenor extends BaseEntity {
         return backIdenIndexS;
     }
 
-    public void setBackIdenIndexE(Integer backIdenIndexE) {
-        this.backIdenIndexE = backIdenIndexE;
-    }
-
-    public Integer getBackIdenIndexE() {
-        return backIdenIndexE;
-    }
-
     public void setBackDataIndexS(Integer backDataIndexS) {
         this.backDataIndexS = backDataIndexS;
     }
@@ -296,6 +298,30 @@ public class ResSenor extends BaseEntity {
         this.matchSenorId = matchSenorId;
     }
 
+    public String getBackDataUnit() {
+        return backDataUnit;
+    }
+
+    public void setBackDataUnit(String backDataUnit) {
+        this.backDataUnit = backDataUnit;
+    }
+
+    public Double getBackDataMax() {
+        return backDataMax;
+    }
+
+    public void setBackDataMax(Double backDataMax) {
+        this.backDataMax = backDataMax;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -311,7 +337,6 @@ public class ResSenor extends BaseEntity {
                 .append("sort", getSort())
                 .append("backIdentification", getBackIdentification())
                 .append("backIdenIndexS", getBackIdenIndexS())
-                .append("backIdenIndexE", getBackIdenIndexE())
                 .append("backDataIndexS", getBackDataIndexS())
                 .append("backDataIndexE", getBackDataIndexE())
                 .append("backDataFormula", getBackDataFormula())

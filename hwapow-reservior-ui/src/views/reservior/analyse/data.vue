@@ -82,9 +82,9 @@
         <el-table-column label="水库" align="center" prop="orgName"/>
         <el-table-column label="断面" align="center" prop="sectionName"/>
         <el-table-column label="设备" align="center" prop="senorName"/>
-        <el-table-column label="淹没高度" align="center" prop="backInstruction"/>
-        <el-table-column label="实时水位" align="center" prop="rawData"/>
-        <el-table-column label="库容" align="center" prop="data"/>
+        <el-table-column label="淹没高度" align="center" prop="rawData"/>
+        <el-table-column label="实时水位" align="center" prop="data"/>
+        <el-table-column label="库容" align="center" prop="capacity"/>
         <el-table-column label="采集时间" align="center" prop="getTime" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.getTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
@@ -135,7 +135,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
         params:{
           getYear: null,
           getMonth: null,

@@ -19,7 +19,6 @@
         <result property="sort" column="sort"/>
         <result property="backIdentification" column="back_identification"/>
         <result property="backIdenIndexS" column="back_iden_index_s"/>
-        <result property="backIdenIndexE" column="back_iden_index_e"/>
         <result property="backDataIndexS" column="back_data_index_s"/>
         <result property="backDataIndexE" column="back_data_index_e"/>
         <result property="backDataFormula" column="back_data_formula"/>
@@ -32,7 +31,7 @@
     </resultMap>
 
     <sql id="selectResSenorVo">
-        select a.*,b.name as section_name,b.org_name as org_name from res_senor a left join
+        select a.*,b.name as section_name,b.org_name as org_name,b.org_id as org_id from res_senor a left join
         ( select a.*,b.org_name as org_name from res_section a left join sys_org b on a.org_id = b.org_id where (a.del_flag is null or a.del_flag = '0')) b
         on a.section_id=b.id
     </sql>
@@ -48,12 +47,18 @@
         </where>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
-        order by type,sort
+        order by sort,type
     </select>
 
     <select id="selectResSenorById" parameterType="Long" resultMap="ResSenorResult">
         <include refid="selectResSenorVo"/>
         where a.id = #{id}
+    </select>
+
+    <select id="selectResSenorByBackData" parameterType="String" resultMap="ResSenorResult">
+        <include refid="selectResSenorVo"/>
+        where a.back_identification=SUBSTR(#{backData},a.back_iden_index_s,LENGTH(a.back_identification)) and
+        a.back_identification is not null and a.back_identification !=''
     </select>
 
     <insert id="insertResSenor" parameterType="ResSenor" useGeneratedKeys="true" keyProperty="id">
@@ -70,7 +75,6 @@
             <if test="sort != null">sort,</if>
             <if test="backIdentification != null">back_identification,</if>
             <if test="backIdenIndexS != null">back_iden_index_s,</if>
-            <if test="backIdenIndexE != null">back_iden_index_e,</if>
             <if test="backDataIndexS != null">back_data_index_s,</if>
             <if test="backDataIndexE != null">back_data_index_e,</if>
             <if test="backDataFormula != null">back_data_formula,</if>
@@ -82,6 +86,8 @@
             <if test="remark != null">remark,</if>
             <if test="type != null">type,</if>
             <if test="matchSenorId != null">match_senor_id,</if>
+            <if test="backDataUnit != null">back_data_unit,</if>
+            <if test="backDataMax != null">back_data_max,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="code != null">#{code},</if>
@@ -95,7 +101,6 @@
             <if test="sort != null">#{sort},</if>
             <if test="backIdentification != null">#{backIdentification},</if>
             <if test="backIdenIndexS != null">#{backIdenIndexS},</if>
-            <if test="backIdenIndexE != null">#{backIdenIndexE},</if>
             <if test="backDataIndexS != null">#{backDataIndexS},</if>
             <if test="backDataIndexE != null">#{backDataIndexE},</if>
             <if test="backDataFormula != null">#{backDataFormula},</if>
@@ -107,6 +112,8 @@
             <if test="remark != null">#{remark},</if>
             <if test="type != null">#{type},</if>
             <if test="matchSenorId != null">#{matchSenorId},</if>
+            <if test="backDataUnit != null">#{backDataUnit},</if>
+            <if test="backDataMax != null">#{backDataMax},</if>
         </trim>
     </insert>
 
@@ -124,7 +131,6 @@
             <if test="sort != null">sort = #{sort},</if>
             <if test="backIdentification != null">back_identification = #{backIdentification},</if>
             <if test="backIdenIndexS != null">back_iden_index_s = #{backIdenIndexS},</if>
-            <if test="backIdenIndexE != null">back_iden_index_e = #{backIdenIndexE},</if>
             <if test="backDataIndexS != null">back_data_index_s = #{backDataIndexS},</if>
             <if test="backDataIndexE != null">back_data_index_e = #{backDataIndexE},</if>
             <if test="backDataFormula != null">back_data_formula = #{backDataFormula},</if>
@@ -133,6 +139,8 @@
             <if test="remark != null">remark = #{remark},</if>
             <if test="type != null">type = #{type},</if>
             <if test="matchSenorId != null">match_senor_id = #{matchSenorId},</if>
+            <if test="backDataUnit != null">back_data_unit = #{backDataUnit},</if>
+            <if test="backDataMax != null">back_data_max = #{backDataMax},</if>
         </trim>
         where id = #{id}
     </update>
@@ -141,7 +149,12 @@
         <include refid="selectResSenorVo"/>
         where a.code = #{code} and a.section_id=#{sectionId} and (a.del_flag is null or a.del_flag = '0') limit 1
     </select>
-    
+
+    <select id="executeFormulaSql" resultType="double">
+        ${sql}
+    </select>
+
+
     <update id="deleteResSenorById" parameterType="Long">
        update res_senor set del_flag=2 where id = #{id}
     </update>

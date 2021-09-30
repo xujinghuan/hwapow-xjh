@@ -54,7 +54,7 @@ public class ResMonitorDataServiceImpl implements IResMonitorDataService {
      */
     @Override
     public int insertResMonitorData(ResMonitorData resMonitorData) {
-        resMonitorData.setCreateBy(SecurityUtils.getUsername());
+        resMonitorData.setCreateBy("自动监测");
         resMonitorData.setCreateTime(DateUtils.getNowDate());
         return resMonitorDataMapper.insertResMonitorData(resMonitorData);
     }

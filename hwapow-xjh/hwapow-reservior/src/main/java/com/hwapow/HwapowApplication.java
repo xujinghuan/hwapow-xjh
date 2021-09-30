@@ -1,7 +1,10 @@
 package com.hwapow;
 
+import com.hwapow.common.utils.spring.SpringUtils;
+import com.hwapow.reservior.service.IResSenorService;
 import com.hwapow.rxtx.core.PortLister;
 import com.hwapow.rxtx.core.SerialPortUtil;
+import com.hwapow.rxtx.service.IPortService;
 import com.hwapow.rxtx.service.impl.PortService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,6 +32,8 @@ public class HwapowApplication
                         " |____|    \\_____>______/__|  \\_____>___/\\__\\____/ \n" +
                         "\n " +
                         "水库监测系统启动成功 \n");
+        //初始化端口
+        SpringUtils.getBean(IPortService.class).InitSerialPortUtil();
     }
 
     @PreDestroy

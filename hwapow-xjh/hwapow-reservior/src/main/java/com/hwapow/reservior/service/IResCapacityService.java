@@ -67,4 +67,12 @@ public interface IResCapacityService {
      * @return
      */
     public String checkCapacityUnique(ResCapacity resCapacity);
+
+    /**
+     * 查找水位
+     * @param waterLevel 水位
+     * @param orgId 组织id
+     * @return
+     */
+    public ResCapacity selectCapacity(Double waterLevel, Long orgId);
 }

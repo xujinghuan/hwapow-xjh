@@ -3,11 +3,13 @@ package com.hwapow.rxtx.service.impl;
 import com.hwapow.common.utils.SecurityUtils;
 import com.hwapow.common.utils.StringUtils;
 import com.hwapow.reservior.domain.ResSenor;
+import com.hwapow.reservior.service.IResSenorService;
 import com.hwapow.rxtx.core.PortLister;
 import com.hwapow.rxtx.core.SerialPortUtil;
 import com.hwapow.rxtx.service.IPortService;
 import com.hwapow.webSocket.service.WebSocketServer;
 import gnu.io.SerialPort;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class PortService implements IPortService {
     @Value("${range.portname:COM1}")
     private String portname;
 
+    @Autowired
+    public IResSenorService resSenorService;
+
     /**
      * 初始化串口避免重复开启
      * @return
@@ -40,7 +45,8 @@ public class PortService implements IPortService {
             //打开该对应portname名字的串口
             PortService.serialPort = serialPortUtil.openPort(portname, 9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             //给对应的serialPort添加监听器
-            serialPortUtil.addListener(PortService.serialPort, new PortLister());
+            PortLister portLister=new PortLister();
+            serialPortUtil.addListener(PortService.serialPort, portLister);
             System.out.println("开始监听" + portname+"数据");
         }
         return serialPortUtil;

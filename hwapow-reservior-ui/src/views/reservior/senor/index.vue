@@ -77,15 +77,15 @@
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="设备编码" align="center" prop="code"/>
-        <el-table-column label="设备名称" align="center" prop="name"/>
-        <el-table-column label="所属断面" align="center" prop="sectionName"/>
-        <el-table-column label="所属水库" align="center" prop="orgName"/>
-        <el-table-column label="零点高程" align="center" prop="zeroElevation"/>
-        <el-table-column label="管口高程" align="center" prop="nozzleElevation"/>
-        <el-table-column label="取数指令" align="center" prop="getInstruction"/>
-        <el-table-column label="顺序号" align="center" prop="sort"/>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="设备编码" align="center" prop="code" width="100"/>
+        <el-table-column label="设备名称" align="center" prop="name" width="130"/>
+        <el-table-column label="所属断面" align="center" prop="sectionName" width="130"/>
+        <el-table-column label="所属水库" align="center" prop="orgName" width="130"/>
+        <el-table-column label="零点高程（米）" align="center" prop="zeroElevation" width="150"/>
+        <el-table-column label="管口高程（米）" align="center" prop="nozzleElevation" width="150"/>
+        <el-table-column label="取数指令" align="center" prop="getInstruction" width="300"/>
+        <el-table-column label="顺序号" align="center" prop="sort" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" >
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -117,14 +117,14 @@
       />
     </el-footer>
     <!-- 添加或修改设备管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="450px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="650px" height="200px" append-to-body>
       <el-container class="fullContainer" direction="vertical">
         <div class="toolbar">
           <el-button size="mini" icon="el-icon-check" type="primary" @click="submitForm">确 定</el-button>
           <el-button size="mini" icon="el-icon-close" @click="cancel">取 消</el-button>
         </div>
         <el-main>
-          <el-form size="mini" ref="form" :model="form" :rules="rules" label-width="100px">
+          <el-form size="mini" ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="设备编码" prop="code">
               <el-input v-model="form.code" placeholder="请输入设备编码"/>
             </el-form-item>
@@ -141,11 +141,45 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="零点高程" prop="zeroElevation">
+            <el-form-item label="所属类型" prop="type">
+              <el-select v-model="form.type" placeholder="请选择所属类型">
+                <el-option
+                  v-for="dict in typeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="返回数据最大值" prop="backDataMax">
+              <el-input v-model="form.backDataMax" onkeyup="value=value.replace(/[^\.\d]/g,'')"
+                        placeholder="返回数据最大值（以原始数据位标准）"/>
+            </el-form-item>
+            <el-form-item label="返回数据单位" prop="backDataUnit">
+              <el-select v-model="form.backDataUnit" placeholder="请选择返回数据单位">
+                <el-option
+                  v-for="dict in backDataUnitOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="form.type==0" label="对应坝基设备" prop="matchSenorId">
+              <el-select v-model="form.matchSenorId" placeholder="请选择对应坝基设备">
+                <el-option
+                  v-for="dict in bjSenorOptions"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="零点高程(米)" prop="zeroElevation">
               <el-input v-model="form.zeroElevation" onkeyup="value=value.replace(/[^\.\d]/g,'')"
                         placeholder="请输入零点高程"/>
             </el-form-item>
-            <el-form-item label="管口高程" prop="nozzleElevation">
+            <el-form-item label="管口高程(米)" prop="nozzleElevation">
               <el-input v-model="form.nozzleElevation" onkeyup="value=value.replace(/[^\.\d]/g,'')"
                         placeholder="请输入管口高程"/>
             </el-form-item>
@@ -166,20 +200,20 @@
             <el-form-item class="double-label-font" label="返回指令设备标识" prop="backIdentification">
               <el-input v-model="form.backIdentification" placeholder="请输入返回指令设备标识，比如返回指令01代表设备T1-1"/>
             </el-form-item>
+            <span style="color: red">返回指令设备标识开始下标，mysql中SubStr函数从1开始数,如D7 01 00 01 00 07 01 03 02 01 2C B8 09中标识是D7 01 00 01 00 07 01，则返回指令标识开始下标为1</span>
             <el-form-item class="double-label-font" label="返回指令设备标识开始下标" prop="backIdenIndexS">
-              <el-input v-model="form.backIdenIndexS" placeholder="请输入返回指令中设备标识开始下标"/>
+              <el-input-number min = 1 v-model="form.backIdenIndexS" />
             </el-form-item>
-            <el-form-item class="double-label-font" label="返回指令设备标识结束下标" prop="backIdenIndexE">
-              <el-input v-model="form.backIdenIndexE" placeholder="请输入返回指令中设备标识结束下标"/>
-            </el-form-item>
+            <span style="color: red">返回指令数据开始下标，java中substr函数从0开始数，截取不包含结束位，如如D7 01 00 01 00 07 01 03 02 01 2C B8 09中标识是01 2C，则返回指令数据开始下标为27,结束下标为32</span>
             <el-form-item class="double-label-font" label="返回指令数据开始下标" prop="backDataIndexS">
-              <el-input v-model="form.backDataIndexS" placeholder="请输入返回指令中数据开始下标"/>
+              <el-input-number min = 1 v-model="form.backDataIndexS" placeholder="请输入返回指令中数据开始下标" onkeyup="value=value.replace(/[^\.\d]/g,'')"/>
             </el-form-item>
             <el-form-item class="double-label-font" label="返回指令数据结束下标" prop="backDataIndexE">
-              <el-input v-model="form.backDataIndexE" placeholder="请输入返回指令中数据结束下标"/>
+              <el-input-number min = 1 v-model="form.backDataIndexE" placeholder="请输入返回指令中数据结束下标" onkeyup="value=value.replace(/[^\.\d]/g,'')"/>
             </el-form-item>
-            <el-form-item class="double-label-font" label="返回数据计算公式" prop="backDataFormula">
-              <el-input type="textarea" v-model="form.backDataFormula" placeholder="请输入返回数据计算公式"/>
+            <span style="color: red">sql中不可以存在delete和update，sql中{senorId}代表设备id，{rowData}代表原始数据，如select {rowData}+100 from res_senor where id={senorId}</span>
+            <el-form-item class="double-label-font" label="返回数据计算公式（sql）" prop="backDataFormula">
+              <el-input type="textarea" v-model="form.backDataFormula" placeholder="请输入返回数据计算公式（sql）"/>
             </el-form-item>
             <el-form-item label="备注" prop="remark">
               <el-input type="textarea" v-model="form.remark" placeholder="请输入备注"/>
@@ -222,12 +256,15 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
         code: null,
         name: null,
       },
       // 表单参数
       form: {},
+      typeOptions:[],
+      backDataUnitOptions:[],
+      bjSenorOptions:[],
       // 表单校验
       rules: {
         code: [
@@ -238,6 +275,42 @@ export default {
         ],
         sectionId: [
           {required: true, message: "断面不能为空", trigger: "blur"}
+        ],
+        type:[
+          {required: true, message: "类型不能为空", trigger: "blur"}
+        ],
+        backDataUnit:[
+          {required: true, message: "返回数据单位不能为空", trigger: "blur"}
+        ],
+        sort:[
+          {required: true, message: "请输入顺序号", trigger: "blur"}
+        ],
+        zeroElevation:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        nozzleElevation:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        getInstruction:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        backIdentification:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        backIdenIndexS:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        backDataIndexS:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        backDataIndexE:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        backDataFormula:[
+          {required: true, message: "请输入值", trigger: "blur"}
+        ],
+        backDataMax:[
+          {required: true, message: "请输入值", trigger: "blur"}
         ]
       }
     };
@@ -245,11 +318,22 @@ export default {
   created() {
     this.getList();
     this.getSectionOptions();
+    this.getDicts("senor_type").then(response => {
+      this.typeOptions = response.data;
+    });
+    this.getDicts("back_data_unit").then(response => {
+      this.backDataUnitOptions = response.data;
+    });
   },
   methods: {
     getSectionOptions() {
       listSection(this.queryParams).then(response => {
         this.sectionOptions = response.rows;
+      });
+    },
+    getBjSenorOptions(){
+      listSenor({type:1}).then(response => {
+        this.bjSenorOptions = response.rows;
       });
     },
     /** 查询设备管理列表 */
@@ -279,9 +363,11 @@ export default {
         x: null,
         y: null,
         sort: null,
+        type:null,
+        backDataUnit:null,
+        matchSenorId:null,
         backIdentification: null,
         backIdenIndexS: null,
-        backIdenIndexE: null,
         backDataIndexS: null,
         backDataIndexE: null,
         backDataFormula: null,
@@ -290,7 +376,8 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        remark: null
+        remark: null,
+        backDataMax:null
       };
       this.resetForm("form");
     },
@@ -313,12 +400,14 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getBjSenorOptions();
       this.open = true;
       this.title = "添加设备管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.getBjSenorOptions();
       const id = row.id || this.ids
       getSenor(id).then(response => {
         this.form = response.data;
@@ -328,6 +417,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      if(this.form.backDataFormula.toLowerCase().indexOf("delete")>=0||this.form.backDataFormula.toLowerCase().indexOf("update")>=0){
+        this.msgError("计算公式中不可以存在update和delete");
+        return;
+      }
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {

@@ -9,6 +9,7 @@ import com.hwapow.rxtx.core.SerialPortUtil;
 public interface IPortService {
 
     public SerialPortUtil InitSerialPortUtil();
+
     /**
      * 读取串口数据
      * @param senor

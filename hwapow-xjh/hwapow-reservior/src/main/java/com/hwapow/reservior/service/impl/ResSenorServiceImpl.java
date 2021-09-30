@@ -20,8 +20,7 @@ import com.hwapow.reservior.service.IResSenorService;
  * @date 2021-09-20
  */
 @Service
-public class ResSenorServiceImpl implements IResSenorService
-{
+public class ResSenorServiceImpl implements IResSenorService {
     @Autowired
     private ResSenorMapper resSenorMapper;
 
@@ -32,8 +31,7 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return 设备管理
      */
     @Override
-    public ResSenor selectResSenorById(Long id)
-    {
+    public ResSenor selectResSenorById(Long id) {
         return resSenorMapper.selectResSenorById(id);
     }
 
@@ -44,8 +42,7 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return 设备管理
      */
     @Override
-    public List<ResSenor> selectResSenorList(ResSenor resSenor)
-    {
+    public List<ResSenor> selectResSenorList(ResSenor resSenor) {
         return resSenorMapper.selectResSenorList(resSenor);
     }
 
@@ -56,11 +53,10 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return 结果
      */
     @Override
-    public int insertResSenor(ResSenor resSenor)
-    {
-                                                                                resSenor.setCreateBy(SecurityUtils.getUsername());
-            resSenor.setCreateTime(DateUtils.getNowDate());
-                        return resSenorMapper.insertResSenor(resSenor);
+    public int insertResSenor(ResSenor resSenor) {
+        resSenor.setCreateBy(SecurityUtils.getUsername());
+        resSenor.setCreateTime(DateUtils.getNowDate());
+        return resSenorMapper.insertResSenor(resSenor);
     }
 
     /**
@@ -70,9 +66,8 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return 结果
      */
     @Override
-    public int updateResSenor(ResSenor resSenor)
-    {
-    resSenor.setUpdateBy(SecurityUtils.getUsername());
+    public int updateResSenor(ResSenor resSenor) {
+        resSenor.setUpdateBy(SecurityUtils.getUsername());
         resSenor.setUpdateTime(DateUtils.getNowDate());
         return resSenorMapper.updateResSenor(resSenor);
     }
@@ -84,8 +79,7 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return 结果
      */
     @Override
-    public int deleteResSenorByIds(Long[] ids)
-    {
+    public int deleteResSenorByIds(Long[] ids) {
         return resSenorMapper.deleteResSenorByIds(ids);
     }
 
@@ -96,8 +90,7 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return 结果
      */
     @Override
-    public int deleteResSenorById(Long id)
-    {
+    public int deleteResSenorById(Long id) {
         return resSenorMapper.deleteResSenorById(id);
     }
 
@@ -108,12 +101,33 @@ public class ResSenorServiceImpl implements IResSenorService
      * @return
      */
     @Override
-    public String checkSenorUnique(ResSenor resSenor){
-        ResSenor resSenorC = resSenorMapper.checkSenorUnique(resSenor.getCode(),resSenor.getSectionId());
-        if (StringUtils.isNotNull(resSenorC) && !resSenorC.getId().equals(resSenor.getId()))
-        {
+    public String checkSenorUnique(ResSenor resSenor) {
+        ResSenor resSenorC = resSenorMapper.checkSenorUnique(resSenor.getCode(), resSenor.getSectionId());
+        if (StringUtils.isNotNull(resSenorC) && !resSenorC.getId().equals(resSenor.getId())) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /**
+     * 根据返回指令查询设备管理
+     *
+     * @param backData 返回指令
+     * @return 设备管理
+     */
+    @Override
+    public ResSenor selectResSenorByBackData(String backData){
+        return this.resSenorMapper.selectResSenorByBackData(backData);
+    }
+
+    /**
+     * 执行计算sql
+     *
+     * @param sql
+     * @return 结果
+     */
+    @Override
+    public double executeFormulaSql(String sql){
+        return this.resSenorMapper.executeFormulaSql(sql);
     }
 }

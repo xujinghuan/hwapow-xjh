@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.constant.UserConstants;
-import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
 import com.hwapow.common.utils.SecurityUtils;
 import com.hwapow.common.utils.StringUtils;
@@ -110,5 +109,16 @@ public class ResCapacityServiceImpl implements IResCapacityService {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /**
+     * 查找水位
+     * @param waterLevel 水位
+     * @param orgId 组织id
+     * @return
+     */
+    @Override
+    public ResCapacity selectCapacity(Double waterLevel, Long orgId){
+        return this.resCapacityMapper.checkCapacityUnique(waterLevel,orgId);
     }
 }

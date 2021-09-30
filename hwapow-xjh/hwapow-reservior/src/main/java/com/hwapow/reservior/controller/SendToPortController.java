@@ -64,7 +64,7 @@ public class SendToPortController extends BaseController
     @GetMapping("/all")
     public AjaxResult sendToAll()
     {
-        List<ResSenor> resSenors=resSenorService.selectResSenorList(null);
+        List<ResSenor> resSenors=resSenorService.selectResSenorList(new ResSenor());
         if(CollectionUtils.isEmpty(resSenors)){
             return AjaxResult.error("监测设备为空!");
         }

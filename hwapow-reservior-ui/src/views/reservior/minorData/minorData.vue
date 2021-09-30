@@ -112,11 +112,11 @@
         <el-table-column label="设备" align="center" prop="senorName"/>
         <el-table-column label="数据获取时间" align="center" prop="getTime" width="180">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.getTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
+            <span>{{ parseTime(scope.row.getTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="返回指令" align="center" prop="backInstruction"/>
-        <el-table-column label="原始数据" align="center" prop="rawData"/>
+        <el-table-column label="返回指令" align="center" prop="backInstruction" width="300"/>
+        <el-table-column label="原始数据" align="center" prop="rawData" :formatter="rawDataFormat" />
         <el-table-column label="数据" align="center" prop="data"/>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
@@ -196,7 +196,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
         params:{
           getYear: null,
           getMonth: null,
@@ -211,6 +211,7 @@ export default {
       rules: {},
       sectionOptions:[],//断面集合
       senorOptions:[],//设备集合
+      backDataUnitOptions:[],
       monthOptions: ["01","02","03","04","05","06","07","08","09","10","11","12"],
       dayOptions: ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
     };
@@ -236,6 +237,13 @@ export default {
       listSenor().then(response => {
         this.senorOptions = response.rows;
       });
+      this.getDicts("back_data_unit").then(response => {
+        this.backDataUnitOptions = response.data;
+      });
+    },
+    // 字典翻译
+    rawDataFormat(row, column) {
+      return row.rawData+this.selectDictLabel(this.backDataUnitOptions, row.backDataUnit);
     },
     // 取消按钮
     cancel() {

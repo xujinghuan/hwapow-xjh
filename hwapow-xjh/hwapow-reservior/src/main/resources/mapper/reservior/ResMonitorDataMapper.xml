@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+        order by a.get_time desc,a.senor_id desc
     </select>
     
     <select id="selectResMonitorDataById" parameterType="Long" resultMap="ResMonitorDataResult">
@@ -59,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="capacity != null">capacity,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="senorId != null">#{senorId},</if>
@@ -73,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="capacity != null">#{capacity},</if>
          </trim>
     </insert>
 
@@ -91,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="capacity != null">capacity = #{capacity},</if>
         </trim>
         where id = #{id}
     </update>
