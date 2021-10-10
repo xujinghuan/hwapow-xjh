@@ -35,6 +35,8 @@ public class ResMonitorData extends BaseEntity
     @Excel(name = "设备")
     private String senorName;
 
+    private String senorType;
+
     /**
      * 设备组织名称，不保存，只显示
      */
@@ -182,6 +184,14 @@ public class ResMonitorData extends BaseEntity
 
     public void setBackDataUnit(String backDataUnit) {
         this.backDataUnit = backDataUnit;
+    }
+
+    public String getSenorType() {
+        return senorType;
+    }
+
+    public void setSenorType(String senorType) {
+        this.senorType = senorType;
     }
 
     @Override

@@ -73,8 +73,11 @@ public class PortLister implements SerialPortEventListener {
                 BigDecimal bg = new BigDecimal(data);
                 data=bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 System.out.println(DateUtils.getTime() + "设备【" + resSenor.getName() + "】计算数据！" + data);
-                //取库容
-                ResCapacity resCapacity = resCapacityService.selectCapacity(data, resSenor.getOrgId());
+                //取库容(库水位)
+                ResCapacity resCapacity = null;
+                if("2".equals(resSenor.getType())){//2代表库水位
+                    resCapacity=resCapacityService.selectCapacity(data, resSenor.getOrgId());
+                }
 
                 //查询是否存在今天的数据,删除今天的数据
                 ResMonitorData selResMonitorData=new ResMonitorData();

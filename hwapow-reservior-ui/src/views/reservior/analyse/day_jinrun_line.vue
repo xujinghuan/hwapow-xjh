@@ -73,7 +73,7 @@ export default {
         this.queryParams.params.getMonth=this.queryParams.params.day.substr(5,2);
         this.queryParams.params.getDay=this.queryParams.params.day.substr(8,2);
         listData(this.queryParams).then(response => {
-          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.queryParams.params.getDay+"日"+$this.getSectionName(this.queryParams.sectionId)+"坝体监测数据"
+          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.queryParams.params.getDay+"日"+$this.getSectionName(this.queryParams.sectionId)+"断面监测数据"
           $this.chartData.xAxisData=[];
           $this.chartData.seriesData[0].data=[];
           for(var i in  response.rows){

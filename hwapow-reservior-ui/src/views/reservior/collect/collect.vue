@@ -17,25 +17,29 @@
         <el-main>
           <el-table :data="dataList">
             <el-table-column
-              label="序号"
+              label=""
               type="index"
-              width="50"
+              width="30"
               align="center">
               <template scope="scope">
                 <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="水库" align="center" prop="orgName"/>
-            <el-table-column label="设备" align="center" prop="senorName"/>
+            <!--<el-table-column label="水库" align="center" prop="orgName" width="100"/>-->
+            <el-table-column label="设备" align="center" prop="senorName" width="65"/>
             <!--<el-table-column label="断面" align="center" prop="sectionName"/>-->
-            <el-table-column label="淹没高度(米)" align="center" prop="rawData" width="95">
+            <el-table-column label="淹没高度" align="center" prop="rawData" width="75">
               <template slot-scope="scope">
-                <span>{{transformUnitToM(scope.row.rawData,scope.row.backDataUnit)}}</span>
+                <span>{{transformUnitToM(scope.row.rawData,scope.row.backDataUnit)}}m</span>
               </template>
             </el-table-column>
-            <el-table-column label="实时水位(米)" align="center" prop="data" width="95"/>
-            <el-table-column label="库容(立方米)" align="center" prop="capacity" width="95"/>
-            <el-table-column label="采集时间" align="center" prop="getTime" width="180">
+            <el-table-column label="水位/流量" align="center" prop="data" width="95">
+              <template slot-scope="scope">
+                <span>{{scope.row.senorType!="3"?(scope.row.data+"m"):(scope.row.data+"L/s")}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="库容(m³)" align="center" prop="capacity" width="71"/>
+            <el-table-column label="采集时间" align="center" prop="getTime" width="150">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.getTime,'{y}-{m}-{d} {h}:{i}:{s}') }}</span>
               </template>
@@ -161,7 +165,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .collect-left {
-  width: 60%;
+  width: calc(100% - 488px);
   height: 100%;
   float: left;
 }
@@ -185,7 +189,7 @@ export default {
 }
 
 .collect-data {
-  width: 40%;
+  width: 488px;
   height: 100%;
   float: right;
   border-left: 1px solid #dedede;
