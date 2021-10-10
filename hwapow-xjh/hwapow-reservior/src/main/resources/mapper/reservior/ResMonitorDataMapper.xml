@@ -32,11 +32,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.getMonth != null and params.getMonth != 'null'"> and get_month = #{params.getMonth}</if>
             <if test="params.getDay != null and params.getDay != 'null'"> and get_day = #{params.getDay}</if>
             <if test="senorId != null"> and senor_id = #{senorId}</if>
+            <if test="params.senorType != null"> and senor_type = #{params.senorType}</if>
             <if test="sectionId != null"> and section_id = #{sectionId}</if>
             and (a.del_flag is null or a.del_flag = '0')
         </where>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+        order by a.get_time desc,a.senor_id desc
+    </select>
+
+    <select id="selectResMonitorDataListByDay"  resultMap="ResMonitorDataResult">
+        <include refid="selectResMonitorDataVo"/>
+        <where>
+            <if test="getTime != null "> and DATE_FORMAT(get_time,'%Y-%m-%d') = substr(#{getTime},1,10)</if>
+            <if test="senorId != null"> and senor_id = #{senorId}</if>
+            <if test="sectionId != null"> and section_id = #{sectionId}</if>
+            <if test="params.senorType != null"> and senor_type = #{params.senorType}</if>
+            and (a.del_flag is null or a.del_flag = '0')
+        </where>
         order by a.get_time desc,a.senor_id desc
     </select>
     

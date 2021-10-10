@@ -59,3 +59,4 @@ spring:
 #应用串口
 range:
     portname: COM1
+

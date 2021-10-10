@@ -90,3 +90,20 @@ export const closeSocket = () =>{
     socket = null;
   }
 }
+
+/***
+ * 转换数据单位为米
+ * @param data
+ * @param unit 0:mm,1:cm,2:dm,3:m,4:km
+ * @returns {number}
+ */
+export const transformUnitToM = (data, unit) => {
+  switch (unit) {
+    case "0":data=data/1000;break;
+    case "1":data=data/100;break;
+    case "2":data=data/10;break;
+    case "4":data=data*1000;break;
+    default:break;
+  }
+  return data;
+}

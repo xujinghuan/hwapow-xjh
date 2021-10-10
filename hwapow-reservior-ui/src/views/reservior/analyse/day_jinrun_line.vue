@@ -1,11 +1,11 @@
 <template>
   <el-container class="fullContainer">
     <el-header style="height: auto;">
-      <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true" >
+      <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true">
         <el-form-item label="日期" prop="day">
           <el-date-picker
             v-model="queryParams.params.day"
-            value-format="yyyy-mm-dd"
+            value-format="yyyy-MM-dd"
             placeholder="选择日期" clearable>
           </el-date-picker>
         </el-form-item>
@@ -37,20 +37,21 @@
 import LineChart from "@/views/dashboard/LineChart";
 import {listData} from "@/api/reservior/data";
 import {listSection} from "@/api/reservior/section";
+import {parseTime} from "@/utils/hwapow";
 
 export default {
   name: "day_jinrun_line",
   components: {LineChart},
   data() {
     return {
-      sectionOptions:null,
+      sectionOptions: null,
       queryParams: {
-        params: {getYear: null},
+        params: {day: null, senorType: 0},
         sectionId: null,
       },
       chartData: {
-        xAxisData: ["T1-1", "T1-2", "T1-3", "T1-4"],
-        seriesData: [{name: "1号断面", data: ["935", "930", "905", "900"],areaStyle:{}}],
+        xAxisData: [],
+        seriesData: [{name: "水位", data: []}],
         yAxisUnit: "米"
       }
     }
@@ -58,17 +59,31 @@ export default {
   created() {
     this.initQuery();
   },
-  methods:{
-    initQuery(){
+  methods: {
+    initQuery() {
       listSection().then(response => {
         this.sectionOptions = response.rows;
       })
     },
     getData() {
+      var $this=this;
       this.loading = true;
-      listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
-      });
+      if (this.queryParams.sectionId && this.queryParams.params.day) {
+        this.queryParams.params.getYear=this.queryParams.params.day.substr(0,4);
+        this.queryParams.params.getMonth=this.queryParams.params.day.substr(5,2);
+        this.queryParams.params.getDay=this.queryParams.params.day.substr(8,2);
+        listData(this.queryParams).then(response => {
+          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.queryParams.params.getDay+"日"+$this.getSectionName(this.queryParams.sectionId)+"坝体监测数据"
+          $this.chartData.xAxisData=[];
+          $this.chartData.seriesData[0].data=[];
+          for(var i in  response.rows){
+            $this.chartData.xAxisData.push(response.rows[i].senorName);
+            $this.chartData.seriesData[0].data.push(response.rows[i].data);
+          }
+        });
+      }else{
+        this.msgError("请选择日期和断面！")
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -76,7 +91,18 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams.params.day = null;
       this.resetForm("queryForm");
+    },
+    getSectionName(id){
+      let actions = []
+      Object.keys(this.sectionOptions).some((key) => {
+        if (this.sectionOptions[key].id === id) {
+          actions.push(this.sectionOptions[key].name)
+          return true
+        }
+      })
+      return actions.join('')
     }
   }
 }

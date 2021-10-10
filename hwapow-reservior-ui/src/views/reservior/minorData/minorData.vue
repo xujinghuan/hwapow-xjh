@@ -276,6 +276,9 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams.params.getYear=null;
+      this.queryParams.params.getMonth=null;
+      this.queryParams.params.getDay=null;
       this.resetForm("queryForm");
       this.handleQuery();
     },

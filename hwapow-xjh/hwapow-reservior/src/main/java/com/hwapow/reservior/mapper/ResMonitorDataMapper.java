@@ -28,6 +28,14 @@ public interface ResMonitorDataMapper
     public List<ResMonitorData> selectResMonitorDataList(ResMonitorData resMonitorData);
 
     /**
+     * 查询传感器监测数据列表
+     *
+     * @param resMonitorData 传感器监测数据
+     * @return 传感器监测数据集合
+     */
+    public List<ResMonitorData> selectResMonitorDataListByDay(ResMonitorData resMonitorData);
+
+    /**
      * 新增传感器监测数据
      * 
      * @param resMonitorData 传感器监测数据

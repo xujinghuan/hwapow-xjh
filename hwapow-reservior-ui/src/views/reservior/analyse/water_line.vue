@@ -2,11 +2,11 @@
   <el-container class="fullContainer">
     <el-header style="height: auto;">
       <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="月份" prop="day">
+        <el-form-item label="月份" prop="month">
           <el-date-picker
-            v-model="queryParams.params.day"
+            v-model="queryParams.params.month"
             type="month"
-            value-format="yyyy-mm"
+            value-format="yyyy-MM"
             placeholder="选择月份" clearable>
           </el-date-picker>
         </el-form-item>
@@ -46,7 +46,7 @@ export default {
     return {
       senorOptions: null,
       queryParams: {
-        params: {getYear: null},
+        params: {month: null},
         senorId: null,
       },
       chartData: {
@@ -79,6 +79,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams.params.month=null;
       this.resetForm("queryForm");
     }
   }

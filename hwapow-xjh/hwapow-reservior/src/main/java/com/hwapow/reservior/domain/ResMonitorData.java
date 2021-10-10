@@ -21,12 +21,18 @@ public class ResMonitorData extends BaseEntity
     private Long id;
 
     /** 传感器设备id */
-    @Excel(name = "传感器设备id")
     private Long senorId;
+
+    /**
+     * 设备断面名称，不保存，只显示
+     */
+    @Excel(name = "断面")
+    private String sectionName;
 
     /**
      * 设备名称，不保存，只显示
      */
+    @Excel(name = "设备")
     private String senorName;
 
     /**
@@ -35,30 +41,23 @@ public class ResMonitorData extends BaseEntity
     private String orgName;
 
     /**
-     * 设备组织名称，不保存，只显示
-     */
-    private String sectionName;
-
-    /**
      * 返回数据单位，不保存，只显示
      */
     private String backDataUnit;
 
     /** 数据获取时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @Excel(name = "数据获取时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "数据获取时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date getTime;
 
     /** 返回指令 */
-    @Excel(name = "返回指令")
     private String backInstruction;
 
     /** 原始数据 */
-    @Excel(name = "原始数据")
     private String rawData;
 
     /** 数据 */
-    @Excel(name = "数据")
+    @Excel(name = "水位（米）")
     private String data;
 
     /**
@@ -67,7 +66,6 @@ public class ResMonitorData extends BaseEntity
     private Double capacity;
 
     /** 断面 */
-    @Excel(name = "断面")
     private Long sectionId;
 
     /** 删除标志（0代表存在 2代表删除） */

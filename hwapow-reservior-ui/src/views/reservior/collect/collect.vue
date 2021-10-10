@@ -3,7 +3,7 @@
     <el-main>
       <div class="collect-left">
         <div class="collect-background">
-          <img src="../../../assets/hhsk/background.jpg" width="100%"/>
+          <img src="../../../assets/hhsk/background.png" width="100%"/>
           <a class="senor-position" v-for="item in senorList" :style="{left:item.x+'%',top:item.y+'%'}" href="#"
              @click="senorClick(item)">{{ item.name }}</a>
         </div>
@@ -28,12 +28,16 @@
             <el-table-column label="水库" align="center" prop="orgName"/>
             <el-table-column label="设备" align="center" prop="senorName"/>
             <!--<el-table-column label="断面" align="center" prop="sectionName"/>-->
-            <el-table-column label="淹没高度" align="center" prop="rawData"/>
-            <el-table-column label="实时水位" align="center" prop="data"/>
-            <el-table-column label="库容" align="center" prop="capacity"/>
+            <el-table-column label="淹没高度(米)" align="center" prop="rawData" width="95">
+              <template slot-scope="scope">
+                <span>{{transformUnitToM(scope.row.rawData,scope.row.backDataUnit)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="实时水位(米)" align="center" prop="data" width="95"/>
+            <el-table-column label="库容(立方米)" align="center" prop="capacity" width="95"/>
             <el-table-column label="采集时间" align="center" prop="getTime" width="180">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.getTime) }}</span>
+                <span>{{ parseTime(scope.row.getTime,'{y}-{m}-{d} {h}:{i}:{s}') }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -59,6 +63,8 @@ import {listData} from "@/api/reservior/data";
 import {getUserProfile} from "@/api/system/user";
 import {sendToALL, sendToSection, sendToSenor} from "@/api/reservior/sendToPort";
 import {closeSocket, openSocket} from "@/utils/hwapowUtils";
+import {parseTime} from "@/utils/hwapow";
+
 
 export default {
   name: "collect",
@@ -87,6 +93,8 @@ export default {
     this.getSenorList();
     this.getDataList();
     this.addListener();
+    //巡测
+    this.sectionClick();
   },
   beforeDestroy() {
     closeSocket();
@@ -94,6 +102,11 @@ export default {
   methods: {
     //查询监测数据
     getDataList() {
+      this.queryParams.params={
+        getYear: parseTime(new Date(),'{y}'),
+          getMonth: parseTime(new Date(),'{m}'),
+          getDay: parseTime(new Date(),'{d}')
+      }
       listData(this.queryParams).then(response => {
         this.total = response.total;
         this.dataList = response.rows;
@@ -161,11 +174,14 @@ export default {
 .senor-position {
   position: absolute;
   z-index: 100;
-  color: #ffffff;
+  color: #1A228F;
   background: url("../../../assets/images/single.gif") no-repeat;
-  padding-left: 25px;
-  height: 25px;
+  height: 38px;
   line-height: 25px;
+  font-weight: 800;
+  background-size: 17px;
+  background-position: top;
+  padding-top: 13px;
 }
 
 .collect-data {
@@ -182,7 +198,7 @@ export default {
 
 
 .collect-section {
-  width: 50%;
+  width: 100%;
   padding: 10px;
   float: left;
 }

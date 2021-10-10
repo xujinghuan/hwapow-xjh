@@ -46,6 +46,18 @@ public class ResMonitorDataServiceImpl implements IResMonitorDataService {
         return resMonitorDataMapper.selectResMonitorDataList(resMonitorData);
     }
 
+
+    /**
+     * 查询传感器监测数据列表
+     *
+     * @param resMonitorData 传感器监测数据
+     * @return 传感器监测数据集合
+     */
+    @Override
+    public List<ResMonitorData> selectResMonitorDataListByDay(ResMonitorData resMonitorData){
+        return resMonitorDataMapper.selectResMonitorDataListByDay(resMonitorData);
+    }
+
     /**
      * 新增传感器监测数据
      *

@@ -6,7 +6,7 @@
           <el-date-picker
             v-model="queryParams.params.month"
             type="month"
-            value-format="yyyy-mm"
+            value-format="yyyy-MM"
             placeholder="选择月份" clearable>
           </el-date-picker>
         </el-form-item>
@@ -38,6 +38,7 @@
 import LineChart from "@/views/dashboard/LineChart";
 import {listSenor} from "@/api/reservior/senor";
 import {listData} from "@/api/reservior/data";
+import {parseTime} from "@/utils/hwapow";
 
 export default {
   name: "month_line",
@@ -50,8 +51,9 @@ export default {
         senorId: null,
       },
       chartData: {
-        xAxisData: ["2021-01-01", "2021-01-02", "2021-01-03", "2021-01-04", "2021-01-05", "2021-01-06"],
-        seriesData: [{name: "水位", data: ["935", "930", "915", "910", "905", "900"]}],
+        title:"",
+        xAxisData: [],
+        seriesData: [{name: "水位", data: []}],
         yAxisUnit: "米"
       }
     }
@@ -66,10 +68,23 @@ export default {
       })
     },
     getData() {
+      var $this=this;
       this.loading = true;
-      listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
-      });
+      if(this.queryParams.senorId&&this.queryParams.params.month){
+        this.queryParams.params.getYear=this.queryParams.params.month.substr(0,4);
+        this.queryParams.params.getMonth=this.queryParams.params.month.substr(5,2);
+        listData(this.queryParams).then(response => {
+          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.getSenorName(this.queryParams.senorId)+"监测数据"
+          $this.chartData.xAxisData=[];
+          $this.chartData.seriesData[0].data=[];
+          for(var i in  response.rows){
+            $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime,"{y}-{m}-{d}"));
+            $this.chartData.seriesData[0].data.push(response.rows[i].data);
+          }
+        });
+      }else{
+        this.msgError("请选择月份和设备！")
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -77,7 +92,18 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams.params.month=null;
       this.resetForm("queryForm");
+    },
+    getSenorName(id){
+      let actions = []
+      Object.keys(this.senorOptions).some((key) => {
+        if (this.senorOptions[key].id === id) {
+          actions.push(this.senorOptions[key].name)
+          return true
+        }
+      })
+      return actions.join('')
     }
   }
 }

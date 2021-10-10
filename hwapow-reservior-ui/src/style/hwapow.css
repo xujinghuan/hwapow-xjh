@@ -219,7 +219,7 @@ aside{
 }
 
 .login-form .el-form-item{
-  padding-bottom: 12px;
+  padding-bottom: 0px;
 }
 
 .searchForm .el-input{

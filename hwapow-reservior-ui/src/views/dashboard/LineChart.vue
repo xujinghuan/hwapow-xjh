@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '400px'
+      default: '500px'
     },
     autoResize: {
       type: Boolean,
@@ -70,6 +70,7 @@ export default {
      *            areaStyle：是否展示面积图
      * yAxisUnit y轴单位
      * yAxisDcale y刻度是否从0开始，默认true，不从0开始，false则是从0开始
+     * title:标题
      * @param D
      */
     setOptions(D) {
@@ -100,6 +101,15 @@ export default {
         });
       }
       this.chart.setOption({
+        title:{
+          show:D.title?true:false,
+          left:"center",
+          text:D.title,
+          textStyle:{
+            color: '#000000',
+            fontSize: 25
+          }
+        },
         xAxis: {
           data: D.xAxisData,
           boundaryGap: true,
@@ -120,7 +130,7 @@ export default {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 80,
           containLabel: true
         },
         tooltip: {
@@ -134,14 +144,15 @@ export default {
           axisTick: {
             show: false
           },
-          scale:true,
+          scale:(D.yAxisDcale==false)?false:true,
           type:"value",
           axisLabel: {
             formatter:'{value}'+(D.yAxisUnit?D.yAxisUnit:"")
           }
         },
         legend: {
-          data: legendData
+          data: legendData,
+          top:40
         },
         series: seriesData
       })

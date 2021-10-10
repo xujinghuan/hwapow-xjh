@@ -2,11 +2,20 @@
   <div class="login">
     <div class="login-title">{{this.$store.state.settings.title}}</div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">欢迎使用</h3>
-      <el-form-item prop="username">
+      <!--<h3 class="title">欢迎使用</h3>-->
+      <!--<el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
+      </el-form-item>-->
+      <el-form-item prop="username">
+        <el-select v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" style="width: 300px">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+          <el-option label="浍河水库" value="hhsk"></el-option>
+          <el-option label="三泉水库" value="sqsk"></el-option>
+          <el-option label="西梁水库" value="xlsk"></el-option>
+          <el-option label="超级管理员" value="admin"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
@@ -146,7 +155,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url("../assets/images/login-background.png");
   background-size: cover;
 }
 .title {
@@ -155,11 +164,17 @@ export default {
   color: #707070;
 }
 
+.login-title{
+  -webkit-box-reflect: below -10px -webkit-gradient(linear,left top,left bottom, from(rgba(0,0,0,0)),to(rgba(255,255,255,0.1)));
+}
+
 .login-form {
   border-radius: 6px;
-  background: #ffffff5c;
+  background: #ffffff00;
   width: 350px;
   padding: 25px 25px 5px 25px;
+  position: fixed;
+  bottom: 20%;
   .el-input {
     height: 38px;
     input {
@@ -170,6 +185,17 @@ export default {
     height: 39px;
     width: 14px;
     margin-left: 2px;
+  }
+
+  .el-input__inner{
+    background-color: #0d295340;
+    border-color: #2c2c2c2b;
+    color: #fff;
+  }
+
+  .el-button--primary{
+    background-color: #1890ff47;
+    border-color: #1890ff47;
   }
 }
 .login-tip {

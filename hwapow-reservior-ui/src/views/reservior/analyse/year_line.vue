@@ -2,9 +2,9 @@
   <el-container class="fullContainer">
     <el-header style="height: auto;">
       <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true" >
-        <el-form-item label="年份" prop="getYear">
+        <el-form-item label="年份" prop="year">
           <el-date-picker
-            v-model="queryParams.params.getYear"
+            v-model="queryParams.params.year"
             type="year"
             value-format="yyyy"
             placeholder="选择年份" clearable>
@@ -38,6 +38,7 @@
 import LineChart from "@/views/dashboard/LineChart";
 import {listSenor} from "@/api/reservior/senor";
 import {listData} from "@/api/reservior/data";
+import {parseTime} from "@/utils/hwapow";
 
 export default {
   name: "year_line",
@@ -46,12 +47,13 @@ export default {
     return {
       senorOptions:null,
       queryParams: {
-        params: {getYear: null},
+        params: {year: null},
         senorId: null,
       },
       chartData: {
-        xAxisData: ["2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06"],
-        seriesData: [{name: "水位", data: ["935", "930", "915", "910", "905", "900"]}],
+        title:"",
+        xAxisData: [],
+        seriesData: [{name: "水位", data: []}],
         yAxisUnit: "米"
       }
     }
@@ -66,10 +68,22 @@ export default {
       })
     },
     getData() {
+      var $this=this;
       this.loading = true;
-      listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
-      });
+      if(this.queryParams.senorId&&this.queryParams.params.year){
+        this.queryParams.params.getYear=this.queryParams.params.year;
+        listData(this.queryParams).then(response => {
+          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.getSenorName(this.queryParams.senorId)+"监测数据"
+          $this.chartData.xAxisData=[];
+          $this.chartData.seriesData[0].data=[];
+          for(var i in  response.rows){
+            $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime,"{y}-{m}-{d}"));
+            $this.chartData.seriesData[0].data.push(response.rows[i].data);
+          }
+        });
+      }else{
+        this.msgError("请选择年份和设备！")
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -77,7 +91,18 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams.params.month=null;
       this.resetForm("queryForm");
+    },
+    getSenorName(id){
+      let actions = []
+      Object.keys(this.senorOptions).some((key) => {
+        if (this.senorOptions[key].id === id) {
+          actions.push(this.senorOptions[key].name)
+          return true
+        }
+      })
+      return actions.join('')
     }
   }
 }

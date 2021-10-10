@@ -11,6 +11,8 @@ import com.hwapow.webSocket.service.WebSocketServer;
 import gnu.io.SerialPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class PortService implements IPortService {
 
     public static SerialPort serialPort = null;
 
-    @Value("${range.portname:COM1}")
+    @Value("${range.portname}")
     private String portname;
 
     @Autowired
@@ -42,6 +44,9 @@ public class PortService implements IPortService {
             //查看所有串口
             ArrayList<String> port = serialPortUtil.findPort();
             System.out.println("发现全部串口：" + port+"打开指定portname:" + portname);
+            if(StringUtils.isBlank(portname)){
+                portname="COM1";
+            }
             //打开该对应portname名字的串口
             PortService.serialPort = serialPortUtil.openPort(portname, 9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             //给对应的serialPort添加监听器

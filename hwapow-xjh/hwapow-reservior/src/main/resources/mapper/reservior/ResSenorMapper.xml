@@ -39,10 +39,10 @@
     <select id="selectResSenorList" parameterType="ResSenor" resultMap="ResSenorResult">
         <include refid="selectResSenorVo"/>
         <where>
-            <if test="code != null  and code != ''">and code like concat('%', #{code}, '%')</if>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="type != null">and type = #{type}</if>
-            <if test="sectionId != null  and sectionId != ''">and section_id = #{sectionId}</if>
+            <if test="code != null  and code != ''">and a.code like concat('%', #{code}, '%')</if>
+            <if test="name != null  and name != ''">and a.name like concat('%', #{name}, '%')</if>
+            <if test="type != null">and a.type = #{type}</if>
+            <if test="sectionId != null  and sectionId != ''">and a.section_id = #{sectionId}</if>
             and (a.del_flag is null or a.del_flag = '0')
         </where>
         <!-- 数据范围过滤 -->
