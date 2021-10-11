@@ -1,17 +1,18 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
+               @toggleClick="toggleSideBar"/>
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <search id="header-search" class="right-menu-item"/>
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <screenfull id="screenfull" class="right-menu-item hover-effect"/>
 
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
+          <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
 
       </template>
@@ -19,7 +20,11 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <div class="name-div">
+            <div>{{ nickName }}</div>
+            <div>{{ orgName }}</div>
+          </div>
+          <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/user/profile">
@@ -38,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
@@ -46,6 +51,7 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import {getUserProfile} from "@/api/system/user";
 
 export default {
   components: {
@@ -56,6 +62,12 @@ export default {
     Search,
     RuoYiGit,
     RuoYiDoc
+  },
+  data() {
+    return {
+      nickName: null,
+      orgName: null
+    }
   },
   computed: {
     ...mapGetters([
@@ -74,6 +86,8 @@ export default {
         })
       }
     }
+  }, created() {
+    this.getUserInfo();
   },
   methods: {
     toggleSideBar() {
@@ -89,7 +103,15 @@ export default {
           location.href = '/index';
         })
       })
+    },
+    getUserInfo() {
+      var $this = this;
+      getUserProfile().then(response => {
+        $this.nickName = response.data.nickName;
+        $this.orgName = response.data.org.orgName;
+      });
     }
+
   }
 }
 </script>
@@ -100,7 +122,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -108,7 +130,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -173,6 +195,18 @@ export default {
           font-size: 12px;
         }
       }
+    }
+
+    .name-div {
+      float: right;
+      font-size: 15px;
+      font-family: fangsong;
+      font-weight: 600;
+    }
+
+    .name-div div {
+      height: 20px;
+      line-height: 20px;
     }
   }
 }

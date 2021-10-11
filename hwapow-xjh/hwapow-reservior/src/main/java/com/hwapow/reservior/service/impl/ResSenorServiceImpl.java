@@ -2,6 +2,7 @@ package com.hwapow.reservior.service.impl;
 
 import java.util.List;
 
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.constant.UserConstants;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
@@ -42,6 +43,7 @@ public class ResSenorServiceImpl implements IResSenorService {
      * @return 设备管理
      */
     @Override
+    @DataScope(orgAlias = "b")
     public List<ResSenor> selectResSenorList(ResSenor resSenor) {
         return resSenorMapper.selectResSenorList(resSenor);
     }
