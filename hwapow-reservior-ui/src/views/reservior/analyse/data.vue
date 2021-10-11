@@ -53,7 +53,7 @@
       </el-form>
     </el-header>
     <el-main>
-      <iframe style="width: 100%;height: 99%" :src="'http://'+backIPPort+'/ureport/preview?_t=6' +
+      <iframe style="width: 100%;height: 99%" :src="'http://'+backIPPort+'/ureport/preview?_t=6&_i=1&_r=1' +
        '&getYear='+queryParams.getYear+'&getMonth='+queryParams.getMonth+'&getDay='+queryParams.getDay+
        '&senorId='+queryParams.senorId+'&sectionId='+queryParams.sectionId+'&orgId='+selOrgId+
        '&_u=file:data-report.ureport.xml'">
