@@ -8,6 +8,7 @@ import com.hwapow.common.core.page.TableDataInfo;
 import com.hwapow.common.enums.BusinessType;
 import com.hwapow.common.utils.SecurityUtils;
 import com.hwapow.common.utils.poi.ExcelUtil;
+import com.hwapow.framework.web.domain.server.Sys;
 import com.hwapow.reservior.domain.ResSenor;
 import com.hwapow.reservior.service.IResSenorService;
 import com.hwapow.rxtx.core.SerialPortUtil;
@@ -38,6 +39,7 @@ public class SendToPortController extends BaseController
     @Autowired
     private IPortService portService;
 
+    private static Thread thread;
     /**
      * 发送取数指令到指定断面设备
      */
@@ -50,15 +52,23 @@ public class SendToPortController extends BaseController
         if(CollectionUtils.isEmpty(resSenors)){
             return AjaxResult.error("监测设备为空!");
         }
+        if(thread!=null&&thread.isAlive()){
+            thread.interrupt();//强制中断是为了不重复执行
+        }
         SerialPortUtil serialPortUtil=portService.InitSerialPortUtil();
-        new Thread(new Runnable() {
+        thread=new Thread(new Runnable() {
             @Override
             public void run() {
                 for(ResSenor item:resSenors){
+                    if(Thread.currentThread().isInterrupted()){
+                        //处理中断逻辑
+                        break;
+                    }
                     portService.startRead(item,serialPortUtil);
                 }
             }
-        }).start();
+        });
+        thread.start();
         return AjaxResult.success("监测数据已发出，请等待设备回传数据！",resSenors.size());
     }
 
@@ -73,14 +83,22 @@ public class SendToPortController extends BaseController
             return AjaxResult.error("监测设备为空!");
         }
         SerialPortUtil serialPortUtil=portService.InitSerialPortUtil();
-        new Thread(new Runnable() {
+        if(thread!=null&&thread.isAlive()){
+            thread.interrupt();//强制中断是为了不重复执行
+        }
+        thread=new Thread(new Runnable() {
             @Override
             public void run() {
                 for(ResSenor item:resSenors){
+                    if(Thread.currentThread().isInterrupted()){
+                        //处理中断逻辑
+                        break;
+                    }
                     portService.startRead(item,serialPortUtil);
                 }
             }
-        }).start();
+        });
+        thread.start();
         return AjaxResult.success("监测数据已发出，请等待设备回传数据！",resSenors.size());
     }
 
@@ -95,12 +113,16 @@ public class SendToPortController extends BaseController
             return AjaxResult.error("监测设备为空!");
         }
         SerialPortUtil serialPortUtil=portService.InitSerialPortUtil();
-        new Thread(new Runnable() {
+        if(thread!=null&&thread.isAlive()){
+            thread.interrupt();//强制中断是为了不重复执行
+        }
+        thread=new Thread(new Runnable() {
             @Override
             public void run() {
                 portService.startRead(resSenor,serialPortUtil);
             }
-        }).start();
+        });
+        thread.start();
         return AjaxResult.success("监测数据已发出，请等待设备回传数据！",1);
     }
 

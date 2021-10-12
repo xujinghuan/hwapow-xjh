@@ -56,6 +56,10 @@
           />
         </el-footer>
       </div>
+      <div v-if="time>0" class="mask">
+        <div style="opacity: 1;z-index: 101;color:#00ff89;">{{ msg }}</div>
+        <div style="opacity: 1;z-index: 101;color:#00ff89;font-size: 80px">{{ time }}</div>
+      </div>
     </el-main>
   </el-container>
 </template>
@@ -84,6 +88,10 @@ export default {
       total: 0,
       //采集数据
       dataList: [],
+      msg:"",
+      time:0,
+      minorData:0,//需要监测测的数量
+      backNum:0,//已经返回数据的数量
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -98,18 +106,31 @@ export default {
     this.getDataList();
     this.addListener();
     //巡测
-    this.sectionClick();
+    this.initPage();
   },
   beforeDestroy() {
     closeSocket();
   },
   methods: {
+    initPage(){
+      this.queryParams.params={
+        getYear: parseTime(new Date(),'{y}'),
+        getMonth: parseTime(new Date(),'{m}'),
+        getDay: parseTime(new Date(),'{d}')
+      }
+      listData(this.queryParams).then(response => {
+        this.total = response.total;
+        if(this.total<=0){
+          this.sectionClick(null)
+        }
+      });
+    },
     //查询监测数据
     getDataList() {
       this.queryParams.params={
         getYear: parseTime(new Date(),'{y}'),
-          getMonth: parseTime(new Date(),'{m}'),
-          getDay: parseTime(new Date(),'{d}')
+        getMonth: parseTime(new Date(),'{m}'),
+        getDay: parseTime(new Date(),'{d}')
       }
       listData(this.queryParams).then(response => {
         this.total = response.total;
@@ -136,18 +157,32 @@ export default {
     sectionClick(item) {
       if (item == null) {
         sendToALL().then(response => {
-          this.msgSuccess(response.msg);
+          this.addCountdown(response.msg,response.data);
         });
       } else {
         sendToSection(item.id).then(response => {
-          this.msgSuccess(response.msg);
+          this.addCountdown(response.msg,response.data);
         });
       }
     },
     senorClick(item) {
       sendToSenor(item.id).then(response => {
-        this.msgSuccess(response.msg);
+        this.addCountdown(response.msg,response.data);
       });
+    },
+    //添加计时器
+    addCountdown(msg,data){
+      this.minorData=data;
+      this.backNum=0;
+      this.time=data*10+10;//10代表每台设备回传时间10秒钟
+      this.msg=msg;
+      this.timer = setInterval(()=>{
+        this.time--;
+        if(this.time<0){
+          clearInterval(this.timer)
+          this.msgSuccess("数据回传完毕！");
+        }
+      },1000)
     },
     //添加后端监听
     addListener() {
@@ -157,6 +192,11 @@ export default {
           $this.queryParams.pageNum = 1;
           $this.queryParams.pageSize = 30;
           $this.getDataList();
+          $this.backNum++;
+          if($this.backNum>=$this.minorData){
+            $this.time=0;
+            this.msgSuccess("数据回传完毕！");
+          }
         }
       });
     }
@@ -215,4 +255,19 @@ export default {
   margin: 5px;
   border-radius: 3px;
 }
+
+.mask {
+  background-color: rgb(0, 0, 0);
+  opacity: 0.3;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
 </style>

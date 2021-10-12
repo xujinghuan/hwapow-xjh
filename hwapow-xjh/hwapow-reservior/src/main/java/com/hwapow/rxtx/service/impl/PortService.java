@@ -70,12 +70,13 @@ public class PortService implements IPortService {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println(senor.getName()+"【"+senor.getCode()+"】发送取数指令失败！");
+            //Thread.sleep() 方法由于中断而抛出的异常，是会清除中断标记的,所以需要手动清除
+            Thread.currentThread().interrupt();
+            System.out.println(senor.getName()+"【"+senor.getCode()+"】发送取数指令中断！");
         }
         if(senor!=null&&StringUtils.isNotEmpty(senor.getGetInstruction())){//取数指令不为空
             serialPortUtil.sendToPort(PortService.serialPort,hex2byte(senor.getGetInstruction().toUpperCase()));
-            System.out.println(DateUtils.getTime()+senor.getName()+"【"+senor.getCode()+"】已发送取数指令" +senor.getGetInstruction());
+            System.out.println(Thread.currentThread().getName()+" "+DateUtils.getTime()+" "+senor.getName()+"【"+senor.getCode()+"】已发送取数指令" +senor.getGetInstruction());
         }
         return null;
     }
