@@ -163,13 +163,13 @@ public class SerialPortUtil {
         try {
             in = serialPort.getInputStream();
             int bufflenth = in.available();
-
+            Thread.sleep(3000);
             while (bufflenth != 0) {
                 bytes = new byte[bufflenth];
                 in.read(bytes);
                 bufflenth = in.available();
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
             try {

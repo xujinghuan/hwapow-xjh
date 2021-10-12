@@ -28,7 +28,6 @@ import java.util.List;
  * @author hwapow
  * @date 2021-09-20
  */
-@EnableAsync
 @RestController
 @RequestMapping("/reservior/sendToPort")
 public class SendToPortController extends BaseController
@@ -52,10 +51,15 @@ public class SendToPortController extends BaseController
             return AjaxResult.error("监测设备为空!");
         }
         SerialPortUtil serialPortUtil=portService.InitSerialPortUtil();
-        for(ResSenor item:resSenors){
-            portService.startRead(item,serialPortUtil);
-        }
-        return AjaxResult.success("监测数据已发出，请等待设备回传数据！");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(ResSenor item:resSenors){
+                    portService.startRead(item,serialPortUtil);
+                }
+            }
+        }).start();
+        return AjaxResult.success("监测数据已发出，请等待设备回传数据！",resSenors.size());
     }
 
     /**
@@ -69,10 +73,15 @@ public class SendToPortController extends BaseController
             return AjaxResult.error("监测设备为空!");
         }
         SerialPortUtil serialPortUtil=portService.InitSerialPortUtil();
-        for(ResSenor item:resSenors){
-            portService.startRead(item,serialPortUtil);
-        }
-        return AjaxResult.success("监测数据已发出，请等待设备回传数据！");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(ResSenor item:resSenors){
+                    portService.startRead(item,serialPortUtil);
+                }
+            }
+        }).start();
+        return AjaxResult.success("监测数据已发出，请等待设备回传数据！",resSenors.size());
     }
 
     /**
@@ -86,8 +95,13 @@ public class SendToPortController extends BaseController
             return AjaxResult.error("监测设备为空!");
         }
         SerialPortUtil serialPortUtil=portService.InitSerialPortUtil();
-        portService.startRead(resSenor,serialPortUtil);
-        return AjaxResult.success("监测数据已发出，请等待设备回传数据！");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                portService.startRead(resSenor,serialPortUtil);
+            }
+        }).start();
+        return AjaxResult.success("监测数据已发出，请等待设备回传数据！",1);
     }
 
 }

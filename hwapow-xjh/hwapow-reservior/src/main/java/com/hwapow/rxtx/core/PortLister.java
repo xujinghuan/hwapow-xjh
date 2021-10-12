@@ -47,7 +47,11 @@ public class PortLister implements SerialPortEventListener {
             byte[] bytes = serialPortUtil.readFromPort(PortService.serialPort);
             String byteStr = new String(bytes, 0, bytes.length).trim();
             String needData = printHexString(bytes);
-            if (needData.equals("D7 FA")) {
+            if (needData.equals("D7 FA")||needData.equals("D7")||needData.equals("FA")) {
+                return;
+            }
+            if (needData.equals("D7 FF")||needData.equals("FF")) {
+                System.out.println(DateUtils.getTime() + "指令发送失败！");
                 return;
             }
             ResSenor resSenor = null;
@@ -63,10 +67,10 @@ public class PortLister implements SerialPortEventListener {
                 String rowData16 = needData.substring(resSenor.getBackDataIndexS(), resSenor.getBackDataIndexE());
                 System.out.println(DateUtils.getTime() + "设备【" + resSenor.getName() + "】原始数据16进制！" + rowData16);
                 double rowData = Integer.parseInt(rowData16.replace(" ", ""), 16);
+                System.out.println(DateUtils.getTime() + "设备【" + resSenor.getName() + "】原始数据10进制！" + rowData);
                 if (rowData >= resSenor.getBackDataMax()) {//如果大于等于最大值，则返回0
                     rowData = 0;
                 }
-                System.out.println(DateUtils.getTime() + "设备【" + resSenor.getName() + "】原始数据10进制！" + rowData);
                 //执行计算公式获取计算数据
                 String formulaSql = resSenor.getBackDataFormula().replace("{senorId}", resSenor.getId() + "").replace("{rowData}", rowData + "");
                 double data = resSenorService.executeFormulaSql(formulaSql);
@@ -104,7 +108,7 @@ public class PortLister implements SerialPortEventListener {
                 WebSocketServer.sendInfo("sernorData", needData);
                 System.out.println(DateUtils.getTime() + "设备【" + resSenor.getName() + "】数据更新！");
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
 

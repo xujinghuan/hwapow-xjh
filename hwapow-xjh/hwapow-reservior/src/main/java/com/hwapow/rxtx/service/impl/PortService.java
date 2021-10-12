@@ -1,5 +1,6 @@
 package com.hwapow.rxtx.service.impl;
 
+import com.hwapow.common.utils.DateUtils;
 import com.hwapow.common.utils.SecurityUtils;
 import com.hwapow.common.utils.StringUtils;
 import com.hwapow.reservior.domain.ResSenor;
@@ -52,6 +53,7 @@ public class PortService implements IPortService {
             //给对应的serialPort添加监听器
             PortLister portLister=new PortLister();
             serialPortUtil.addListener(PortService.serialPort, portLister);
+            serialPort.notifyOnDataAvailable(true);
             System.out.println("开始监听" + portname+"数据");
         }
         return serialPortUtil;
@@ -64,11 +66,16 @@ public class PortService implements IPortService {
      * @return
      */
     @Override
-    @Async
     public String startRead(ResSenor senor, SerialPortUtil serialPortUtil) {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(senor.getName()+"【"+senor.getCode()+"】发送取数指令失败！");
+        }
         if(senor!=null&&StringUtils.isNotEmpty(senor.getGetInstruction())){//取数指令不为空
             serialPortUtil.sendToPort(PortService.serialPort,hex2byte(senor.getGetInstruction().toUpperCase()));
-            System.out.println(senor.getName()+"【"+senor.getCode()+"】已发送取数指令" +senor.getGetInstruction());
+            System.out.println(DateUtils.getTime()+senor.getName()+"【"+senor.getCode()+"】已发送取数指令" +senor.getGetInstruction());
         }
         return null;
     }
