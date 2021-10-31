@@ -38,10 +38,12 @@ public class ResSectionController extends BaseController
     /**
      * 查询水库断面列表
      */
-    @PreAuthorize("@ss.hasPermi('reservior:section:list')")
     @GetMapping("/list")
     public TableDataInfo list(ResSection resSection)
     {
+        if (resSection.getParams()!=null&&resSection.getParams().get("codeNotIn")!=null){
+            resSection.getParams().put("codeNotIn",((String)resSection.getParams().get("codeNotIn")).split(","));
+        }
         startPage();
         List<ResSection> list = resSectionService.selectResSectionList(resSection);
         return getDataTable(list);

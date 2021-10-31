@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hwapow.reservior.mapper.ResMonitorDataMapper">
-    
+
     <resultMap type="ResMonitorData" id="ResMonitorDataResult">
         <result property="id"    column="id"    />
         <result property="senorId"    column="senor_id"    />
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectResMonitorDataList"  resultMap="ResMonitorDataResult">
         <include refid="selectResMonitorDataVo"/>
-        <where>  
+        <where>
             <if test="getTime != null "> and get_time = #{getTime}</if>
             <if test="params.getYear != null and params.getYear != 'null' "> and get_year = #{params.getYear}</if>
             <if test="params.getMonth != null and params.getMonth != 'null'"> and get_month = #{params.getMonth}</if>
@@ -38,7 +38,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
-        order by a.get_time desc,a.senor_id desc
+        <choose>
+            <when test="params.order != null and params.order != 'null'">
+                order by #{params.order}
+            </when>
+            <otherwise>
+                order by a.get_year desc,a.get_month desc,a.get_day desc,a.get_time asc,a.senor_id asc
+            </otherwise>
+        </choose>
+
     </select>
 
     <select id="selectResMonitorDataListByDay"  resultMap="ResMonitorDataResult">
@@ -52,12 +60,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by a.get_time desc,a.senor_id desc
     </select>
-    
+
     <select id="selectResMonitorDataById" parameterType="Long" resultMap="ResMonitorDataResult">
         <include refid="selectResMonitorDataVo"/>
         where a.id = #{id}
     </select>
-        
+
+    <select id="selectLastDataByDay" resultMap="ResMonitorDataResult">
+        select a.* from v_res_monitor_data a
+        where get_time =
+        (select max(get_time)
+        from v_res_monitor_data
+        where senor_id = a.senor_id
+        <choose>
+            <when test="getTime != null ">and DATE_FORMAT(get_time,'%Y-%m-%d') <![CDATA[ <= ]]> substr(#{getTime},1,10) </when>
+            <otherwise>
+                <if test="params.getYear != null and params.getYear != 'null' "> and get_year = #{params.getYear}</if>
+                <if test="params.getMonth != null and params.getMonth != 'null'"> and get_month = #{params.getMonth}</if>
+                <if test="params.getDay != null and params.getDay != 'null'"> and get_day = #{params.getDay}</if>
+            </otherwise>
+        </choose>
+        <if test="senorId != null"> and senor_id = #{senorId}</if>
+        <if test="sectionId != null"> and section_id = #{sectionId}</if>
+        <if test="params.senorType != null"> and senor_type = #{params.senorType}</if>
+        and (del_flag = '0' or del_flag is null) ) order by a.senor_sort asc
+    </select>
+
     <insert id="insertResMonitorData" parameterType="ResMonitorData" useGeneratedKeys="true" keyProperty="id">
         insert into res_monitor_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -74,7 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
             <if test="capacity != null">capacity,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="senorId != null">#{senorId},</if>
             <if test="getTime != null">#{getTime},</if>
@@ -89,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="capacity != null">#{capacity},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateResMonitorData" parameterType="ResMonitorData">
@@ -112,14 +140,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <update id="deleteResMonitorDataById" parameterType="Long">
-        update res_monitor_data  set del_flag=2 where id = #{id}
-    </update>
+    <delete id="deleteResMonitorDataById" parameterType="Long">
+        delete from res_monitor_data where id = #{id}
+    </delete>
 
-    <update id="deleteResMonitorDataByIds" parameterType="String">
-        update res_monitor_data  set del_flag=2 where id in
+    <delete id="deleteResMonitorDataByIds" parameterType="String">
+        delete from res_monitor_data where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </update>
+    </delete>
 </mapper>

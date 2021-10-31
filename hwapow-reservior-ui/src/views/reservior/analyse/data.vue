@@ -55,8 +55,8 @@
     <el-main>
       <iframe style="width: 100%;height: 99%" :src="'http://'+backIPPort+'/ureport/preview?_t=6&_i=1&_r=1' +
        '&getYear='+queryParams.getYear+'&getMonth='+queryParams.getMonth+'&getDay='+queryParams.getDay+
-       '&senorId='+queryParams.senorId+'&sectionId='+queryParams.sectionId+'&orgId='+selOrgId+
-       '&_u=file:data-report.ureport.xml'">
+       '&senorId='+queryParams.senorId+'&sectionId='+queryParams.sectionId+'&orgId='+selOrgId+'&getTime='+this.queryParams.getTime+
+       '&_u=file:'+file">
       </iframe>
     </el-main>
   </el-container>
@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       selOrgId: null,
+      file:"data-report.ureport.xml",
       // 查询参数
       queryParams: {
         getYear: null,
@@ -112,6 +113,20 @@ export default {
       getUserProfile().then(response => {
         $this.selOrgId = response.data.orgId;
       });
+    }
+  },
+  watch:{
+    queryParams:{//深度监听，可监听到对象、数组的变化
+      handler(val, oldVal){
+        if(this.queryParams.getYear&&this.queryParams.getMonth&&this.queryParams.getDay){
+          this.queryParams.getTime=this.queryParams.getYear+"-"+this.queryParams.getMonth+"-"+this.queryParams.getDay
+          this.file="day-data-report.ureport.xml"
+        }else{
+          this.queryParams.getTime="";
+          this.file="data-report.ureport.xml"
+        }
+      },
+      deep:true //true 深度监听
     }
   }
 };

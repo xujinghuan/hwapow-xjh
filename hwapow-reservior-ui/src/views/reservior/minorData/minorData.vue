@@ -57,14 +57,15 @@
       </el-form>
     </el-header>
     <div class="toolbar">
-      <!--<el-button
+      <el-button
         type="primary"
         plain
         icon="el-icon-plus"
         size="mini"
         @click="handleAdd"
         v-hasPermi="['reservior:data:add']"
-      >新增</el-button>
+      >新增
+      </el-button>
       <el-button
         type="success"
         plain
@@ -73,17 +74,18 @@
         :disabled="single"
         @click="handleUpdate"
         v-hasPermi="['reservior:data:edit']"
-      >修改</el-button>-->
+      >修改
+      </el-button>
       <el-button
-         type="danger"
-         plain
-         icon="el-icon-delete"
-         size="mini"
-         :disabled="multiple"
-         @click="handleDelete"
-         v-hasPermi="['reservior:data:remove']"
-       >删除
-       </el-button>
+        type="danger"
+        plain
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['reservior:data:remove']"
+      >删除
+      </el-button>
       <el-button
         type="warning"
         plain
@@ -116,18 +118,18 @@
           </template>
         </el-table-column>
         <el-table-column label="返回指令" align="center" prop="backInstruction" width="300"/>
-        <el-table-column label="原始数据" align="center" prop="rawData" :formatter="rawDataFormat" />
+        <el-table-column label="原始数据" align="center" prop="rawData" :formatter="rawDataFormat"/>
         <el-table-column label="数据" align="center" prop="data"/>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <!--<el-button
+            <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['reservior:data:edit']"
             >修改
-            </el-button>-->
+            </el-button>
             <el-button
               size="mini"
               type="text"
@@ -158,6 +160,33 @@
         </div>
         <el-main>
           <el-form size="mini" ref="form" :model="form" :rules="rules" label-width="80px">
+            <el-form-item label="设备" prop="senorId">
+              <el-select v-model="form.senorId" placeholder="请选择所属设备">
+                <el-option
+                  v-for="dict in senorOptions"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="数据获取时间" prop="getTime">
+              <el-date-picker clearable size="small"
+                              v-model="form.getTime"
+                              type="datetime"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+                              placeholder="选择数据获取时间">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="返回指令" prop="backInstruction">
+              <el-input v-model="form.backInstruction" placeholder="请输入返回指令"/>
+            </el-form-item>
+            <el-form-item label="原始数据" prop="rawData">
+              <el-input-number v-model="form.rawData" placeholder="请输入原始数据"/>
+            </el-form-item>
+            <el-form-item label="数据" prop="data">
+              <el-input-number v-model="form.data" placeholder="请输入数据"/>
+            </el-form-item>
           </el-form>
         </el-main>
       </el-container>
@@ -197,23 +226,33 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 15,
-        params:{
+        params: {
           getYear: null,
           getMonth: null,
           getDay: null
         },
-        sectionId:null,
-        senorId:null
+        sectionId: null,
+        senorId: null
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
-      sectionOptions:[],//断面集合
-      senorOptions:[],//设备集合
-      backDataUnitOptions:[],
-      monthOptions: ["01","02","03","04","05","06","07","08","09","10","11","12"],
-      dayOptions: ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
+      rules: {
+        senorId: [
+          {required: true, message: "设备不能为空", trigger: "blur"}
+        ],
+        getTime: [
+          {required: true, message: "时间不能为空", trigger: "blur"}
+        ],
+        data: [
+          {required: true, message: "数据不能为空", trigger: "blur"}
+        ]
+      },
+      sectionOptions: [],//断面集合
+      senorOptions: [],//设备集合
+      backDataUnitOptions: [],
+      monthOptions: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+      dayOptions: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     };
   },
   created() {
@@ -230,7 +269,7 @@ export default {
         this.loading = false;
       });
     },
-    initQuery(){
+    initQuery() {
       listSection().then(response => {
         this.sectionOptions = response.rows;
       });
@@ -243,7 +282,7 @@ export default {
     },
     // 字典翻译
     rawDataFormat(row, column) {
-      return row.rawData+this.selectDictLabel(this.backDataUnitOptions, row.backDataUnit);
+      return row.rawData + this.selectDictLabel(this.backDataUnitOptions, row.backDataUnit);
     },
     // 取消按钮
     cancel() {
@@ -276,9 +315,9 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.queryParams.params.getYear=null;
-      this.queryParams.params.getMonth=null;
-      this.queryParams.params.getDay=null;
+      this.queryParams.params.getYear = null;
+      this.queryParams.params.getMonth = null;
+      this.queryParams.params.getDay = null;
       this.resetForm("queryForm");
       this.handleQuery();
     },

@@ -9,6 +9,15 @@ export function listData(query) {
   })
 }
 
+// 查询传感器监测数据列表
+export function getLastData(query) {
+  return request({
+    url: '/reservior/data/getLastData',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询传感器监测数据详细
 export function getData(id) {
   return request({

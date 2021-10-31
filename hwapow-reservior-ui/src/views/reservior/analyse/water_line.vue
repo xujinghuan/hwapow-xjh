@@ -74,6 +74,7 @@ export default {
       var bjData=null;//坝基数据
       var kswData=null;//库位水数据
       this.loading = true;
+      this.queryParams.params.order="get_time asc";
       if(this.queryParams.senorId&&this.queryParams.params.month) {
         this.queryParams.params.getYear = this.queryParams.params.month.substr(0, 4);
         this.queryParams.params.getMonth = this.queryParams.params.month.substr(5, 2);
@@ -99,7 +100,7 @@ export default {
             kswQueryParams.params.getYear=$this.queryParams.params.getYear;
             kswQueryParams.params.getMonth=$this.queryParams.params.getMonth;
             listData(kswQueryParams).then(response => {
-              var title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.getSenorName($this.queryParams.senorId)+"水位过程图";
+              var title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.getSenorName($this.queryParams.senorId)+"水位过程线";
               kswData = response.rows;
               $this.getChartData(btData,bjData,kswData,title);
             });

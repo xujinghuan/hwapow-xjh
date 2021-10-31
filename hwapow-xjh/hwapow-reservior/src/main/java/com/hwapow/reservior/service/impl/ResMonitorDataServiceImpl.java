@@ -105,4 +105,15 @@ public class ResMonitorDataServiceImpl implements IResMonitorDataService {
     public int deleteResMonitorDataById(Long id) {
         return resMonitorDataMapper.deleteResMonitorDataById(id);
     }
+
+    /**
+     * 获取某天之前的设备数据
+     *
+     * @param resMonitorData 日期
+     * @return 结果
+     */
+    @Override
+    public List<ResMonitorData> selectLastDataByDay(ResMonitorData resMonitorData){
+        return resMonitorDataMapper.selectLastDataByDay(resMonitorData);
+    }
 }

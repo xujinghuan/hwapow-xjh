@@ -1,6 +1,9 @@
 package com.hwapow.reservior.controller;
 
 import java.util.List;
+
+import com.hwapow.reservior.domain.ResSenor;
+import com.hwapow.reservior.service.IResSenorService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +36,25 @@ public class ResMonitorDataController extends BaseController
     @Autowired
     private IResMonitorDataService resMonitorDataService;
 
+    @Autowired
+    private IResSenorService resSenorService;
+
+    /**
+     * 查询传感器监测数据列表,如果当天数据不全，则取昨天数据补充，如果当天本身没有数据则全部显示
+     */
+    @GetMapping("/getLastData")
+    public TableDataInfo getLastData(ResMonitorData resMonitorData)
+    {
+        List<ResMonitorData> list=resMonitorDataService.selectResMonitorDataListByDay(resMonitorData);
+        if(list!=null&&list.size()>0){
+            list= resMonitorDataService.selectLastDataByDay(resMonitorData);
+        }
+        return getDataTable(list);
+    }
+
     /**
      * 查询传感器监测数据列表
      */
-    @PreAuthorize("@ss.hasPermi('reservior:data:list')")
     @GetMapping("/list")
     public TableDataInfo list(ResMonitorData resMonitorData)
     {
@@ -76,6 +94,10 @@ public class ResMonitorDataController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ResMonitorData resMonitorData)
     {
+        ResSenor resSenor =this.resSenorService.selectResSenorById(resMonitorData.getSenorId());
+        if (resSenor!=null){
+            resMonitorData.setSectionId(resSenor.getSectionId());
+        }
         return toAjax(resMonitorDataService.insertResMonitorData(resMonitorData));
     }
 
@@ -87,6 +109,10 @@ public class ResMonitorDataController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ResMonitorData resMonitorData)
     {
+        ResSenor resSenor =this.resSenorService.selectResSenorById(resMonitorData.getSenorId());
+        if (resSenor!=null){
+            resMonitorData.setSectionId(resSenor.getSectionId());
+        }
         return toAjax(resMonitorDataService.updateResMonitorData(resMonitorData));
     }
 

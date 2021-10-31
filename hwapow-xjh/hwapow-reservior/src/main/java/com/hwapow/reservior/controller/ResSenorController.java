@@ -38,7 +38,6 @@ public class ResSenorController extends BaseController
     /**
      * 查询设备管理列表
      */
-    @PreAuthorize("@ss.hasPermi('reservior:senor:list')")
     @GetMapping("/list")
     public TableDataInfo list(ResSenor resSenor)
     {

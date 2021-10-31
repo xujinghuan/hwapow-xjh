@@ -19,26 +19,25 @@
             <el-table-column
               label=""
               type="index"
-              width="30"
+              width="40"
               align="center">
               <template scope="scope">
                 <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
               </template>
             </el-table-column>
             <!--<el-table-column label="水库" align="center" prop="orgName" width="100"/>-->
-            <el-table-column label="设备" align="center" prop="senorName" width="65"/>
+            <el-table-column label="设备" align="center" prop="senorName" width="64"/>
             <!--<el-table-column label="断面" align="center" prop="sectionName"/>-->
-            <el-table-column label="淹没高度" align="center" prop="rawData" width="75">
+            <el-table-column label="淹没高度" align="center" prop="rawData" width="74">
               <template slot-scope="scope">
                 <span>{{transformUnitToM(scope.row.rawData,scope.row.backDataUnit)}}m</span>
               </template>
             </el-table-column>
-            <el-table-column label="水位/流量" align="center" prop="data" width="95">
+            <el-table-column label="水位/流量" align="center" prop="data" width="94">
               <template slot-scope="scope">
-                <span>{{scope.row.senorType!="3"?(scope.row.data+"m"):(scope.row.data+"L/s")}}</span>
+                <span>{{ (scope.row.senorType!="3"?(scope.row.data+"m"):(scope.row.data+"L/s"))+(scope.row.capacity?("/"+scope.row.capacity+"m³"):"")}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="库容(m³)" align="center" prop="capacity" width="71"/>
             <el-table-column label="采集时间" align="center" prop="getTime" width="150">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.getTime,'{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -127,11 +126,7 @@ export default {
     },
     //查询监测数据
     getDataList() {
-      this.queryParams.params={
-        getYear: parseTime(new Date(),'{y}'),
-        getMonth: parseTime(new Date(),'{m}'),
-        getDay: parseTime(new Date(),'{d}')
-      }
+      this.queryParams.params=null;
       listData(this.queryParams).then(response => {
         this.total = response.total;
         this.dataList = response.rows;
@@ -205,7 +200,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .collect-left {
-  width: calc(100% - 488px);
+  width: calc(100% - 425px);
   height: 100%;
   float: left;
 }
@@ -229,7 +224,7 @@ export default {
 }
 
 .collect-data {
-  width: 488px;
+  width: 425px;
   height: 100%;
   float: right;
   border-left: 1px solid #dedede;

@@ -2,9 +2,9 @@
   <el-container class="fullContainer">
     <el-header style="height: auto;">
       <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="日期" prop="day">
+        <el-form-item label="日期" prop="getTime">
           <el-date-picker
-            v-model="queryParams.params.day"
+            v-model="queryParams.getTime"
             value-format="yyyy-MM-dd"
             placeholder="选择日期" clearable>
           </el-date-picker>
@@ -35,7 +35,7 @@
 
 <script>
 import LineChart from "@/views/dashboard/LineChart";
-import {listData} from "@/api/reservior/data";
+import {getLastData, listData} from "@/api/reservior/data";
 import {listSection} from "@/api/reservior/section";
 import {parseTime} from "@/utils/hwapow";
 
@@ -46,7 +46,7 @@ export default {
     return {
       sectionOptions: null,
       queryParams: {
-        params: {day: null, senorType: 0},
+        getTime:null,
         sectionId: null,
       },
       chartData: {
@@ -61,19 +61,17 @@ export default {
   },
   methods: {
     initQuery() {
-      listSection().then(response => {
+      var query={params:{codeNotIn:['9','11','12']}}
+      listSection(query).then(response => {
         this.sectionOptions = response.rows;
       })
     },
     getData() {
       var $this=this;
       this.loading = true;
-      if (this.queryParams.sectionId && this.queryParams.params.day) {
-        this.queryParams.params.getYear=this.queryParams.params.day.substr(0,4);
-        this.queryParams.params.getMonth=this.queryParams.params.day.substr(5,2);
-        this.queryParams.params.getDay=this.queryParams.params.day.substr(8,2);
-        listData(this.queryParams).then(response => {
-          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.queryParams.params.getDay+"日"+$this.getSectionName(this.queryParams.sectionId)+"断面监测数据"
+      if (this.queryParams.sectionId && this.queryParams.getTime) {
+        getLastData(this.queryParams).then(response => {
+          $this.chartData.title=$this.queryParams.getTime+$this.getSectionName(this.queryParams.sectionId)+"断面监测数据"
           $this.chartData.xAxisData=[];
           $this.chartData.seriesData[0].data=[];
           for(var i in  response.rows){

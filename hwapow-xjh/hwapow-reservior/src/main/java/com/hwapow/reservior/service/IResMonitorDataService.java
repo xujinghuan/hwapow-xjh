@@ -66,4 +66,12 @@ public interface IResMonitorDataService
      * @return 结果
      */
     public int deleteResMonitorDataById(Long id);
+
+    /**
+     * 获取某天之前的设备数据
+     *
+     * @param resMonitorData
+     * @return 结果
+     */
+    public List<ResMonitorData> selectLastDataByDay(ResMonitorData resMonitorData);
 }

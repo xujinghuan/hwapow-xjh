@@ -28,6 +28,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="code != null  and code != ''"> and a.code like concat('%', #{code}, '%')</if>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="params.codeNotIn != null"> and a.code not in <foreach item="code" collection="params.codeNotIn" open="(" separator="," close=")">
+                #{code}
+            </foreach></if>
             and (a.del_flag is null or a.del_flag = '0')
         </where>
         <!-- 数据范围过滤 -->

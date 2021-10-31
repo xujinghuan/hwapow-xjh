@@ -2,6 +2,7 @@ package com.hwapow.reservior.mapper;
 
 import java.util.List;
 import com.hwapow.reservior.domain.ResMonitorData;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 传感器监测数据Mapper接口
@@ -66,4 +67,12 @@ public interface ResMonitorDataMapper
      * @return 结果
      */
     public int deleteResMonitorDataByIds(Long[] ids);
+
+    /**
+     * 获取某天之前的设备数据
+     *
+     * @param getDay 日期
+     * @return 结果
+     */
+    public List<ResMonitorData> selectLastDataByDay(ResMonitorData resMonitorData);
 }

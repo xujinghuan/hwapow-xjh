@@ -1,7 +1,7 @@
 <template>
   <el-container class="fullContainer">
     <el-header style="height: auto;">
-      <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true" >
+      <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true">
         <el-form-item label="月份" prop="month">
           <el-date-picker
             v-model="queryParams.params.month"
@@ -45,13 +45,13 @@ export default {
   components: {LineChart},
   data() {
     return {
-      senorOptions:null,
+      senorOptions: null,
       queryParams: {
         params: {month: null},
         senorId: null,
       },
       chartData: {
-        title:"",
+        title: "",
         xAxisData: [],
         seriesData: [{name: "水位", data: []}],
         yAxisUnit: "米"
@@ -61,28 +61,30 @@ export default {
   created() {
     this.initQuery();
   },
-  methods:{
-    initQuery(){
+  methods: {
+    initQuery() {
       listSenor().then(response => {
         this.senorOptions = response.rows;
       })
     },
     getData() {
-      var $this=this;
+      var $this = this;
       this.loading = true;
-      if(this.queryParams.senorId&&this.queryParams.params.month){
-        this.queryParams.params.getYear=this.queryParams.params.month.substr(0,4);
-        this.queryParams.params.getMonth=this.queryParams.params.month.substr(5,2);
+      this.queryParams.params.order = "get_time asc";
+      if (this.queryParams.senorId && this.queryParams.params.month) {
+        this.queryParams.params.getYear = this.queryParams.params.month.substr(0, 4);
+        this.queryParams.params.getMonth = this.queryParams.params.month.substr(5, 2);
         listData(this.queryParams).then(response => {
-          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.getSenorName(this.queryParams.senorId)+"监测数据"
-          $this.chartData.xAxisData=[];
-          $this.chartData.seriesData[0].data=[];
-          for(var i in  response.rows){
-            $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime,"{y}-{m}-{d}"));
+          $this.chartData.title = $this.queryParams.params.getYear + "年" + $this.queryParams.params.getMonth + "月" + $this.getSenorName(this.queryParams.senorId) + "监测数据"
+          $this.chartData.xAxisData = [];
+          $this.chartData.seriesData[0].data = [];
+          for (var i in response.rows) {
+            $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime, "{m}-{d}"));
             $this.chartData.seriesData[0].data.push(response.rows[i].data);
           }
+
         });
-      }else{
+      } else {
         this.msgError("请选择月份和设备！")
       }
     },
@@ -92,10 +94,10 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.queryParams.params.month=null;
+      this.queryParams.params.month = null;
       this.resetForm("queryForm");
     },
-    getSenorName(id){
+    getSenorName(id) {
       let actions = []
       Object.keys(this.senorOptions).some((key) => {
         if (this.senorOptions[key].id === id) {

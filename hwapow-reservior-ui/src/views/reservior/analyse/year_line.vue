@@ -70,6 +70,7 @@ export default {
     getData() {
       var $this=this;
       this.loading = true;
+      this.queryParams.params.order="get_time asc";
       if(this.queryParams.senorId&&this.queryParams.params.year){
         this.queryParams.params.getYear=this.queryParams.params.year;
         listData(this.queryParams).then(response => {
@@ -77,7 +78,7 @@ export default {
           $this.chartData.xAxisData=[];
           $this.chartData.seriesData[0].data=[];
           for(var i in  response.rows){
-            $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime,"{y}-{m}-{d}"));
+            $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime,"{m}-{d}"));
             $this.chartData.seriesData[0].data.push(response.rows[i].data);
           }
         });
