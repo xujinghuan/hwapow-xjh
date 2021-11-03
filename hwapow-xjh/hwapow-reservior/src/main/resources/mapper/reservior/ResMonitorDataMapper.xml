@@ -40,10 +40,10 @@
         ${params.dataScope}
         <choose>
             <when test="params.order != null and params.order != 'null'">
-                order by #{params.order}
+                order by ${params.order}
             </when>
             <otherwise>
-                order by a.get_year desc,a.get_month desc,a.get_day desc,a.get_time asc,a.senor_id asc
+                order by a.get_year desc,a.get_month desc,a.get_day desc,a.get_time asc,a.senor_sort asc
             </otherwise>
         </choose>
 
@@ -58,7 +58,7 @@
             <if test="params.senorType != null"> and senor_type = #{params.senorType}</if>
             and (a.del_flag is null or a.del_flag = '0')
         </where>
-        order by a.get_time desc,a.senor_id desc
+        order by a.get_time asc,a.senor_sort asc
     </select>
 
     <select id="selectResMonitorDataById" parameterType="Long" resultMap="ResMonitorDataResult">

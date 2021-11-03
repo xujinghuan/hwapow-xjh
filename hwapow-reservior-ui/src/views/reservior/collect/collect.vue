@@ -126,7 +126,12 @@ export default {
     },
     //查询监测数据
     getDataList() {
-      this.queryParams.params=null;
+      this.queryParams.params={
+        getYear: parseTime(new Date(),'{y}'),
+        getMonth: parseTime(new Date(),'{m}'),
+        getDay: parseTime(new Date(),'{d}')
+      }
+      this.queryParams.params.order="senor_sort asc";
       listData(this.queryParams).then(response => {
         this.total = response.total;
         this.dataList = response.rows;

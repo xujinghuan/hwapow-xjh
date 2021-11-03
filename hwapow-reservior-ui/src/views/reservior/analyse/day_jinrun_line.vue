@@ -2,9 +2,9 @@
   <el-container class="fullContainer">
     <el-header style="height: auto;">
       <el-form class="searchForm" size="mini" :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="日期" prop="getTime">
+        <el-form-item label="日期" prop="getDay">
           <el-date-picker
-            v-model="queryParams.getTime"
+            v-model="queryParams.getDay"
             value-format="yyyy-MM-dd"
             placeholder="选择日期" clearable>
           </el-date-picker>
@@ -46,7 +46,8 @@ export default {
     return {
       sectionOptions: null,
       queryParams: {
-        getTime:null,
+        params:{},
+        getDay:null,
         sectionId: null,
       },
       chartData: {
@@ -69,9 +70,13 @@ export default {
     getData() {
       var $this=this;
       this.loading = true;
-      if (this.queryParams.sectionId && this.queryParams.getTime) {
-        getLastData(this.queryParams).then(response => {
-          $this.chartData.title=$this.queryParams.getTime+$this.getSectionName(this.queryParams.sectionId)+"断面监测数据"
+      this.queryParams.params.order="senor_sort asc";
+      if (this.queryParams.sectionId && this.queryParams.getDay) {
+        this.queryParams.params.getYear=this.queryParams.getDay.substr(0,4);
+        this.queryParams.params.getMonth=this.queryParams.getDay.substr(5,2);
+        this.queryParams.params.getDay=this.queryParams.getDay.substr(8,2);
+        listData(this.queryParams).then(response => {
+          $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.queryParams.params.getDay+"日"+$this.getSectionName(this.queryParams.sectionId)+"断面监测数据"
           $this.chartData.xAxisData=[];
           $this.chartData.seriesData[0].data=[];
           for(var i in  response.rows){
