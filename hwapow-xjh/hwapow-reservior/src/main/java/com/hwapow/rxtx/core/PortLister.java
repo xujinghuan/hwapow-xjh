@@ -90,9 +90,15 @@ public class PortLister implements SerialPortEventListener {
                 List<ResMonitorData> list=this.resMonitorDataService.selectResMonitorDataListByDay(selResMonitorData);
                 if(list!=null){
                     for(ResMonitorData item : list){
-                        if(Double.valueOf(item.getData())>0&&Math.abs(data-Double.valueOf(item.getData()))>1){//如果超过1米，则取原来的数据
-                            rowData=Double.valueOf(item.getRawData());
-                            data=Double.valueOf(item.getData());
+                        if(!"2".equals(item.getSenorType())&&!"2".equals(item.getSenorType())){//非坝体和坝基设备
+                            if(item.getRawData()!=null&&Double.valueOf(item.getRawData())>0){
+                                if(Math.abs(rowData-Double.valueOf(item.getRawData()))>1){//如果超过1米，则取原来的数据
+                                    rowData=Double.valueOf(item.getRawData());
+                                    formulaSql = resSenor.getBackDataFormula().replace("{senorId}", resSenor.getId() + "").replace("{rowData}", rowData + "");
+                                    data = resSenorService.executeFormulaSql(formulaSql);
+                                    data=(new BigDecimal(data)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                }
+                            }
                         }
                         this.resMonitorDataService.deleteResMonitorDataById(item.getId());
                     }
