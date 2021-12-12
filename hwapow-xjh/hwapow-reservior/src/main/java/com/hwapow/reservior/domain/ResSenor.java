@@ -138,6 +138,32 @@ public class ResSenor extends BaseEntity {
      */
     private Double backDataMax;
 
+    /**
+     * 报警水位最大值
+     */
+    private Double warnMax;
+
+    /**
+     * 报警水位最小值
+     */
+    private Double warnMin;
+
+    public Double getWarnMax() {
+        return warnMax;
+    }
+
+    public void setWarnMax(Double warnMax) {
+        this.warnMax = warnMax;
+    }
+
+    public Double getWarnMin() {
+        return warnMin;
+    }
+
+    public void setWarnMin(Double warnMin) {
+        this.warnMin = warnMin;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

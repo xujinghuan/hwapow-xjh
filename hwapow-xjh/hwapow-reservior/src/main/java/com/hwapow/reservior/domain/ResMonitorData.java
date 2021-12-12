@@ -35,6 +35,16 @@ public class ResMonitorData extends BaseEntity
     @Excel(name = "设备")
     private String senorName;
 
+    /**
+     * 报警水位最大值,不保存，只显示
+     */
+    private Double warnMax;
+
+    /**
+     * 报警水位最小值,不保存，只显示
+     */
+    private Double warnMin;
+
     private String senorType;
 
     /**
@@ -192,6 +202,22 @@ public class ResMonitorData extends BaseEntity
 
     public void setSenorType(String senorType) {
         this.senorType = senorType;
+    }
+
+    public Double getWarnMax() {
+        return warnMax;
+    }
+
+    public void setWarnMax(Double warnMax) {
+        this.warnMax = warnMax;
+    }
+
+    public Double getWarnMin() {
+        return warnMin;
+    }
+
+    public void setWarnMin(Double warnMin) {
+        this.warnMin = warnMin;
     }
 
     @Override

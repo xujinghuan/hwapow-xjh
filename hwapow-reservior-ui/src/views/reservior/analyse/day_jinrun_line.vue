@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     initQuery() {
-      var query={params:{codeNotIn:['9','11','12']}}
+      var query={params:{codeNotIn:['9','11','12','1','10']}}
       listSection(query).then(response => {
         this.sectionOptions = response.rows;
       })

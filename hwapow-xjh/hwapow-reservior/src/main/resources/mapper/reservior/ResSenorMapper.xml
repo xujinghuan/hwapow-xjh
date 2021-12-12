@@ -28,6 +28,8 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result property="warnMax" column="warn_max"/>
+        <result property="warnMin" column="warn_min"/>
     </resultMap>
 
     <sql id="selectResSenorVo">
@@ -88,6 +90,8 @@
             <if test="matchSenorId != null">match_senor_id,</if>
             <if test="backDataUnit != null">back_data_unit,</if>
             <if test="backDataMax != null">back_data_max,</if>
+            <if test="warnMax != null">warn_max,</if>
+            <if test="warnMin != null">warn_min,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="code != null">#{code},</if>
@@ -114,6 +118,8 @@
             <if test="matchSenorId != null">#{matchSenorId},</if>
             <if test="backDataUnit != null">#{backDataUnit},</if>
             <if test="backDataMax != null">#{backDataMax},</if>
+            <if test="warnMax != null">#{warnMax},</if>
+            <if test="warnMin != null">#{warnMin},</if>
         </trim>
     </insert>
 
@@ -141,6 +147,8 @@
             <if test="matchSenorId != null">match_senor_id = #{matchSenorId},</if>
             <if test="backDataUnit != null">back_data_unit = #{backDataUnit},</if>
             <if test="backDataMax != null">back_data_max = #{backDataMax},</if>
+            <if test="warnMax != null">warn_max = #{warnMax},</if>
+            <if test="warnMin != null">warn_min = #{warnMin},</if>
         </trim>
         where id = #{id}
     </update>

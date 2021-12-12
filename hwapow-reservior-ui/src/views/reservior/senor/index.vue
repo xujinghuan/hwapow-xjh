@@ -151,6 +151,14 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="警戒水位最大值" prop="warnMax">
+              <el-input v-model="form.warnMax" onkeyup="value=value.replace(/[^\.\d]/g,'')"
+                        placeholder="警戒水位最大值"/>
+            </el-form-item>
+            <el-form-item label="警戒水位最小值" prop="warnMin">
+              <el-input v-model="form.warnMin" onkeyup="value=value.replace(/[^\.\d]/g,'')"
+                        placeholder="警戒水位最小值"/>
+            </el-form-item>
             <el-form-item label="返回数据最大值" prop="backDataMax">
               <el-input v-model="form.backDataMax" onkeyup="value=value.replace(/[^\.\d]/g,'')"
                         placeholder="返回数据最大值（以原始数据位标准）"/>
@@ -377,7 +385,9 @@ export default {
         updateBy: null,
         updateTime: null,
         remark: null,
-        backDataMax:null
+        backDataMax:null,
+        warnMin:null,
+        warnMax:null
       };
       this.resetForm("form");
     },

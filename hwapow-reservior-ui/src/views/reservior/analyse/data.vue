@@ -30,6 +30,16 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="断面" prop="sectionId">
+          <el-select v-model="queryParams.sectionId" placeholder="请选择所属断面" clearable>
+            <el-option
+              v-for="dict in sectionOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="设备" prop="senorId">
           <el-select v-model="queryParams.senorId" placeholder="请选择所属设备" clearable>
             <el-option
@@ -72,7 +82,8 @@ export default {
         getYear: null,
         getMonth: null,
         getDay: null,
-        senorId: null
+        senorId: null,
+        sectionId: null
       },
       sectionOptions: [],//断面集合
       senorOptions: [],//设备集合
@@ -126,7 +137,7 @@ export default {
       }
       this.src='http://'+this.backIPPort+'/ureport/preview?_t=6&_i=1&_r=1' +
         '&getYear='+this.queryParams.getYear+'&getMonth='+this.queryParams.getMonth+'&getDay='+this.queryParams.getDay+
-        '&senorId='+this.queryParams.senorId+'&orgId='+this.selOrgId+'&getTime='+this.queryParams.getTime+
+        '&senorId='+this.queryParams.senorId+'&sectionId='+this.queryParams.sectionId+'&orgId='+this.selOrgId+'&getTime='+this.queryParams.getTime+
         '&_u=file:'+this.file;
     }
   }

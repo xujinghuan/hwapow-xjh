@@ -1,8 +1,8 @@
 module.exports = {
   //网站标题，在登陆页展示
-  title: '水库大坝无线监测系统',
+  title: '浍河水库大坝无线监测系统',
   //网站缩写标题，在主界面左上方展示（最多支持十个字）
-  title_abbr:'水库大坝无线监测系统',
+  title_abbr:'浍河水库大坝无线监测',
   //后端地址和端口
   //backIPPort:'192.168.1.105:8080/hwapow-reservior',
   backIPPort:'127.0.0.1:8080',

@@ -35,7 +35,7 @@
             </el-table-column>
             <el-table-column label="水位/流量" align="center" prop="data" width="94">
               <template slot-scope="scope">
-                <span>{{ (scope.row.senorType!="3"?(scope.row.data+"m"):(scope.row.data+"L/s"))+(scope.row.capacity?("/"+scope.row.capacity+"m³"):"")}}</span>
+                <span :style="{color:((scope.row.warnMax&&scope.row.warnMin&&(scope.row.data>=scope.row.warnMax||scope.row.data<=scope.row.warnMin))?'red':'black')}">{{ (scope.row.senorType!="3"?(scope.row.data+"m"):(scope.row.data+"L/s"))+(scope.row.capacity?("/"+scope.row.capacity+"m³"):"")}}</span>
               </template>
             </el-table-column>
             <el-table-column label="采集时间" align="center" prop="getTime" width="150">
@@ -135,6 +135,15 @@ export default {
       listData(this.queryParams).then(response => {
         this.total = response.total;
         this.dataList = response.rows;
+        var msg=null;
+        for(var i in this.dataList){
+          if(this.dataList[i].warnMax&&this.dataList[i].warnMin&&(this.dataList[i].data>=this.dataList[i].warnMax||this.dataList[i].data<=this.dataList[i].warnMin)){
+              msg=this.dataList[i].senorName+"报警！";
+          }
+        }
+        if(msg){
+          this.$message({ showClose: true, message: msg, type: "error" ,duration: 300000000});
+        }
       });
     },
     /** 查询水库断面列表 */

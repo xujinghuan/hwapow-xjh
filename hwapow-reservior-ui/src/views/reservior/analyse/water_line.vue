@@ -10,10 +10,10 @@
             placeholder="选择月份" clearable>
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="坝体设备" prop="senorId">
-          <el-select v-model="queryParams.senorId" clearable>
+        <el-form-item label="断面" prop="sectionId">
+          <el-select v-model="queryParams.sectionId" clearable>
             <el-option
-              v-for="dict in senorOptions"
+              v-for="dict in sectionOptions"
               :key="dict.id"
               :label="dict.name"
               :value="dict.id"
@@ -36,19 +36,19 @@
 
 <script>
 import LineChart from "@/views/dashboard/LineChart";
-import {listSenor} from "@/api/reservior/senor";
 import {listData} from "@/api/reservior/data";
 import {parseTime} from "@/utils/hwapow";
+import {listSection} from "@/api/reservior/section";
 
 export default {
   name: "water_line",
   components: {LineChart},
   data() {
     return {
-      senorOptions: null,
+      sectionOptions: null,
       queryParams: {
         params: {month: null,getYear:null,getMonth:null},
-        senorId: null,
+        sectionId: null,
       },
       chartData: {
         xAxisData: [],
@@ -64,46 +64,33 @@ export default {
   },
   methods: {
     initQuery() {
-      listSenor({type: "0"}).then(response => {
-        this.senorOptions = response.rows;
+      var query={params:{codeNotIn:['9','11','12','1','10','2','5','8']}}
+      listSection(query).then(response => {
+        this.sectionOptions = response.rows;
       })
     },
     getData() {
       var $this=this;
       var btData=null;//坝体数据
-      var bjData=null;//坝基数据
       var kswData=null;//库位水数据
       this.loading = true;
       this.queryParams.params.order="get_time asc";
-      if(this.queryParams.senorId&&this.queryParams.params.month) {
+      if(this.queryParams.sectionId&&this.queryParams.params.month) {
         this.queryParams.params.getYear = this.queryParams.params.month.substr(0, 4);
         this.queryParams.params.getMonth = this.queryParams.params.month.substr(5, 2);
         //获取坝体数据
         listData(this.queryParams).then(response => {
           btData = response.rows;
-          //获取坝基数据
-          var bjQueryParams={};
-          bjQueryParams.senorId=$this.getSenorMatchSenorId($this.queryParams.senorId);
-          if(!bjQueryParams.senorId){
-            this.msgError("没有对应坝基设备！")
-            return;
-          }
-          bjQueryParams.params={getYear:null,getMonth:null};
-          bjQueryParams.params.getYear=$this.queryParams.params.getYear;
-          bjQueryParams.params.getMonth=$this.queryParams.params.getMonth;
-          listData(bjQueryParams).then(response => {
-            bjData = response.rows;
-            //获取库水位数据
-            var kswQueryParams={};
-            kswQueryParams.params={getYear:null,getMonth:null};
-            kswQueryParams.params.senorType="2";
-            kswQueryParams.params.getYear=$this.queryParams.params.getYear;
-            kswQueryParams.params.getMonth=$this.queryParams.params.getMonth;
-            listData(kswQueryParams).then(response => {
-              var title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.getSenorName($this.queryParams.senorId)+"水位过程线";
-              kswData = response.rows;
-              $this.getChartData(btData,bjData,kswData,title);
-            });
+          //获取库水位数据
+          var kswQueryParams={};
+          kswQueryParams.params={getYear:null,getMonth:null};
+          kswQueryParams.params.senorType="2";
+          kswQueryParams.params.getYear=$this.queryParams.params.getYear;
+          kswQueryParams.params.getMonth=$this.queryParams.params.getMonth;
+          listData(kswQueryParams).then(response => {
+            var title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.getSectionName($this.queryParams.sectionId)+"水位过程线";
+            kswData = response.rows;
+            $this.getChartData(btData,kswData,title);
           });
         });
       }else{
@@ -119,11 +106,11 @@ export default {
       this.queryParams.params.month=null;
       this.resetForm("queryForm");
     },
-    getSenorName(id){
+    getSectionName(id){
       let actions = []
-      Object.keys(this.senorOptions).some((key) => {
-        if (this.senorOptions[key].id === id) {
-          actions.push(this.senorOptions[key].name)
+      Object.keys(this.sectionOptions).some((key) => {
+        if (this.sectionOptions[key].id === id) {
+          actions.push(this.sectionOptions[key].name)
           return true
         }
       })
@@ -141,47 +128,46 @@ export default {
       return actions.join("")
     },
     //拼接数据
-    getChartData(btData,bjData,kswData,title){
+    getChartData(btData,kswData,title){
       var $this=this;
       $this.chartData.title=title;
       $this.chartData.xAxisData=[];
-      $this.chartData.seriesData=[{name: "", data: []},
-        {name: "", data: []},
-        {name: "", data: []}];
-      var btMap={};
-      var bjMap={};
+      $this.chartData.seriesData=[{name: "", data: []}];
+      var btMap=[];
       var kswMap={};
       for(var i in  btData){
         var getTime=parseTime(btData[i].getTime,"{y}-{m}-{d}");
         if($this.chartData.xAxisData.indexOf(getTime)<0){
           $this.chartData.xAxisData.push(getTime);
         }
-        btMap.name=btData[i].senorName;
-        btMap[getTime]=btData[i].data;
-      }
-      for(var i in  bjData){
-        var getTime=parseTime(bjData[i].getTime,"{y}-{m}-{d}");
-        if($this.chartData.xAxisData.indexOf(getTime)<0){
-          $this.chartData.xAxisData.push(getTime);
+        if(!btMap[btData[i].senorName]){
+          btMap[btData[i].senorName]={name:null};
         }
-        bjMap.name=bjData[i].senorName;
-        bjMap[getTime]=bjData[i].data;
+        btMap[btData[i].senorName].name=btData[i].senorName;
+        btMap[btData[i].senorName][getTime]=btData[i].data;
       }
       for(var i in  kswData){
         var getTime=parseTime(kswData[i].getTime,"{y}-{m}-{d}");
         if($this.chartData.xAxisData.indexOf(getTime)<0){
           $this.chartData.xAxisData.push(getTime);
         }
-        kswMap.name=kswData[i].senorName;
+        kswMap.name=kswData[i].senorName?kswData[i].senorName:"库水位";
         kswMap[getTime]=kswData[i].data;
       }
-      $this.chartData.seriesData[0].name=btMap.name;
-      $this.chartData.seriesData[1].name=bjMap.name;
-      $this.chartData.seriesData[2].name=kswMap.name;
+      $this.chartData.seriesData[0].name=kswMap.name;
+      var t=0;
+      for(var i in btMap){
+        t++;
+        $this.chartData.seriesData[t]={name: "", data: []};
+        $this.chartData.seriesData[t].name=btMap[i].name;
+      }
       for(var i in $this.chartData.xAxisData){
-        $this.chartData.seriesData[0].data.push(btMap[$this.chartData.xAxisData[i]]?btMap[$this.chartData.xAxisData[i]]:"");
-        $this.chartData.seriesData[1].data.push(bjMap[$this.chartData.xAxisData[i]]?bjMap[$this.chartData.xAxisData[i]]:"");
-        $this.chartData.seriesData[2].data.push(kswMap[$this.chartData.xAxisData[i]]?kswMap[$this.chartData.xAxisData[i]]:"");
+        $this.chartData.seriesData[0].data.push(kswMap[$this.chartData.xAxisData[i]]?kswMap[$this.chartData.xAxisData[i]]:"");
+        t=0;
+        for(var j in btMap){
+          t++;
+          $this.chartData.seriesData[t].data.push(btMap[j][$this.chartData.xAxisData[i]]?btMap[j][$this.chartData.xAxisData[i]]:"");
+        }
       }
     }
   }
