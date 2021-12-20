@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       chart: null,
-      chartColor:["#3888fa","#ff1e00","#ffc300","#4e6ef2","#11FF00","#4f6ef2","#fd1e00","#FF005A"]
+      chartColor:["#1e0524","#9500ff","#ffc300","#4f6ef2","#11FF00","#ff1e00","#fd1e00","#FF005A"]
     }
   },
   watch: {
@@ -70,6 +70,8 @@ export default {
      *            areaStyle：是否展示面积图
      * yAxisUnit y轴单位
      * yAxisDcale y刻度是否从0开始，默认true，不从0开始，false则是从0开始
+     * yAxisDcaleMax y轴最大值
+     * yAxisDcaleMin y轴最小值
      * title:标题
      * @param D
      */
@@ -148,7 +150,9 @@ export default {
           type:"value",
           axisLabel: {
             formatter:'{value}'+(D.yAxisUnit?D.yAxisUnit:"")
-          }
+          },
+          min: D.yAxisDcaleMin,
+          max: D.yAxisDcaleMax
         },
         legend: {
           data: legendData,

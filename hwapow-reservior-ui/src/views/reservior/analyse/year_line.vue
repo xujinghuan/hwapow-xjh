@@ -53,6 +53,8 @@ export default {
       chartData: {
         title:"",
         xAxisData: [],
+        yAxisDcaleMin:800,
+        yAxisDcaleMax:0,
         seriesData: [{name: "水位", data: []}],
         yAxisUnit: "米"
       }
@@ -77,10 +79,21 @@ export default {
           $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.getSenorName(this.queryParams.senorId)+"监测数据"
           $this.chartData.xAxisData=[];
           $this.chartData.seriesData[0].data=[];
+          var max=0;
+          var min=10000;
           for(var i in  response.rows){
             $this.chartData.xAxisData.push(parseTime(response.rows[i].getTime,"{m}-{d}"));
             $this.chartData.seriesData[0].data.push(response.rows[i].data);
+            if(parseFloat(response.rows[i].data)>max){
+              max=parseFloat(response.rows[i].data);
+            }
+            if(parseFloat(response.rows[i].data)<min){
+              min=parseFloat(response.rows[i].data);
+            }
           }
+          $this.chartData.yAxisDcaleMax= parseFloat(max)+1;
+          $this.chartData.yAxisDcaleMin= parseFloat(min)-1;
+          console.log($this.chartData.yAxisDcaleMin);
         });
       }else{
         this.msgError("请选择年份和设备！")

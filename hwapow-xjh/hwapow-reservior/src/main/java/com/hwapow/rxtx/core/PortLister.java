@@ -89,10 +89,27 @@ public class PortLister implements SerialPortEventListener {
                 selResMonitorData.setSenorId(resSenor.getId());
                 List<ResMonitorData> list=this.resMonitorDataService.selectResMonitorDataListByDay(selResMonitorData);
                 if(list!=null){
+                    double oneM=100;
+                    if(resSenor.getBackDataUnit()!=null&&resSenor.getBackDataUnit().equals("0")){//毫米
+                        oneM=1000;
+                    }
+                    if(resSenor.getBackDataUnit()!=null&&resSenor.getBackDataUnit().equals("1")){//厘米
+                        oneM=100;
+                    }
+                    if(resSenor.getBackDataUnit()!=null&&resSenor.getBackDataUnit().equals("2")){//分米
+                        oneM=10;
+                    }
+                    if(resSenor.getBackDataUnit()!=null&&resSenor.getBackDataUnit().equals("3")){//米
+                        oneM=1;
+                    }
+                    if(resSenor.getBackDataUnit()!=null&&resSenor.getBackDataUnit().equals("4")){//千米
+                        oneM=0.001;
+                    }
                     for(ResMonitorData item : list){
-                        if(!"2".equals(item.getSenorType())&&!"2".equals(item.getSenorType())){//非坝体和坝基设备
+                        if(!"2".equals(item.getSenorType())){//坝体和坝基设备
                             if(item.getRawData()!=null&&Double.valueOf(item.getRawData())>0){
-                                if(Math.abs(rowData-Double.valueOf(item.getRawData()))>1){//如果超过1米，则取原来的数据
+                                if(Math.abs(rowData-Double.valueOf(item.getRawData()))>oneM){//如果超过1米，则取原来的数据
+                                    System.out.println(DateUtils.getTime() + "设备【" + resSenor.getName() + "】数据超过100cm！取之前数据"+item.getRawData()+" oneM="+oneM);
                                     rowData=Double.valueOf(item.getRawData());
                                     formulaSql = resSenor.getBackDataFormula().replace("{senorId}", resSenor.getId() + "").replace("{rowData}", rowData + "");
                                     data = resSenorService.executeFormulaSql(formulaSql);
