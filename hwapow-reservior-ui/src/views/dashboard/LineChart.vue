@@ -34,7 +34,8 @@ export default {
   data() {
     return {
       chart: null,
-      chartColor:["#1e0524","#9500ff","#ffc300","#4f6ef2","#11FF00","#ff1e00","#fd1e00","#FF005A"]
+      chartColor:["#1e0524","#9500ff","#ffc300","#4f6ef2","#11FF00","#ff1e00","#fd1e00","#FF005A"],
+      chartSymbol:['circle','star','diamond','triangle','emptyCicle','emptyTriangle','pin']
     }
   },
   watch: {
@@ -92,6 +93,8 @@ export default {
             }
           },
           smooth: true,
+          symbol:this.chartSymbol[i%7],
+          symbolSize:9,
           areaStyle:D.seriesData[i].areaStyle?D.seriesData[i].areaStyle:null,
           type: D.seriesData[i].type?D.seriesData[i].type:'line',
           data: D.seriesData[i].data,
