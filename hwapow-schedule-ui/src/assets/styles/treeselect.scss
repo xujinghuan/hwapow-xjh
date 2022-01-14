@@ -1,0 +1,18 @@
+$miniHeight: 28px;
+
+.vue-treeselect-mini {
+  .vue-treeselect__control {
+    height: $miniHeight;
+
+    .vue-treeselect__value-container {
+      font-size: 12px;
+
+      .vue-treeselect__single-value,
+      .vue-treeselect__placeholder {
+        font-size: 12px;
+        line-height: $miniHeight !important;
+      }
+    }
+
+  }
+}

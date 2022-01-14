@@ -1,0 +1,41 @@
+.searchForm {
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .el-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .el-form-item {
+    margin-bottom: 0;
+  }
+}
+
+.searchInput {
+  width: 220px!important;
+}
+
+.formInput {
+  width: 100%!important;
+}
+
+/** 表单布局 **/
+.form-header {
+  font-size: 15px;
+  color: #6379bb;
+  border-bottom: 1px solid #ddd;
+  margin: 8px 10px 25px 10px;
+  padding-bottom: 5px
+}
+
+.el-form-item--small.el-form-item {
+  margin-bottom: 10px;
+}
+
+//input控件类型为textarea时加入此类可隐藏右下角调整大小的黑色三角
+.resizeNone {
+  .el-textarea__inner { //el_input中的隐藏属性
+    resize: none!important; //主要是这个样式
+  }
+}

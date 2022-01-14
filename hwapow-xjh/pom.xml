@@ -206,6 +206,7 @@
         <module>hwapow-common</module>
         <module>hwapow-worksite</module>
         <module>hwapow-reservior</module>
+        <module>hwapow-schedule</module>
     </modules>
     <packaging>pom</packaging>
 

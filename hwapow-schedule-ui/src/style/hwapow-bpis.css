@@ -1,0 +1,11 @@
+/**登陆页标题***/
+.tabsClass,el-main .el-tabs{
+  height: 100%;
+}
+
+.tabsClass .el-tabs__content,.el-main .el-tabs .el-tabs__content .el-tab-pane{
+  height: 94%;
+}
+
+
+
