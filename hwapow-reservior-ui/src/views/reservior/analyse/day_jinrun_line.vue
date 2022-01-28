@@ -79,9 +79,25 @@ export default {
           $this.chartData.title=$this.queryParams.params.getYear+"年"+$this.queryParams.params.getMonth+"月"+$this.queryParams.params.getDay+"日"+$this.getSectionName(this.queryParams.sectionId)+"断面监测数据"
           $this.chartData.xAxisData=[];
           $this.chartData.seriesData[0].data=[];
+          var max=0;
+          var min=10000;
           for(var i in  response.rows){
             $this.chartData.xAxisData.push(response.rows[i].senorName);
             $this.chartData.seriesData[0].data.push(response.rows[i].data);
+            if(parseFloat(response.rows[i].data)>max){
+              max=parseFloat(response.rows[i].data);
+            }
+            if(parseFloat(response.rows[i].data)<min){
+              min=parseFloat(response.rows[i].data);
+            }
+          }
+          console.log(max+" "+min);
+          if(max-min<10){
+            $this.chartData.yAxisDcaleMax= parseFloat(max)+6;
+            $this.chartData.yAxisDcaleMin= parseFloat(min)-6;
+          }else{
+            $this.chartData.yAxisDcaleMax= null;
+            $this.chartData.yAxisDcaleMin= null;
           }
         });
       }else{
