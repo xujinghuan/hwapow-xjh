@@ -12,3 +12,4 @@ export const isGreatThan0 = (rule, value, callback) => {
   }
   callback();
 }
+
