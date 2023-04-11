@@ -233,3 +233,41 @@ aside{
 .double-label-font .el-form-item__label{
   line-height: 15px;
 }
+
+.hwapow-table-menu{
+  height: 40px;
+}
+
+.hwapow-table-menu .el-menu-item{
+  height: 40px;
+  line-height: 40px;
+  border-right: solid 1px #ccc;
+  border-top: solid 1px #ccc;
+}
+
+.hwapow-card .el-card__body{
+  height:calc(100% - 40px);
+  overflow: auto;
+}
+
+.hwapow-card-header{
+  font-size: 16px;
+  font-weight: 800;
+  font-family: fangsong;
+}
+
+.hwapow-card-row{
+  padding-top: 10px;
+}
+
+.hwapow-card-row .el-col{
+  height:17px;
+  font-family: emoji;
+}
+.hwapow-card-row span{
+  height:17px;
+  line-height: 17px;
+}
+.hwapow-card-row .el-col .el-button{
+  padding: 0px;
+}

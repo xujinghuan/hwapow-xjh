@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.constant.UserConstants;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
@@ -23,8 +24,7 @@ import com.hwapow.worksite.service.IWorktimeService;
  * @date 2021-08-12
  */
 @Service
-public class WorktimeServiceImpl implements IWorktimeService
-{
+public class WorktimeServiceImpl implements IWorktimeService {
     @Autowired
     private WorktimeMapper worktimeMapper;
 
@@ -35,8 +35,7 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return 工时记录
      */
     @Override
-    public Worktime selectWorktimeById(Long id)
-    {
+    public Worktime selectWorktimeById(Long id) {
         return worktimeMapper.selectWorktimeById(id);
     }
 
@@ -47,8 +46,8 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return 工时记录
      */
     @Override
-    public List<Worktime> selectWorktimeList(Worktime worktime)
-    {
+    @DataScope(userAlias = "a")
+    public List<Worktime> selectWorktimeList(Worktime worktime) {
         return worktimeMapper.selectWorktimeList(worktime);
     }
 
@@ -59,11 +58,11 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return 结果
      */
     @Override
-    public int insertWorktime(Worktime worktime)
-    {
-                                            worktime.setCreateBy(SecurityUtils.getUsername());
-            worktime.setCreateTime(DateUtils.getNowDate());
-                        return worktimeMapper.insertWorktime(worktime);
+    public int insertWorktime(Worktime worktime) {
+        worktime.setCreateBy(SecurityUtils.getUsername());
+        worktime.setCreateTime(DateUtils.getNowDate());
+        worktime.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        return worktimeMapper.insertWorktime(worktime);
     }
 
     /**
@@ -73,10 +72,10 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return 结果
      */
     @Override
-    public int updateWorktime(Worktime worktime)
-    {
-    worktime.setUpdateBy(SecurityUtils.getUsername());
+    public int updateWorktime(Worktime worktime) {
+        worktime.setUpdateBy(SecurityUtils.getUsername());
         worktime.setUpdateTime(DateUtils.getNowDate());
+        worktime.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         return worktimeMapper.updateWorktime(worktime);
     }
 
@@ -87,8 +86,7 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return 结果
      */
     @Override
-    public int deleteWorktimeByIds(Long[] ids)
-    {
+    public int deleteWorktimeByIds(Long[] ids) {
         return worktimeMapper.deleteWorktimeByIds(ids);
     }
 
@@ -99,21 +97,20 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return 结果
      */
     @Override
-    public int deleteWorktimeById(Long id)
-    {
+    public int deleteWorktimeById(Long id) {
         return worktimeMapper.deleteWorktimeById(id);
     }
 
     /**
      * 检查否重复
+     *
      * @param worktime
      * @return
      */
     @Override
-    public String checkWorktimeUnique(Worktime worktime){
-        Worktime worktimeC = worktimeMapper.checkWorktimeUnique(worktime.getWorker(),worktime.getWorkDate());
-        if (StringUtils.isNotNull(worktimeC) && !worktimeC.getId().equals(worktime.getId()))
-        {
+    public String checkWorktimeUnique(Worktime worktime) {
+        Worktime worktimeC = worktimeMapper.checkWorktimeUnique(worktime.getWorker(), worktime.getWorkDate(),SecurityUtils.getLoginUser().getUser().getUserId());
+        if (StringUtils.isNotNull(worktimeC) && !worktimeC.getId().equals(worktime.getId())) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -124,60 +121,65 @@ public class WorktimeServiceImpl implements IWorktimeService
      * @return
      */
     @Override
-    public Date getLastDay(){
-        return this.worktimeMapper.getLastDay();
+    public Date getLastDay() {
+        return this.worktimeMapper.getLastDay(SecurityUtils.getLoginUser().getUser().getUserId());
     }
 
     /**
      * 全员按年统计
+     *
      * @param year
      * @return
      */
     @Override
-    public List<Map<String,Object>> countAllYear(String year){
-        return this.worktimeMapper.countAllYear(year);
+    public List<Map<String, Object>> countAllYear(String year) {
+        return this.worktimeMapper.countAllYear(year,SecurityUtils.getLoginUser().getUser().getUserId());
     }
 
 
     /**
      * 全员按月统计
+     *
      * @param month
      * @return
      */
     @Override
-    public List<Map<String,Object>> countAllMonth(String month){
-        return this.worktimeMapper.countAllMonth(month);
+    public List<Map<String, Object>> countAllMonth(String month) {
+        return this.worktimeMapper.countAllMonth(month,SecurityUtils.getLoginUser().getUser().getUserId());
     }
 
     /**
      * 全员按天统计
+     *
      * @param day
      * @return
      */
     @Override
-    public List<Map<String,Object>> countAllDay(String day){
-        return this.worktimeMapper.countAllDay(day);
+    public List<Map<String, Object>> countAllDay(String day) {
+        return this.worktimeMapper.countAllDay(day,SecurityUtils.getLoginUser().getUser().getUserId());
     }
 
     /**
      * 单人按月统计
+     *
      * @param month
      * @param worker
      * @return
      */
     @Override
-    public List<Map<String,Object>> countOneMonth(Long worker,String month){
-        return this.worktimeMapper.countOneMonth(worker,month);
+    public List<Map<String, Object>> countOneMonth(Long worker, String month) {
+        return this.worktimeMapper.countOneMonth(worker, month,SecurityUtils.getLoginUser().getUser().getUserId());
     }
 
     /**
      * 单人按年统计
+     *
      * @param year
      * @param worker
      * @return
      */
     @Override
-    public List<Map<String,Object>> countOneYear(Long worker,String year){
-        return this.worktimeMapper.countOneYear(worker,year);
+    public List<Map<String, Object>> countOneYear(Long worker, String year) {
+        return this.worktimeMapper.countOneYear(worker, year,SecurityUtils.getLoginUser().getUser().getUserId());
     }
 }

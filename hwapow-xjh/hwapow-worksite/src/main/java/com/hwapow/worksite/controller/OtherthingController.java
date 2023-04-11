@@ -74,7 +74,7 @@ public class OtherthingController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:otherthing:add')")
     @Log(title = "杂事记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Otherthing otherthing)
+    public synchronized AjaxResult add(@RequestBody Otherthing otherthing)
     {
         return toAjax(otherthingService.insertOtherthing(otherthing));
     }
@@ -85,7 +85,7 @@ public class OtherthingController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:otherthing:edit')")
     @Log(title = "杂事记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Otherthing otherthing)
+    public synchronized AjaxResult edit(@RequestBody Otherthing otherthing)
     {
         return toAjax(otherthingService.updateOtherthing(otherthing));
     }

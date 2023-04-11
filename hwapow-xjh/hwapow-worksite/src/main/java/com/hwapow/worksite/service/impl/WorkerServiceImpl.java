@@ -2,6 +2,7 @@ package com.hwapow.worksite.service.impl;
 
 import java.util.List;
 
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.constant.UserConstants;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
@@ -21,8 +22,7 @@ import com.hwapow.worksite.service.IWorkerService;
  * @date 2021-08-11
  */
 @Service
-public class WorkerServiceImpl implements IWorkerService
-{
+public class WorkerServiceImpl implements IWorkerService {
     @Autowired
     private WorkerMapper workerMapper;
 
@@ -33,8 +33,7 @@ public class WorkerServiceImpl implements IWorkerService
      * @return 工人
      */
     @Override
-    public Worker selectWorkerById(Long id)
-    {
+    public Worker selectWorkerById(Long id) {
         return workerMapper.selectWorkerById(id);
     }
 
@@ -45,8 +44,8 @@ public class WorkerServiceImpl implements IWorkerService
      * @return 工人
      */
     @Override
-    public List<Worker> selectWorkerList(Worker worker)
-    {
+    @DataScope
+    public List<Worker> selectWorkerList(Worker worker) {
         return workerMapper.selectWorkerList(worker);
     }
 
@@ -57,11 +56,11 @@ public class WorkerServiceImpl implements IWorkerService
      * @return 结果
      */
     @Override
-    public int insertWorker(Worker worker)
-    {
-                                                                        worker.setCreateBy(SecurityUtils.getUsername());
-            worker.setCreateTime(DateUtils.getNowDate());
-                        return workerMapper.insertWorker(worker);
+    public int insertWorker(Worker worker) {
+        worker.setCreateBy(SecurityUtils.getUsername());
+        worker.setCreateTime(DateUtils.getNowDate());
+        worker.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        return workerMapper.insertWorker(worker);
     }
 
     /**
@@ -71,10 +70,10 @@ public class WorkerServiceImpl implements IWorkerService
      * @return 结果
      */
     @Override
-    public int updateWorker(Worker worker)
-    {
-    worker.setUpdateBy(SecurityUtils.getUsername());
+    public int updateWorker(Worker worker) {
+        worker.setUpdateBy(SecurityUtils.getUsername());
         worker.setUpdateTime(DateUtils.getNowDate());
+        worker.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         return workerMapper.updateWorker(worker);
     }
 
@@ -85,8 +84,7 @@ public class WorkerServiceImpl implements IWorkerService
      * @return 结果
      */
     @Override
-    public int deleteWorkerByIds(Long[] ids)
-    {
+    public int deleteWorkerByIds(Long[] ids) {
         return workerMapper.deleteWorkerByIds(ids);
     }
 
@@ -97,21 +95,20 @@ public class WorkerServiceImpl implements IWorkerService
      * @return 结果
      */
     @Override
-    public int deleteWorkerById(Long id)
-    {
+    public int deleteWorkerById(Long id) {
         return workerMapper.deleteWorkerById(id);
     }
 
     /**
      * 检查名称和身份证号是否重复
+     *
      * @param worker
      * @return
      */
     @Override
-    public String checkWorkerUnique(Worker worker){
-        Worker workerC = workerMapper.checkWorkerUnique(worker.getName(),worker.getIdcard());
-        if (StringUtils.isNotNull(workerC) && !workerC.getId().equals(worker.getId()))
-        {
+    public String checkWorkerUnique(Worker worker) {
+        Worker workerC = workerMapper.checkWorkerUnique(worker.getName(), worker.getIdcard(),SecurityUtils.getLoginUser().getUser().getUserId());
+        if (StringUtils.isNotNull(workerC) && !workerC.getId().equals(worker.getId())) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -123,7 +120,7 @@ public class WorkerServiceImpl implements IWorkerService
      * @param id
      * @return
      */
-    public int updateWorkerStatus(@Param("status")String status, @Param("id")Long id){
-        return this.workerMapper.updateWorkerStatus(status,id);
+    public int updateWorkerStatus(@Param("status") String status, @Param("id") Long id) {
+        return this.workerMapper.updateWorkerStatus(status, id);
     }
 }

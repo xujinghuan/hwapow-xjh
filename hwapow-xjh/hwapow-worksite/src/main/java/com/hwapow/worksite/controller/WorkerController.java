@@ -31,8 +31,7 @@ import com.hwapow.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/worksite/worker")
-public class WorkerController extends BaseController
-{
+public class WorkerController extends BaseController {
     @Autowired
     private IWorkerService workerService;
 
@@ -41,8 +40,7 @@ public class WorkerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:worker:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Worker worker)
-    {
+    public TableDataInfo list(Worker worker) {
         startPage();
         List<Worker> list = workerService.selectWorkerList(worker);
         return getDataTable(list);
@@ -54,8 +52,7 @@ public class WorkerController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worker:export')")
     @Log(title = "工人", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(Worker worker)
-    {
+    public AjaxResult export(Worker worker) {
         List<Worker> list = workerService.selectWorkerList(worker);
         ExcelUtil<Worker> util = new ExcelUtil<Worker>(Worker.class);
         return util.exportExcel(list, "worker");
@@ -66,8 +63,7 @@ public class WorkerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:worker:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(workerService.selectWorkerById(id));
     }
 
@@ -77,10 +73,8 @@ public class WorkerController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worker:add')")
     @Log(title = "工人", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Worker worker)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(workerService.checkWorkerUnique(worker)))
-        {
+    public synchronized AjaxResult add(@RequestBody Worker worker) {
+        if (UserConstants.NOT_UNIQUE.equals(workerService.checkWorkerUnique(worker))) {
             return AjaxResult.error("新增工人'" + worker.getName() + "'失败，工人名称或身份证号已存在，请核实后保存");
         }
         return toAjax(workerService.insertWorker(worker));
@@ -92,10 +86,8 @@ public class WorkerController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worker:edit')")
     @Log(title = "工人", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Worker worker)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(workerService.checkWorkerUnique(worker)))
-        {
+    public synchronized AjaxResult edit(@RequestBody Worker worker) {
+        if (UserConstants.NOT_UNIQUE.equals(workerService.checkWorkerUnique(worker))) {
             return AjaxResult.error("修改工人'" + worker.getName() + "'失败，工人名称或身份证号已存在，请核实后保存");
         }
         return toAjax(workerService.updateWorker(worker));
@@ -107,17 +99,15 @@ public class WorkerController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worker:edit')")
     @Log(title = "工人", businessType = BusinessType.UPDATE)
     @PutMapping("/updateStatus")
-    public AjaxResult updateStatus(@RequestBody Worker worker)
-    {
-        return toAjax(workerService.updateWorkerStatus(worker.getStatus(),worker.getId()));
+    public synchronized AjaxResult updateStatus(@RequestBody Worker worker) {
+        return toAjax(workerService.updateWorkerStatus(worker.getStatus(), worker.getId()));
     }
 
     /**
      * 获取工人下拉树列表
      */
     @GetMapping("/treeselect")
-    public AjaxResult treeselect(Worker worker)
-    {
+    public AjaxResult treeselect(Worker worker) {
         List<Worker> workers = workerService.selectWorkerList(worker);
         return AjaxResult.success(workers);
     }
@@ -127,9 +117,8 @@ public class WorkerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:worker:remove')")
     @Log(title = "工人", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(workerService.deleteWorkerByIds(ids));
     }
 }

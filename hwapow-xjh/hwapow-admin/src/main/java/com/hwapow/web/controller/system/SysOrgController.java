@@ -48,6 +48,16 @@ public class SysOrgController extends BaseController
     }
 
     /**
+     * 获取组织列表无权限控制
+     */
+    @GetMapping("/listNoDataScode")
+    public AjaxResult listNoDataScode(SysOrg org)
+    {
+        List<SysOrg> orgs = orgService.selectOrgListNoDataScode(org);
+        return AjaxResult.success(orgs);
+    }
+
+    /**
      * 查询组织列表（排除节点）
      */
     @PreAuthorize("@ss.hasPermi('system:org:list')")

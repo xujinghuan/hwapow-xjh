@@ -59,7 +59,7 @@ public class CaptchaConfig
         // 验证码图片高度 默认为50
         properties.setProperty(KAPTCHA_IMAGE_HEIGHT, "60");
         // 验证码文本字符大小 默认为40
-        properties.setProperty(KAPTCHA_TEXTPRODUCER_FONT_SIZE, "35");
+        properties.setProperty(KAPTCHA_TEXTPRODUCER_FONT_SIZE, "50");
         // KAPTCHA_SESSION_KEY
         properties.setProperty(KAPTCHA_SESSION_CONFIG_KEY, "kaptchaCodeMath");
         // 验证码文本生成器
@@ -75,7 +75,7 @@ public class CaptchaConfig
         // 干扰实现类
         properties.setProperty(KAPTCHA_NOISE_IMPL, "com.google.code.kaptcha.impl.NoNoise");
         // 图片样式 水纹com.google.code.kaptcha.impl.WaterRipple 鱼眼com.google.code.kaptcha.impl.FishEyeGimpy 阴影com.google.code.kaptcha.impl.ShadowGimpy
-        properties.setProperty(KAPTCHA_OBSCURIFICATOR_IMPL, "com.google.code.kaptcha.impl.ShadowGimpy");
+        properties.setProperty(KAPTCHA_OBSCURIFICATOR_IMPL, "com.google.code.kaptcha.impl.WaterRipple");
         Config config = new Config(properties);
         defaultKaptcha.setConfig(config);
         return defaultKaptcha;

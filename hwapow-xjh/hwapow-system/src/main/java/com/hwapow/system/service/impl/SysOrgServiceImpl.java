@@ -45,6 +45,18 @@ public class SysOrgServiceImpl implements ISysOrgService
     }
 
     /**
+     * 查询组织管理数据
+     *
+     * @param org 组织信息
+     * @return 组织信息集合
+     */
+    @Override
+    public List<SysOrg> selectOrgListNoDataScode(SysOrg org)
+    {
+        return orgMapper.selectOrgList(org);
+    }
+
+    /**
      * 构建前端所需要树结构
      *
      * @param orgs 组织列表

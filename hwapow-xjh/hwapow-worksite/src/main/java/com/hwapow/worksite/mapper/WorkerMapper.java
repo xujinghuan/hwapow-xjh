@@ -66,7 +66,7 @@ public interface WorkerMapper
      * @param idcard
      * @return
      */
-    public Worker checkWorkerUnique(@Param("name")String name, @Param("idcard")String idcard);
+    public Worker checkWorkerUnique(@Param("name")String name, @Param("idcard")String idcard, @Param("userId")Long userId);
 
     /***
      * 修改工人状态

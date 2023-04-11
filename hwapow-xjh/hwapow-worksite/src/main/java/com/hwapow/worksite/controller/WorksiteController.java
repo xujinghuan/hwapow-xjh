@@ -31,8 +31,7 @@ import com.hwapow.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/worksite/worksite")
-public class WorksiteController extends BaseController
-{
+public class WorksiteController extends BaseController {
     @Autowired
     private IWorksiteService worksiteService;
 
@@ -41,8 +40,7 @@ public class WorksiteController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:worksite:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Worksite worksite)
-    {
+    public TableDataInfo list(Worksite worksite) {
         startPage();
         List<Worksite> list = worksiteService.selectWorksiteList(worksite);
         return getDataTable(list);
@@ -54,8 +52,7 @@ public class WorksiteController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worksite:export')")
     @Log(title = "工地", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(Worksite worksite)
-    {
+    public AjaxResult export(Worksite worksite) {
         List<Worksite> list = worksiteService.selectWorksiteList(worksite);
         ExcelUtil<Worksite> util = new ExcelUtil<Worksite>(Worksite.class);
         return util.exportExcel(list, "worksite");
@@ -66,8 +63,7 @@ public class WorksiteController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:worksite:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(worksiteService.selectWorksiteById(id));
     }
 
@@ -77,10 +73,8 @@ public class WorksiteController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worksite:add')")
     @Log(title = "工地", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Worksite worksite)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(worksiteService.checkWorksiteUnique(worksite)))
-        {
+    public synchronized AjaxResult add(@RequestBody Worksite worksite) {
+        if (UserConstants.NOT_UNIQUE.equals(worksiteService.checkWorksiteUnique(worksite))) {
             return AjaxResult.error("新增工地'" + worksite.getName() + "'失败，工地名称已存在，请核实后保存");
         }
         return toAjax(worksiteService.insertWorksite(worksite));
@@ -92,10 +86,8 @@ public class WorksiteController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worksite:edit')")
     @Log(title = "工地", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Worksite worksite)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(worksiteService.checkWorksiteUnique(worksite)))
-        {
+    public synchronized AjaxResult edit(@RequestBody Worksite worksite) {
+        if (UserConstants.NOT_UNIQUE.equals(worksiteService.checkWorksiteUnique(worksite))) {
             return AjaxResult.error("修改工地'" + worksite.getName() + "'失败，工地名称已存在，请核实后保存");
         }
         return toAjax(worksiteService.updateWorksite(worksite));
@@ -107,17 +99,15 @@ public class WorksiteController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:worksite:edit')")
     @Log(title = "工地", businessType = BusinessType.UPDATE)
     @PutMapping("/updateStatus")
-    public AjaxResult updateStatus(@RequestBody Worksite worksite)
-    {
-        return toAjax(worksiteService.updateWorksiteStatus(worksite.getStatus(),worksite.getId()));
+    public AjaxResult updateStatus(@RequestBody Worksite worksite) {
+        return toAjax(worksiteService.updateWorksiteStatus(worksite.getStatus(), worksite.getId()));
     }
 
     /**
      * 获取工地下拉树列表
      */
     @GetMapping("/treeselect")
-    public AjaxResult treeselect(Worksite worksite)
-    {
+    public AjaxResult treeselect(Worksite worksite) {
         List<Worksite> worksites = worksiteService.selectWorksiteList(worksite);
         return AjaxResult.success(worksites);
     }
@@ -127,9 +117,8 @@ public class WorksiteController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:worksite:remove')")
     @Log(title = "工地", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(worksiteService.deleteWorksiteByIds(ids));
     }
 }

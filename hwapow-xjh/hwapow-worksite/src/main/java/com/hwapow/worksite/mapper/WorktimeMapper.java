@@ -69,34 +69,34 @@ public interface WorktimeMapper
      * @param workDate
      * @return
      */
-    public Worktime checkWorktimeUnique(@Param("worker")Long worker, @Param("workDate") Date workDate);
+    public Worktime checkWorktimeUnique(@Param("worker")Long worker, @Param("workDate") Date workDate, @Param("userId") Long userId);
 
     /***
      * 获取最近一次工时
      * @return
      */
-    public Date getLastDay();
+    public Date getLastDay(@Param("userId")Long userId);
 
     /**
      * 全员按年统计
      * @param year
      * @return
      */
-    public List<Map<String,Object>> countAllYear(@Param("year")String year);
+    public List<Map<String,Object>> countAllYear(@Param("year")String year,@Param("userId")Long userId);
 
     /**
      * 全员按月统计
      * @param month
      * @return
      */
-    public List<Map<String,Object>> countAllMonth(@Param("month")String month);
+    public List<Map<String,Object>> countAllMonth(@Param("month")String month,@Param("userId")Long userId);
 
     /**
      * 全员按天统计
      * @param day
      * @return
      */
-    public List<Map<String,Object>> countAllDay(@Param("day")String day);
+    public List<Map<String,Object>> countAllDay(@Param("day")String day,@Param("userId")Long userId);
 
     /**
      * 单人按月统计
@@ -104,7 +104,7 @@ public interface WorktimeMapper
      * @param worker
      * @return
      */
-    public List<Map<String,Object>> countOneMonth(@Param("worker")Long worker,@Param("month")String month);
+    public List<Map<String,Object>> countOneMonth(@Param("worker")Long worker,@Param("month")String month,@Param("userId")Long userId);
 
     /**
      * 单人按年统计
@@ -112,5 +112,5 @@ public interface WorktimeMapper
      * @param worker
      * @return
      */
-    public List<Map<String,Object>> countOneYear(@Param("worker")Long worker,@Param("year")String year);
+    public List<Map<String,Object>> countOneYear(@Param("worker")Long worker,@Param("year")String year,@Param("userId")Long userId);
 }

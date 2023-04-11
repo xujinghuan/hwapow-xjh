@@ -1,6 +1,8 @@
 package com.hwapow.worksite.service.impl;
 
 import java.util.List;
+
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
 import com.hwapow.common.utils.SecurityUtils;
@@ -17,8 +19,7 @@ import com.hwapow.worksite.service.IAskForLeaveService;
  * @date 2021-08-11
  */
 @Service
-public class AskForLeaveServiceImpl implements IAskForLeaveService
-{
+public class AskForLeaveServiceImpl implements IAskForLeaveService {
     @Autowired
     private AskForLeaveMapper askForLeaveMapper;
 
@@ -29,8 +30,7 @@ public class AskForLeaveServiceImpl implements IAskForLeaveService
      * @return 请假
      */
     @Override
-    public AskForLeave selectAskForLeaveById(Long id)
-    {
+    public AskForLeave selectAskForLeaveById(Long id) {
         return askForLeaveMapper.selectAskForLeaveById(id);
     }
 
@@ -41,8 +41,8 @@ public class AskForLeaveServiceImpl implements IAskForLeaveService
      * @return 请假
      */
     @Override
-    public List<AskForLeave> selectAskForLeaveList(AskForLeave askForLeave)
-    {
+    @DataScope(userAlias = "a")
+    public List<AskForLeave> selectAskForLeaveList(AskForLeave askForLeave) {
         return askForLeaveMapper.selectAskForLeaveList(askForLeave);
     }
 
@@ -53,11 +53,11 @@ public class AskForLeaveServiceImpl implements IAskForLeaveService
      * @return 结果
      */
     @Override
-    public int insertAskForLeave(AskForLeave askForLeave)
-    {
-                                    askForLeave.setCreateBy(SecurityUtils.getUsername());
-            askForLeave.setCreateTime(DateUtils.getNowDate());
-                        return askForLeaveMapper.insertAskForLeave(askForLeave);
+    public int insertAskForLeave(AskForLeave askForLeave) {
+        askForLeave.setCreateBy(SecurityUtils.getUsername());
+        askForLeave.setCreateTime(DateUtils.getNowDate());
+        askForLeave.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        return askForLeaveMapper.insertAskForLeave(askForLeave);
     }
 
     /**
@@ -67,10 +67,10 @@ public class AskForLeaveServiceImpl implements IAskForLeaveService
      * @return 结果
      */
     @Override
-    public int updateAskForLeave(AskForLeave askForLeave)
-    {
-    askForLeave.setUpdateBy(SecurityUtils.getUsername());
+    public int updateAskForLeave(AskForLeave askForLeave) {
+        askForLeave.setUpdateBy(SecurityUtils.getUsername());
         askForLeave.setUpdateTime(DateUtils.getNowDate());
+        askForLeave.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         return askForLeaveMapper.updateAskForLeave(askForLeave);
     }
 
@@ -81,8 +81,7 @@ public class AskForLeaveServiceImpl implements IAskForLeaveService
      * @return 结果
      */
     @Override
-    public int deleteAskForLeaveByIds(Long[] ids)
-    {
+    public int deleteAskForLeaveByIds(Long[] ids) {
         return askForLeaveMapper.deleteAskForLeaveByIds(ids);
     }
 
@@ -93,8 +92,7 @@ public class AskForLeaveServiceImpl implements IAskForLeaveService
      * @return 结果
      */
     @Override
-    public int deleteAskForLeaveById(Long id)
-    {
+    public int deleteAskForLeaveById(Long id) {
         return askForLeaveMapper.deleteAskForLeaveById(id);
     }
 }

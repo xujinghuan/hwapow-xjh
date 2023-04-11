@@ -42,6 +42,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
              and (del_flag = 0 or del_flag is null)
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
         order by CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
@@ -72,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
@@ -92,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
 
@@ -130,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="checkWorkerUnique"  resultMap="WorkerResult">
         <include refid="selectWorkerVo"/>
-        where (name = #{name} <if test="idcard != null">or idcard=#{idcard}</if>) and (del_flag is null or del_flag = '0') limit 1
+        where (name = #{name} <if test="idcard != null">or idcard=#{idcard}</if>) and (del_flag is null or del_flag = '0') and user_id = #{userId} limit 1
     </select>
 
     <delete id="deleteWorkerByIds" parameterType="String">

@@ -188,7 +188,7 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-container class="fullContainer" direction="vertical">
-        <div class="toolbar">
+          <div class="toolbar">
           <el-button size="mini" icon="el-icon-check" type="primary" @click="submitForm">确 定</el-button>
           <el-button size="mini" icon="el-icon-close" @click="cancel">取 消</el-button>
         </div>

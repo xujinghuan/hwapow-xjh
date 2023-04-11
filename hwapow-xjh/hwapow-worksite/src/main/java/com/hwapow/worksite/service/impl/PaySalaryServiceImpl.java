@@ -1,6 +1,8 @@
 package com.hwapow.worksite.service.impl;
 
 import java.util.List;
+
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
 import com.hwapow.common.utils.SecurityUtils;
@@ -17,8 +19,7 @@ import com.hwapow.worksite.service.IPaySalaryService;
  * @date 2021-08-11
  */
 @Service
-public class PaySalaryServiceImpl implements IPaySalaryService
-{
+public class PaySalaryServiceImpl implements IPaySalaryService {
     @Autowired
     private PaySalaryMapper paySalaryMapper;
 
@@ -29,8 +30,7 @@ public class PaySalaryServiceImpl implements IPaySalaryService
      * @return 工资发放
      */
     @Override
-    public PaySalary selectPaySalaryById(Long id)
-    {
+    public PaySalary selectPaySalaryById(Long id) {
         return paySalaryMapper.selectPaySalaryById(id);
     }
 
@@ -41,8 +41,8 @@ public class PaySalaryServiceImpl implements IPaySalaryService
      * @return 工资发放
      */
     @Override
-    public List<PaySalary> selectPaySalaryList(PaySalary paySalary)
-    {
+    @DataScope(userAlias = "a")
+    public List<PaySalary> selectPaySalaryList(PaySalary paySalary) {
         return paySalaryMapper.selectPaySalaryList(paySalary);
     }
 
@@ -53,11 +53,11 @@ public class PaySalaryServiceImpl implements IPaySalaryService
      * @return 结果
      */
     @Override
-    public int insertPaySalary(PaySalary paySalary)
-    {
-                                    paySalary.setCreateBy(SecurityUtils.getUsername());
-            paySalary.setCreateTime(DateUtils.getNowDate());
-                        return paySalaryMapper.insertPaySalary(paySalary);
+    public int insertPaySalary(PaySalary paySalary) {
+        paySalary.setCreateBy(SecurityUtils.getUsername());
+        paySalary.setCreateTime(DateUtils.getNowDate());
+        paySalary.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        return paySalaryMapper.insertPaySalary(paySalary);
     }
 
     /**
@@ -67,10 +67,10 @@ public class PaySalaryServiceImpl implements IPaySalaryService
      * @return 结果
      */
     @Override
-    public int updatePaySalary(PaySalary paySalary)
-    {
-    paySalary.setUpdateBy(SecurityUtils.getUsername());
+    public int updatePaySalary(PaySalary paySalary) {
+        paySalary.setUpdateBy(SecurityUtils.getUsername());
         paySalary.setUpdateTime(DateUtils.getNowDate());
+        paySalary.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         return paySalaryMapper.updatePaySalary(paySalary);
     }
 
@@ -81,8 +81,7 @@ public class PaySalaryServiceImpl implements IPaySalaryService
      * @return 结果
      */
     @Override
-    public int deletePaySalaryByIds(Long[] ids)
-    {
+    public int deletePaySalaryByIds(Long[] ids) {
         return paySalaryMapper.deletePaySalaryByIds(ids);
     }
 
@@ -93,8 +92,7 @@ public class PaySalaryServiceImpl implements IPaySalaryService
      * @return 结果
      */
     @Override
-    public int deletePaySalaryById(Long id)
-    {
+    public int deletePaySalaryById(Long id) {
         return paySalaryMapper.deletePaySalaryById(id);
     }
 }

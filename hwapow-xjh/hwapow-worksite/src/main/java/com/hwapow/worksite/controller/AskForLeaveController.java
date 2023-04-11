@@ -1,6 +1,7 @@
 package com.hwapow.worksite.controller;
 
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,7 @@ import com.hwapow.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/worksite/askForLeave")
-public class AskForLeaveController extends BaseController
-{
+public class AskForLeaveController extends BaseController {
     @Autowired
     private IAskForLeaveService askForLeaveService;
 
@@ -38,8 +38,7 @@ public class AskForLeaveController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:askForLeave:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AskForLeave askForLeave)
-    {
+    public TableDataInfo list(AskForLeave askForLeave) {
         startPage();
         List<AskForLeave> list = askForLeaveService.selectAskForLeaveList(askForLeave);
         return getDataTable(list);
@@ -51,8 +50,7 @@ public class AskForLeaveController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:askForLeave:export')")
     @Log(title = "请假", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(AskForLeave askForLeave)
-    {
+    public AjaxResult export(AskForLeave askForLeave) {
         List<AskForLeave> list = askForLeaveService.selectAskForLeaveList(askForLeave);
         ExcelUtil<AskForLeave> util = new ExcelUtil<AskForLeave>(AskForLeave.class);
         return util.exportExcel(list, "askForLeave");
@@ -63,8 +61,7 @@ public class AskForLeaveController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:askForLeave:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(askForLeaveService.selectAskForLeaveById(id));
     }
 
@@ -74,8 +71,7 @@ public class AskForLeaveController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:askForLeave:add')")
     @Log(title = "请假", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AskForLeave askForLeave)
-    {
+    public synchronized AjaxResult add(@RequestBody AskForLeave askForLeave) {
         return toAjax(askForLeaveService.insertAskForLeave(askForLeave));
     }
 
@@ -85,8 +81,7 @@ public class AskForLeaveController extends BaseController
     @PreAuthorize("@ss.hasPermi('worksite:askForLeave:edit')")
     @Log(title = "请假", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AskForLeave askForLeave)
-    {
+    public synchronized AjaxResult edit(@RequestBody AskForLeave askForLeave) {
         return toAjax(askForLeaveService.updateAskForLeave(askForLeave));
     }
 
@@ -95,9 +90,8 @@ public class AskForLeaveController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('worksite:askForLeave:remove')")
     @Log(title = "请假", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(askForLeaveService.deleteAskForLeaveByIds(ids));
     }
 }

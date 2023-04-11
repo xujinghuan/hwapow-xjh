@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.schedule.mapper.ToDoThingMapper">
+    
+    <resultMap type="ToDoThing" id="ToDoThingResult">
+        <result property="id"    column="id"    />
+        <result property="toDoThing"    column="to_do_thing"    />
+        <result property="toDoTime"    column="to_do_time"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="transactor"    column="transactor"    />
+        <result property="doneThing"    column="done_thing"    />
+        <result property="doneTime"    column="done_time"    />
+        <result property="isClose"    column="is_close"    />
+        <result property="isDone"    column="is_done"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectToDoThingVo">
+        select id, to_do_thing, to_do_time, employee_id, transactor, done_thing, done_time, is_close, is_done, user_id, create_by, create_time, update_by, update_time from to_do_thing
+    </sql>
+
+    <select id="selectToDoThingList" parameterType="ToDoThing" resultMap="ToDoThingResult">
+        <include refid="selectToDoThingVo"/>
+        <where>
+            and user_id is not null
+            <if test="toDoThing != null  and toDoThing != ''"> and to_do_thing like concat('%', #{toDoThing}, '%')</if>
+            <if test="toDoTime != null "> and  DATE_FORMAT(to_do_time,'%Y-%m-%d') = substr(#{toDoTime},1,10)</if>
+            <if test="params.beginToDoTime != null and params.beginToDoTime != '' and params.endToDoTime != null and params.endToDoTime != ''"> and to_do_time between #{params.beginToDoTime} and #{params.endToDoTime}</if>
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="transactor != null "> and transactor = #{transactor}</if>
+            <if test="params.beginDoneTime != null and params.beginDoneTime != '' and params.endDoneTime != null and params.endDoneTime != ''"> and done_time between #{params.beginDoneTime} and #{params.endDoneTime}</if>
+            <if test="isClose != null  and isClose != ''"> and is_close = #{isClose}</if>
+            <if test="isDone != null  and isDone != ''"> and is_done = #{isDone}</if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by is_close asc,is_done asc,to_do_time asc,done_time asc
+    </select>
+    
+    <select id="selectToDoThingById" parameterType="Long" resultMap="ToDoThingResult">
+        <include refid="selectToDoThingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertToDoThing" parameterType="ToDoThing">
+        insert into to_do_thing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="toDoThing != null">to_do_thing,</if>
+            <if test="toDoTime != null">to_do_time,</if>
+            <if test="employeeId != null">employee_id,</if>
+            <if test="transactor != null">transactor,</if>
+            <if test="doneThing != null">done_thing,</if>
+            <if test="doneTime != null">done_time,</if>
+            <if test="isClose != null">is_close,</if>
+            <if test="isDone != null">is_done,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="toDoThing != null">#{toDoThing},</if>
+            <if test="toDoTime != null">#{toDoTime},</if>
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="transactor != null">#{transactor},</if>
+            <if test="doneThing != null">#{doneThing},</if>
+            <if test="doneTime != null">#{doneTime},</if>
+            <if test="isClose != null">#{isClose},</if>
+            <if test="isDone != null">#{isDone},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateToDoThing" parameterType="ToDoThing">
+        update to_do_thing
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="toDoThing != null">to_do_thing = #{toDoThing},</if>
+            <if test="toDoTime != null">to_do_time = #{toDoTime},</if>
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="transactor != null">transactor = #{transactor},</if>
+            <if test="doneThing != null">done_thing = #{doneThing},</if>
+            <if test="doneTime != null">done_time = #{doneTime},</if>
+            <if test="isClose != null">is_close = #{isClose},</if>
+            <if test="isDone != null">is_done = #{isDone},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteToDoThingById" parameterType="Long">
+        delete from to_do_thing where id = #{id}
+    </delete>
+
+    <delete id="deleteToDoThingByIds" parameterType="String">
+        delete from to_do_thing where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteToDoThingByEmployeeId" parameterType="Long">
+        delete from to_do_thing where employee_id = #{employeeId}
+    </delete>
+</mapper>

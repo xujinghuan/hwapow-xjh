@@ -35,6 +35,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workDate != null "> and work_date = #{workDate}</if>
             and (a.del_flag = 0 or a.del_flag is null)
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
         order by work_Date desc,c.name desc,b.name desc
     </select>
 
@@ -58,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="worker != null">#{worker},</if>
@@ -72,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
 
@@ -107,33 +111,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="checkWorktimeUnique"  resultMap="WorktimeResult">
         <include refid="selectWorktimeVo"/>
-        where (a.worker = #{worker} and a.work_date = #{workDate}) and (a.del_flag is null or a.del_flag = '0') limit 1
+        where (a.worker = #{worker} and a.work_date = #{workDate}) and (a.del_flag is null or a.del_flag = '0') and user_id = #{userId} limit 1
     </select>
 
     <select id="getLastDay" resultType="Date">
-        select MAX(work_date) from worktime where (del_flag = 0 or del_flag is null)
+        select MAX(work_date) from worktime where (del_flag = 0 or del_flag is null) and user_id = #{userId}
     </select>
 
     <select id="countAllYear" resultType="java.util.Map">
-        select work_year,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_year=#{year} GROUP BY worker
+        select work_year,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_year=#{year} and user_id = #{userId} GROUP BY worker
          order by CONVERT( worker_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="countAllMonth" resultType="java.util.Map">
-        select work_month,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_month=#{month} GROUP BY worker
+        select work_month,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_month=#{month} and user_id = #{userId} GROUP BY worker
          order by CONVERT( worker_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="countAllDay" resultType="java.util.Map">
-        select work_date,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_date=#{day} GROUP BY worker
+        select work_date,worker,worker_name,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_date=#{day} and user_id = #{userId} GROUP BY worker
          order by CONVERT( worker_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="countOneMonth" resultType="java.util.Map">
-        select worker,worker_name,work_date,task_time,wage as wage from v_worktime where work_month=#{month} and worker=#{worker} order by work_date asc
+        select worker,worker_name,work_date,task_time,wage as wage from v_worktime where work_month=#{month} and worker=#{worker} and user_id = #{userId} order by work_date asc
     </select>
 
     <select id="countOneYear" resultType="java.util.Map">
-        select worker,worker_name,work_month,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_year=#{year} and worker=#{worker} group by work_month order by work_month asc
+        select worker,worker_name,work_month,sum(task_time) as task_time,sum(wage) as wage from v_worktime where work_year=#{year} and worker=#{worker} and user_id = #{userId} group by work_month order by work_month asc
     </select>
 </mapper>

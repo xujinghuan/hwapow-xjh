@@ -1,6 +1,8 @@
 package com.hwapow.worksite.service.impl;
 
 import java.util.List;
+
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
 import com.hwapow.common.utils.SecurityUtils;
@@ -17,8 +19,7 @@ import com.hwapow.worksite.service.IOtherthingService;
  * @date 2021-08-11
  */
 @Service
-public class OtherthingServiceImpl implements IOtherthingService
-{
+public class OtherthingServiceImpl implements IOtherthingService {
     @Autowired
     private OtherthingMapper otherthingMapper;
 
@@ -29,8 +30,7 @@ public class OtherthingServiceImpl implements IOtherthingService
      * @return 杂事记录
      */
     @Override
-    public Otherthing selectOtherthingById(Long id)
-    {
+    public Otherthing selectOtherthingById(Long id) {
         return otherthingMapper.selectOtherthingById(id);
     }
 
@@ -41,8 +41,8 @@ public class OtherthingServiceImpl implements IOtherthingService
      * @return 杂事记录
      */
     @Override
-    public List<Otherthing> selectOtherthingList(Otherthing otherthing)
-    {
+    @DataScope
+    public List<Otherthing> selectOtherthingList(Otherthing otherthing) {
         return otherthingMapper.selectOtherthingList(otherthing);
     }
 
@@ -53,11 +53,11 @@ public class OtherthingServiceImpl implements IOtherthingService
      * @return 结果
      */
     @Override
-    public int insertOtherthing(Otherthing otherthing)
-    {
-                            otherthing.setCreateBy(SecurityUtils.getUsername());
-            otherthing.setCreateTime(DateUtils.getNowDate());
-                        return otherthingMapper.insertOtherthing(otherthing);
+    public int insertOtherthing(Otherthing otherthing) {
+        otherthing.setCreateBy(SecurityUtils.getUsername());
+        otherthing.setCreateTime(DateUtils.getNowDate());
+        otherthing.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        return otherthingMapper.insertOtherthing(otherthing);
     }
 
     /**
@@ -67,10 +67,10 @@ public class OtherthingServiceImpl implements IOtherthingService
      * @return 结果
      */
     @Override
-    public int updateOtherthing(Otherthing otherthing)
-    {
-    otherthing.setUpdateBy(SecurityUtils.getUsername());
+    public int updateOtherthing(Otherthing otherthing) {
+        otherthing.setUpdateBy(SecurityUtils.getUsername());
         otherthing.setUpdateTime(DateUtils.getNowDate());
+        otherthing.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         return otherthingMapper.updateOtherthing(otherthing);
     }
 
@@ -81,8 +81,7 @@ public class OtherthingServiceImpl implements IOtherthingService
      * @return 结果
      */
     @Override
-    public int deleteOtherthingByIds(Long[] ids)
-    {
+    public int deleteOtherthingByIds(Long[] ids) {
         return otherthingMapper.deleteOtherthingByIds(ids);
     }
 
@@ -93,8 +92,7 @@ public class OtherthingServiceImpl implements IOtherthingService
      * @return 结果
      */
     @Override
-    public int deleteOtherthingById(Long id)
-    {
+    public int deleteOtherthingById(Long id) {
         return otherthingMapper.deleteOtherthingById(id);
     }
 }

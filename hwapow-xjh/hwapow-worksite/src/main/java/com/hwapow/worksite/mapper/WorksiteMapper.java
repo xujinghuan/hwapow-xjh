@@ -66,7 +66,7 @@ public interface WorksiteMapper
      * @param name
      * @return
      */
-    public Worksite checkWorksiteUnique(String name);
+    public Worksite checkWorksiteUnique(@Param("name")String name,@Param("userId")Long userId);
 
     /***
      * 修改工人状态

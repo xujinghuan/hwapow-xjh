@@ -39,3 +39,16 @@ export const getIntervalMonthOfDate = (startDate,endDate) => {
   }
   return months;
 }
+
+/**
+ * [dateAddDays 从某个日期增加n天后的日期]
+ * @param  {[string]} dateStr  [日期字符串]
+ * @param  {[int]} dayCount [增加的天数]
+ * @return {[string]}[增加n天后的日期字符串]
+ */
+export const dateAddDays = (dateStr,dayCount) =>{
+  var tempDate=new Date(dateStr.replace(/-/g,"/"));//把日期字符串转换成日期格式
+  var resultDate=new Date((tempDate/1000+(86400*dayCount))*1000);//增加n天后的日期
+  var resultDateStr=resultDate.getFullYear()+"-"+(resultDate.getMonth()+1)+"-"+(resultDate.getDate());//将日期转化为字符串格式
+  return resultDateStr;
+}

@@ -33,6 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payDate != null "> and pay_date = #{payDate}</if>
             and (a.del_flag = 0 or a.del_flag is null)
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
         order by pay_date desc,create_time desc
     </select>
 
@@ -55,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
             <if test="payWay != null">pay_way,</if>
+            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="worker != null">#{worker},</if>
@@ -68,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="payWay != null">#{payWay},</if>
+            <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
 

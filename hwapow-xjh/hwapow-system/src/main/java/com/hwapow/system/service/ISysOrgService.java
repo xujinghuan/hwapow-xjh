@@ -20,12 +20,21 @@ public interface ISysOrgService
     public List<SysOrg> selectOrgList(SysOrg org);
 
     /**
+     * 查询组织管理数据
+     *
+     * @param org 组织信息
+     * @return 组织信息集合
+     */
+    public List<SysOrg> selectOrgListNoDataScode(SysOrg org);
+
+    /**
      * 构建前端所需要树结构
      *
      * @param orgs 组织列表
      * @return 树结构列表
      */
     public List<SysOrg> buildOrgTree(List<SysOrg> orgs);
+
 
     /**
      * 构建前端所需要下拉树结构

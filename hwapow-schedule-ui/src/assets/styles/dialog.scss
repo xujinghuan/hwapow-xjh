@@ -62,3 +62,13 @@
 .el-dialog:not(.is-fullscreen) {
   margin-top: 6vh !important;
 }
+
+.el-dialog .toolbar .el-button{
+  float: right;
+  margin-right: 10px;
+}
+
+.el-dialog .toolbar {
+  border-radius: 5px;
+}
+

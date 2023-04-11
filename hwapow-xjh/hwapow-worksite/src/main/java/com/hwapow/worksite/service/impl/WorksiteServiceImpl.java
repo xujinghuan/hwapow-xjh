@@ -2,6 +2,7 @@ package com.hwapow.worksite.service.impl;
 
 import java.util.List;
 
+import com.hwapow.common.annotation.DataScope;
 import com.hwapow.common.constant.UserConstants;
 import com.hwapow.common.core.domain.model.LoginUser;
 import com.hwapow.common.utils.DateUtils;
@@ -22,8 +23,7 @@ import com.hwapow.worksite.service.IWorksiteService;
  * @date 2021-08-11
  */
 @Service
-public class WorksiteServiceImpl implements IWorksiteService
-{
+public class WorksiteServiceImpl implements IWorksiteService {
     @Autowired
     private WorksiteMapper worksiteMapper;
 
@@ -34,8 +34,7 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @return 工地
      */
     @Override
-    public Worksite selectWorksiteById(Long id)
-    {
+    public Worksite selectWorksiteById(Long id) {
         return worksiteMapper.selectWorksiteById(id);
     }
 
@@ -46,8 +45,8 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @return 工地
      */
     @Override
-    public List<Worksite> selectWorksiteList(Worksite worksite)
-    {
+    @DataScope
+    public List<Worksite> selectWorksiteList(Worksite worksite) {
         return worksiteMapper.selectWorksiteList(worksite);
     }
 
@@ -58,11 +57,11 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @return 结果
      */
     @Override
-    public int insertWorksite(Worksite worksite)
-    {
-                                                worksite.setCreateBy(SecurityUtils.getUsername());
-            worksite.setCreateTime(DateUtils.getNowDate());
-                        return worksiteMapper.insertWorksite(worksite);
+    public int insertWorksite(Worksite worksite) {
+        worksite.setCreateBy(SecurityUtils.getUsername());
+        worksite.setCreateTime(DateUtils.getNowDate());
+        worksite.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        return worksiteMapper.insertWorksite(worksite);
     }
 
     /**
@@ -72,10 +71,10 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @return 结果
      */
     @Override
-    public int updateWorksite(Worksite worksite)
-    {
-    worksite.setUpdateBy(SecurityUtils.getUsername());
+    public int updateWorksite(Worksite worksite) {
+        worksite.setUpdateBy(SecurityUtils.getUsername());
         worksite.setUpdateTime(DateUtils.getNowDate());
+        worksite.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         return worksiteMapper.updateWorksite(worksite);
     }
 
@@ -86,8 +85,7 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @return 结果
      */
     @Override
-    public int deleteWorksiteByIds(Long[] ids)
-    {
+    public int deleteWorksiteByIds(Long[] ids) {
         return worksiteMapper.deleteWorksiteByIds(ids);
     }
 
@@ -98,21 +96,20 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @return 结果
      */
     @Override
-    public int deleteWorksiteById(Long id)
-    {
+    public int deleteWorksiteById(Long id) {
         return worksiteMapper.deleteWorksiteById(id);
     }
 
     /**
      * 检查名称是否重复
+     *
      * @param worksite
      * @return
      */
     @Override
-    public String checkWorksiteUnique(Worksite worksite){
-        Worksite worksiteC = worksiteMapper.checkWorksiteUnique(worksite.getName());
-        if (StringUtils.isNotNull(worksiteC) && !worksiteC.getId().equals(worksite.getId()))
-        {
+    public String checkWorksiteUnique(Worksite worksite) {
+        Worksite worksiteC = worksiteMapper.checkWorksiteUnique(worksite.getName(),SecurityUtils.getLoginUser().getUser().getUserId());
+        if (StringUtils.isNotNull(worksiteC) && !worksiteC.getId().equals(worksite.getId())) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -124,7 +121,7 @@ public class WorksiteServiceImpl implements IWorksiteService
      * @param id
      * @return
      */
-    public int updateWorksiteStatus(@Param("status")String status, @Param("id")Long id){
-        return this.worksiteMapper.updateWorksiteStatus(status,id);
+    public int updateWorksiteStatus(@Param("status") String status, @Param("id") Long id) {
+        return this.worksiteMapper.updateWorksiteStatus(status, id);
     }
 }

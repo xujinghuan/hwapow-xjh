@@ -9,6 +9,15 @@ export function listOrg(query) {
   })
 }
 
+// 查询组织列表(无权限限制，一般用于下拉表)
+export function listOrgNoDataScode(query) {
+  return request({
+    url: '/system/org/listNoDataScode',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询组织列表（排除节点）
 export function listOrgExcludeChild(orgId) {
   return request({
