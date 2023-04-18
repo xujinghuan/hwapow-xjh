@@ -1,0 +1,68 @@
+@import "./variables.scss";
+
+/*修改弹框标题栏样式*/
+.el-dialog {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  .el-dialog__header {
+    height: $dialogHeaderHeight;
+    background-color: #3A71A8;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    .el-dialog__title {
+      color: white;
+      font-size: 16px;
+    }
+
+    .el-dialog__headerbtn {
+      top: 11px;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 0;
+    /*padding: 0px 20px 10px 20px;*/
+    height: calc(100% - #{$dialogHeaderHeight});
+
+    .el-dialog-tool {
+      height: $dialogToolHeight;
+      /*margin-left: -20px;
+      margin-right: -20px;*/
+      padding: 5px 6px;
+      border-top: #eee solid 1px;
+      border-bottom: #eee solid 1px;
+      background-color: #fcfcfc;
+
+      .toolbar-title {
+        line-height: calc(#{$dialogToolHeight} - 10px);
+        font-weight: bold;
+        font-size: 16px;
+        color: #1c84c6;
+      }
+    }
+    .el-dialog-form{
+      height: calc(100% - #{$dialogToolHeight});
+      padding: 20px;
+    }
+  }
+
+  .toolbar {
+    text-align: right;
+  }
+}
+
+.toolbar {
+  height: $dialogToolHeight;
+  padding: 5px 6px;
+  border-top: #eee solid 1px;
+  border-bottom: #eee solid 1px;
+  background-color: #fcfcfc;
+}
+
+.el-dialog:not(.is-fullscreen) {
+  margin-top: 15vh;
+}

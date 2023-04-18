@@ -1,0 +1,114 @@
+.el-table {
+  .el-table__header-wrapper, .el-table__fixed-header-wrapper {
+    .el-table__header > thead > tr > th {
+      word-break: break-word;
+      background-color: #f6f6f6;
+      color: #515a6e;
+      font-size: 13px;
+      height: 36px;
+      padding: 6px 0;
+    }
+  }
+
+  .el-table__body-wrapper {
+    .el-button [class*="el-icon-"] + span {
+      margin-left: 1px;
+    }
+
+    .el-table__body > tbody > tr > td {
+      padding: 5px 0;
+    }
+  }
+
+  .el-table__fixed-body-wrapper {
+    .el-table__body > tbody > tr > td {
+      padding: 5px 0;
+    }
+  }
+
+  .fixed-width {
+    .el-button--mini {
+      color: #409EFF;
+      padding-left: 0;
+      padding-right: 0;
+      width: inherit;
+    }
+  }
+
+  .el-table__expanded-cell {
+    min-height: 40px;
+    background-color: #ffffdd;
+    padding: 10px 5px !important;
+  }
+
+  /* 合计行样式 */
+  .has-gutter > tr > td {
+    background-color: cornsilk !important;
+    padding: 5px 0;
+    font-weight: bold;
+    text-align: center;
+  }
+}
+
+.miniTableRow {
+  padding: 3px 0 !important;
+}
+
+/* 行选择列样式 */
+.el-table-column-check {
+  background-color: #f6f6f6 !important;
+}
+//选择列被禁用时的样式
+.disabledSelectionColumn {
+  >.cell > .is-disabled > .is-checked,
+  >.is-disabled {
+    > .el-checkbox__inner {
+      background-color: #1890ff!important;
+      border-color: #1890ff!important;
+    }
+
+    > .el-checkbox__inner::after {
+      border-color: #FFFFFF!important;
+    }
+  }
+
+  >.is-disabled + span.el-checkbox__label {
+    color: #84b4e0;
+  }
+}
+
+//选择列被禁用时隐藏列头的选择框
+.disabledSelectionColumnHeader {
+  .cell {
+    display: none !important;
+  }
+}
+
+/*隐藏树形表格的展开收缩图标*/
+.hideExpand {
+  .el-table__expand-icon {
+    display: none!important;
+  }
+  .el-table__placeholder {
+    display: none;
+  }
+}
+
+/* 序号列样式 */
+.el-table-column-serial {
+  background-color: #f6f6f6 !important;
+}
+
+/** 表格分页布局 **/
+.pagination-container {
+  position: relative;
+  height: 25px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  padding: 10px 20px !important;
+
+  .el-pagination {
+    right: 0;
+    position: absolute;
+  }
+}

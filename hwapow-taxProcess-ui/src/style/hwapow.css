@@ -1,0 +1,257 @@
+/**登陆页标题***/
+.login-title{
+  position: absolute;
+  top: 12%;
+  z-index: 20;
+  font-size: 53px;
+  font-weight: 600;
+  color: #6096c9;
+}
+
+/****设置form中input框上下距离****/
+.el-form-item{
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.el-main .el-form{
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+}
+
+aside{
+  padding: 0px 2px;
+}
+/***设置弹框样式 xjh 2021-03-20 start**/
+/*.el-dialog__wrapper{
+  height:600px;
+}
+
+.el-dialog__wrapper .el-dialog{
+  height: calc(100% - 45px);
+  border-radius: 5px;
+}
+
+.el-dialog__header{
+  border-bottom: 1px solid #e8e3e3;
+  height: 45px;
+  position: relative;
+  line-height: 45px;
+  padding: 0px 0px 0px 20px;
+  padding-bottom: 0px;
+  background: aliceblue;
+  border-radius: 5px 5px 0px 0px
+}
+
+.el-dialog__body{
+  padding: 5px 15px;
+  height: calc(100% - 95px);
+  overflow: auto;
+}
+
+.el-dialog__footer{
+  padding: 10px 20px 10px 0px;
+}*/
+
+/*设置另外界面的弹框底部**/
+/*.app-container-footer{
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+}
+
+.el-dialog__title{
+  font-family: serif;
+  font-size: 20px;
+  font-weight: 600;
+  height: 45px;
+  line-height: 45px;
+}
+
+.el-dialog__headerbtn {
+  top: 15px;
+}*/
+
+/***设置弹框样式 xjh 2021-03-20 end**/
+
+/**设置form表单无边框格式（类似excel）start**/
+/* 利用穿透，设置input边框隐藏 */
+
+.hwapow-form-excel .el-input__inner{
+  border: 0;
+  background: #e8ffe0;
+  border-radius:0px;
+}
+
+.hwapow-form-excel .el-input{
+  border: 0;
+  background: #e8ffe0;
+  border-radius:0px;
+}
+
+.hwapow-form-excel .el-form-item {
+  border: 1px solid;
+  margin-bottom: -1px;
+  margin-left: -1px;
+  margin-top:0px;
+}
+
+.hwapow-form-excel .el-form-item .el-form-item__label{
+  border: 1px solid;
+  margin-bottom: -1px;
+  margin-left: -1px;
+  margin-top: -1px;
+}
+
+.hwapow-form-excel .el-form-item .el-form-item__label{
+  width: 100px;
+}
+
+.hwapow-form-excel .el-form-item .el-form-item__content .el-input {
+  width: calc(100% - 99px);
+}
+
+.hwapow-form-excel .el-form-item .el-form-item__content .vue-treeselect .vue-treeselect__control{
+  width: calc(100% - 99px);
+  border: 0;
+  background: #e8ffe0;
+  border-radius:0px;
+}
+.hwapow-form-excel .el-form-item .el-form-item__content .vue-treeselect .vue-treeselect__menu-container{
+  width: calc(100% - 100px);
+  left: 99px;
+}
+
+/**设置form表单无边框格式（类似excel）end**/
+
+/**设置主界面顶边***/
+/*.app-container {
+  padding: 5px 15px 5px 15px;
+  height: calc(100% - 32px);
+}*/
+
+/***表格样式修改start(让表格占满)***/
+/*.el-table th, .el-table td {
+  padding: 5px 0;
+}
+
+.app-main .app-container{
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 84px);
+}
+
+.app-container .el-form{
+  flex-shrink: 0;
+}
+
+.app-container .mb8{
+  flex-shrink: 1;
+}
+
+.app-container .el-table{
+  flex: auto;
+  overflow: auto;
+  height: 100%;
+}
+.el-table__body-wrapper{
+  overflow: auto;
+  height: calc(100% - 40px);
+}
+
+.pagination-container{
+  bottom: 10px;
+  right: 5px;
+  margin-top: 10px;
+}*/
+/******表格样式修改end*****/
+
+/**左侧每个菜单栏高度 start**/
+
+.el-menu .el-menu-item{
+  height: 50px;
+  line-height: 50px;
+}
+
+.el-submenu__title{
+  height: 50px;
+  line-height: 50px;
+}
+.el-submenu .el-menu-item {
+  height: 45px;
+  line-height: 45px;
+  padding: 0 45px;
+  min-width: 200px;
+}
+/**左侧每个菜单栏高度 end**/
+
+/***滚动条样式 start**/
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width : 10px;  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius   : 10px;
+  background-color: skyblue;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background   : #ededed;
+  border-radius: 10px;
+}
+/*****滚动条样式end****/
+.el-form-item--mini.el-form-item {
+  margin-bottom: 12px;
+}
+
+.login-form .el-form-item{
+  padding-bottom: 0px;
+}
+
+.searchForm .el-input{
+  width: 180px;
+}
+
+.el-dialog__body .fullContainer{
+  height:500px;
+}
+
+.double-label-font .el-form-item__label{
+  line-height: 15px;
+}
+.el-tree-node{
+  background: #FFFFFF;
+}
+
+.el-mian-left{
+  padding: 0px 2px;
+  background: #eef1f6;
+}
+
+fieldset {
+  border: 1px solid #C0C4CC;
+  border-radius: 5px;
+  padding-top: 10px;
+  padding-bottom: 0px;
+  margin: 0 11px;
+  margin-bottom: 13px;
+}
+
+legend {
+  font-weight: 700;
+  font-size: 12px;
+}

@@ -1,0 +1,24 @@
+.el-message-box {
+  border: none;
+  .el-message-box__header {
+    padding: 10px;
+    background-color: #3A71A8;
+
+    .el-message-box__title {
+      font-size: 16px;
+      color: #eeeeee;
+    }
+
+    .el-message-box__headerbtn {
+      top: 10px;
+    }
+
+    .el-message-box__close {
+      color: #eeeeee;
+    }
+  }
+
+  .el-message-box__btns {
+    padding-bottom: 5px;
+  }
+}
