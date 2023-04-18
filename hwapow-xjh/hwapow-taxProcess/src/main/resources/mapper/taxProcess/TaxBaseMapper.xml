@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwapow.taxProcess.mapper.TaxBaseMapper">
+    
+    <resultMap type="TaxBase" id="TaxBaseResult">
+        <result property="id"    column="id"    />
+        <result property="colB"    column="col_b"    />
+        <result property="colC"    column="col_c"    />
+        <result property="colA"    column="col_a"    />
+        <result property="colD"    column="col_d"    />
+        <result property="colE"    column="col_e"    />
+        <result property="colF"    column="col_f"    />
+        <result property="colG"    column="col_g"    />
+        <result property="colH"    column="col_h"    />
+        <result property="colI"    column="col_i"    />
+        <result property="colJ"    column="col_j"    />
+        <result property="colK"    column="col_k"    />
+        <result property="colL"    column="col_l"    />
+        <result property="colM"    column="col_m"    />
+        <result property="colN"    column="col_n"    />
+        <result property="colO"    column="col_o"    />
+        <result property="colP"    column="col_p"    />
+        <result property="colQ"    column="col_q"    />
+        <result property="colR"    column="col_r"    />
+        <result property="down"    column="down"    />
+    </resultMap>
+
+    <sql id="selectTaxBaseVo">
+        select * from tax_base
+    </sql>
+
+    <select id="selectTaxBaseList" parameterType="TaxBase" resultMap="TaxBaseResult">
+        <include refid="selectTaxBaseVo"/>
+        <where>  
+            <if test="colB != null  and colB != ''"> and col_b = #{colB}</if>
+            <if test="colC != null  and colC != ''"> and col_c = #{colC}</if>
+            <if test="colA != null  and colA != ''"> and col_a = #{colA}</if>
+            <if test="colD != null  and colD != ''"> and col_d = #{colD}</if>
+            <if test="colE != null "> and col_e = #{colE}</if>
+            <if test="colF != null  and colF != ''"> and col_f = #{colF}</if>
+            <if test="colG != null "> and col_g = #{colG}</if>
+            <if test="colH != null  and colH != ''"> and col_h = #{colH}</if>
+            <if test="colI != null  and colI != ''"> and col_i = #{colI}</if>
+            <if test="colJ != null  and colJ != ''"> and col_j = #{colJ}</if>
+            <if test="colK != null  and colK != ''"> and col_k = #{colK}</if>
+            <if test="colL != null  and colL != ''"> and col_l = #{colL}</if>
+            <if test="colM != null  and colM != ''"> and col_m = #{colM}</if>
+            <if test="colN != null  and colN != ''"> and col_n = #{colN}</if>
+            <if test="colO != null  and colO != ''"> and col_o = #{colO}</if>
+            <if test="colP != null  and colP != ''"> and col_p = #{colP}</if>
+            <if test="colQ != null  and colQ != ''"> and col_q = #{colQ}</if>
+            <if test="colR != null  and colR != ''"> and col_r = #{colR}</if>
+            <if test="down != null  and down != ''"> and down = #{down}</if>
+        </where>
+        order by id asc
+    </select>
+    
+    <select id="selectTaxBaseById" parameterType="Long" resultMap="TaxBaseResult">
+        <include refid="selectTaxBaseVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTaxBase" parameterType="TaxBase" useGeneratedKeys="true" keyProperty="id">
+        insert into tax_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="colB != null">col_b,</if>
+            <if test="colC != null">col_c,</if>
+            <if test="colA != null">col_a,</if>
+            <if test="colD != null">col_d,</if>
+            <if test="colE != null">col_e,</if>
+            <if test="colF != null">col_f,</if>
+            <if test="colG != null">col_g,</if>
+            <if test="colH != null">col_h,</if>
+            <if test="colI != null">col_i,</if>
+            <if test="colJ != null">col_j,</if>
+            <if test="colK != null">col_k,</if>
+            <if test="colL != null">col_l,</if>
+            <if test="colM != null">col_m,</if>
+            <if test="colN != null">col_n,</if>
+            <if test="colO != null">col_o,</if>
+            <if test="colP != null">col_p,</if>
+            <if test="colQ != null">col_q,</if>
+            <if test="colR != null">col_r,</if>
+            <if test="down != null">down,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="colB != null">#{colB},</if>
+            <if test="colC != null">#{colC},</if>
+            <if test="colA != null">#{colA},</if>
+            <if test="colD != null">#{colD},</if>
+            <if test="colE != null">#{colE},</if>
+            <if test="colF != null">#{colF},</if>
+            <if test="colG != null">#{colG},</if>
+            <if test="colH != null">#{colH},</if>
+            <if test="colI != null">#{colI},</if>
+            <if test="colJ != null">#{colJ},</if>
+            <if test="colK != null">#{colK},</if>
+            <if test="colL != null">#{colL},</if>
+            <if test="colM != null">#{colM},</if>
+            <if test="colN != null">#{colN},</if>
+            <if test="colO != null">#{colO},</if>
+            <if test="colP != null">#{colP},</if>
+            <if test="colQ != null">#{colQ},</if>
+            <if test="colR != null">#{colR},</if>
+            <if test="down != null">#{down},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaxBase" parameterType="TaxBase">
+        update tax_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="colB != null">col_b = #{colB},</if>
+            <if test="colC != null">col_c = #{colC},</if>
+            <if test="colA != null">col_a = #{colA},</if>
+            <if test="colD != null">col_d = #{colD},</if>
+            <if test="colE != null">col_e = #{colE},</if>
+            <if test="colF != null">col_f = #{colF},</if>
+            <if test="colG != null">col_g = #{colG},</if>
+            <if test="colH != null">col_h = #{colH},</if>
+            <if test="colI != null">col_i = #{colI},</if>
+            <if test="colJ != null">col_j = #{colJ},</if>
+            <if test="colK != null">col_k = #{colK},</if>
+            <if test="colL != null">col_l = #{colL},</if>
+            <if test="colM != null">col_m = #{colM},</if>
+            <if test="colN != null">col_n = #{colN},</if>
+            <if test="colO != null">col_o = #{colO},</if>
+            <if test="colP != null">col_p = #{colP},</if>
+            <if test="colQ != null">col_q = #{colQ},</if>
+            <if test="colR != null">col_r = #{colR},</if>
+            <if test="down != null">down=#{down},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaxBaseById" parameterType="Long">
+        delete from tax_base where id = #{id}
+    </delete>
+
+    <delete id="deleteTaxBaseByIds" parameterType="String">
+        delete from tax_base where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

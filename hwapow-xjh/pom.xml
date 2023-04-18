@@ -207,6 +207,7 @@
         <module>hwapow-worksite</module>
         <module>hwapow-reservior</module>
         <module>hwapow-schedule</module>
+		<module>hwapow-taxProcess</module>
     </modules>
     <packaging>pom</packaging>
 
